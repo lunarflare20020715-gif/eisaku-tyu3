@@ -185,12 +185,22 @@
 
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-slate-200/80">
             <div>
-              <span class="text-xs font-bold text-slate-700">② 出題範囲（授業で習ったパート）</span>
+              <span class="text-xs font-bold text-slate-700">② 出題範囲・出題順（授業で習ったパート）</span>
               <p class="text-[11px] text-slate-500">現在 <strong id="cover-learned-count" class="text-teal-700">122問</strong> が対象になっています</p>
             </div>
-            <button type="button" onclick="switchMainTab('grammar')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-teal-700 border border-teal-200 hover:bg-teal-50 transition shrink-0">
-              ⚙️ パートを選ぶ・文法を見る
-            </button>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex bg-white p-1 rounded-xl border border-slate-200" role="group" aria-label="表紙出題順切り替え">
+                <button type="button" id="cover-order-sequential" onclick="setOrderMode('sequential')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm">
+                  🔢 順番通り
+                </button>
+                <button type="button" id="cover-order-random" onclick="setOrderMode('random')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+                  🔀 ランダム
+                </button>
+              </div>
+              <button type="button" onclick="switchMainTab('grammar')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-teal-700 border border-teal-200 hover:bg-teal-50 transition shrink-0">
+                ⚙️ パートを選ぶ・文法を見る
+              </button>
+            </div>
           </div>
         </div>
 
@@ -208,16 +218,31 @@
 
     <!-- 習った単元フィルタ＆難易度バー -->
     <div class="flex flex-col gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-      <!-- 習った単元のみ出題トグルバー -->
+      <!-- 習った単元のみ出題トグルバー ＆ 出題順（順番通り／ランダム）切り替え -->
       <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-          <input type="checkbox" id="toggle-only-learned" checked onchange="toggleOnlyLearnedMode()" class="w-4 h-4 accent-teal-600 rounded cursor-pointer" />
-          <span class="text-xs sm:text-sm font-bold text-slate-700">習ったパートだけ出題する</span>
-          <span id="learned-count-badge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">122 / 122問</span>
-        </label>
-        <button type="button" onclick="switchMainTab('grammar')" class="text-xs font-bold text-teal-600 hover:text-teal-800 underline underline-offset-2">
-          ⚙️ 習ったパートを選ぶ →
-        </button>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="toggle-only-learned" checked onchange="toggleOnlyLearnedMode()" class="w-4 h-4 accent-teal-600 rounded cursor-pointer" />
+            <span class="text-xs sm:text-sm font-bold text-slate-700">習ったパートだけ出題</span>
+            <span id="learned-count-badge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">122 / 122問</span>
+          </label>
+          <button type="button" onclick="switchMainTab('grammar')" class="text-xs font-bold text-teal-600 hover:text-teal-800 underline underline-offset-2">
+            ⚙️ 選択
+          </button>
+        </div>
+
+        <!-- 順番通り / ランダム モード切替 -->
+        <div class="flex items-center gap-1.5">
+          <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">出題順：</span>
+          <div class="flex bg-slate-100 p-0.5 rounded-xl border border-slate-200" role="group" aria-label="出題順切り替え">
+            <button type="button" id="btn-order-sequential" onclick="setOrderMode('sequential')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm">
+              🔢 順番通り
+            </button>
+            <button type="button" id="btn-order-random" onclick="setOrderMode('random')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+              🔀 ランダム
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- パートフィルタ・問題セレクター＆難易度切り替え -->
@@ -246,8 +271,8 @@
             <option value="Unit 6 Part 2">Unit 6 Part 2 (5)</option>
             <option value="Unit 6 Read & Think">Unit 6 Read & Think (10)</option>
           </select>
-          <select id="question-select" onchange="onQuestionSelectChange()" class="flex-1 bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-medium rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 truncate">
-            <!-- JSで全103問を動的生成 -->
+          <select id="question-select" onchange="onQuestionSelectChange()" class="flex-1 bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-medium rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 truncate">
+            <!-- JSで全122問を動的生成 -->
           </select>
         </div>
 
@@ -314,7 +339,7 @@
         </div>
       </div>
 
-      <!-- 機能語ヒント（インデックスが -1 の場合や中・上級の補助メッセージ） -->
+      <!-- 機能語ヒント（インデックスが -1 の場合） -->
       <div id="special-hint-banner" class="hidden mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm flex items-start gap-2 animate-pop">
         <span class="text-base leading-none mt-0.5">💡</span>
         <div id="special-hint-text" class="font-medium leading-relaxed"></div>
@@ -379,9 +404,9 @@
           <div>
             <div class="flex items-center gap-2">
               <h2 class="text-base sm:text-lg font-bold text-emerald-900">正解！</h2>
-              <span id="result-score-pill" class="px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-bold bg-amber-400 text-amber-950 shadow-sm">100点 獲得！</span>
+              <span id="result-score-pill" class="px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-bold bg-amber-400 text-amber-950 shadow-sm">★★★ 獲得！</span>
             </div>
-            <p id="result-rating-text" class="text-xs font-semibold text-emerald-700 mt-0.5">評価：★★★（ノーヒント＆ノーミス達成！）</p>
+            <p id="result-rating-text" class="text-xs font-semibold text-emerald-700 mt-0.5">ノーヒント＆ノーミスでマスターしました！</p>
           </div>
         </div>
         <button type="button" onclick="speakAnswer()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-emerald-700 border border-emerald-300 text-xs sm:text-sm font-bold shadow-sm hover:bg-emerald-100 active:scale-95 transition">
@@ -756,6 +781,8 @@
       grammarFilter: 'ALL',
       unitFilter: 'ALL',
       onlyLearned: true,
+      orderMode: 'sequential', // 'sequential' | 'random'
+      randomHistory: [],       // ランダム出題時の履歴スタック
       learnedIds: new Set(QUESTIONS.map(q => q.id)), // 初期状態は全122問ON
       currentQuestionId: 1,
       level: 'beginner', // 'beginner' | 'intermediate' | 'advanced'
@@ -772,133 +799,120 @@
       customCharUrl: null // ユーザーがアップロードした画像URL
     };
 
-    // キャラクターのカスタムSVG生成（青いカーディガン・星ヘアピン・指示棒・青い教科書）
-    function getCharacterSvg(isMini = false) {
-      const viewBox = isMini ? "20 12 160 155" : "0 5 200 230";
+    // ナビゲーターキャラクターのSVG（青いカーディガン・星型ヘアピン・指示棒・青い教科書）
+    function getNavigatorSvg(isAvatar = false) {
+      const viewBox = isAvatar ? "22 10 156 145" : "0 0 200 220";
       return `
-        <svg viewBox="${viewBox}" class="w-full h-full object-contain" xmlns="http://www.w3.org/2000/svg" aria-label="ナビゲーターキャラクター">
+        <svg viewBox="${viewBox}" class="w-full h-full object-contain" xmlns="http://www.w3.org/2000/svg">
           <!-- 後ろ髪 -->
-          <path d="M52 85 C42 115, 44 142, 58 148 C65 140, 68 125, 70 110 Z" fill="#54453d" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M148 85 C158 115, 156 142, 142 148 C135 140, 132 125, 130 110 Z" fill="#54453d" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M52 76 C44 105, 48 134, 62 142 C72 146, 128 146, 138 142 C152 134, 156 105, 148 76 Z" fill="#4e3d38" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
           <!-- 首 -->
-          <rect x="92" y="128" width="16" height="16" rx="4" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
-          <!-- チェックのプリーツスカート -->
-          <path d="M68 192 L58 228 L142 228 L132 192 Z" fill="#2b4c7e" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M78 192 L72 228 M92 192 L90 228 M108 192 L110 228 M122 192 L128 228" stroke="#1e3a5f" stroke-width="2"/>
-          <path d="M63 208 L137 208 M60 220 L140 220" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
-          <!-- 白シャツ襟＆紺ベスト -->
-          <path d="M74 142 L126 142 L132 195 L68 195 Z" fill="#334155" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <polygon points="84,142 100,162 116,142" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
-          <!-- 青ストライプのリボン -->
-          <path d="M100 153 L83 144 L80 160 Z" fill="#1d4ed8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M100 153 L117 144 L120 160 Z" fill="#1d4ed8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M96 156 L87 176 L96 173 Z" fill="#2563eb" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M104 156 L113 176 L104 173 Z" fill="#2563eb" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
-          <rect x="95" y="149" width="10" height="9" rx="3" fill="#3b82f6" stroke="#1e293b" stroke-width="2"/>
-          <!-- 青いカーディガン（胴体＆袖） -->
-          <path d="M74 142 C62 146, 56 175, 52 200 L70 202 L78 158 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M126 142 C138 146, 144 175, 148 200 L130 202 L122 158 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- 左腕（指示棒を持つ腕） -->
-          <path d="M68 146 C48 154, 38 140, 34 126 L46 122 C50 132, 56 138, 70 136 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- 指示棒 -->
-          <line x1="42" y1="132" x2="18" y2="62" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-          <line x1="42" y1="132" x2="18" y2="62" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
-          <polygon points="18,62 14,52 22,54" fill="#94a3b8" stroke="#1e293b" stroke-width="1.5"/>
-          <line x1="42" y1="132" x2="36" y2="114" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
-          <!-- 左手 -->
-          <circle cx="39" cy="122" r="7" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
-          <!-- 青い教科書 -->
-          <rect x="102" y="156" width="26" height="34" rx="3" transform="rotate(-10 115 173)" fill="#38bdf8" stroke="#1e293b" stroke-width="2.2"/>
-          <line x1="106" y1="158" x2="111" y2="189" stroke="#ffffff" stroke-width="2.5"/>
-          <!-- 右腕＆手（本を抱える） -->
-          <path d="M132 146 C148 158, 146 178, 122 180 L120 169 C134 168, 134 158, 126 152 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-          <circle cx="118" cy="175" r="6.5" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
+          <rect x="92" y="122" width="16" height="16" rx="4" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
+          <!-- 制服スカート -->
+          <path d="M68 184 L132 184 L142 214 L58 214 Z" fill="#1e3a5f" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M74 184 L68 214 M90 184 L88 214 M110 184 L112 214 M126 184 L132 214" stroke="#3b82f6" stroke-width="2.5"/>
+          <path d="M62 198 L138 198 M60 207 L140 207" stroke="#3b82f6" stroke-width="2"/>
+          <!-- インナーのダークネイビーベスト -->
+          <path d="M72 136 L128 136 L133 188 L67 188 Z" fill="#2c3545" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
+          <!-- 白シャツ襟 -->
+          <path d="M84 134 L100 148 L116 134 L108 130 L100 138 L92 130 Z" fill="#ffffff" stroke="#2d2226" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- リボンタイ -->
+          <path d="M100 145 L84 139 L81 153 L97 149 Z" fill="#1e40af" stroke="#2d2226" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M100 145 L116 139 L119 153 L103 149 Z" fill="#1e40af" stroke="#2d2226" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M96 149 L89 167 L98 164 L100 151 Z" fill="#1e3a8a" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M104 149 L111 167 L102 164 L100 151 Z" fill="#1e3a8a" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="95" y="141" width="10" height="9" rx="3" fill="#2563eb" stroke="#2d2226" stroke-width="2.2"/>
+          <!-- 青いカーディガン -->
+          <path d="M74 134 C58 138, 48 156, 42 178 L58 182 L72 154 L70 192 L88 192 L90 142 Z" fill="#2b8ac6" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M126 134 C142 138, 152 156, 158 178 L142 182 L128 154 L130 192 L112 192 L110 142 Z" fill="#2b8ac6" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
+          <!-- 指示棒（右手） -->
+          <line x1="42" y1="142" x2="22" y2="74" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+          <line x1="42" y1="142" x2="36" y2="122" stroke="#78350f" stroke-width="5.5" stroke-linecap="round"/>
+          <polygon points="22,74 18,64 26,66" fill="#94a3b8" stroke="#2d2226" stroke-width="1.8" stroke-linejoin="round"/>
+          <!-- 右手 -->
+          <circle cx="42" cy="134" r="7.5" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
+          <!-- 左手と青い教科書 -->
+          <g transform="rotate(-10 124 166)">
+            <rect x="104" y="148" width="32" height="40" rx="4" fill="#3898d4" stroke="#2d2226" stroke-width="2.8"/>
+            <rect x="107" y="151" width="5" height="34" fill="#1d6fa5"/>
+            <line x1="112" y1="148" x2="134" y2="148" stroke="#ffffff" stroke-width="3"/>
+          </g>
+          <circle cx="112" cy="172" r="7.5" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
           <!-- 顔の輪郭 -->
-          <path d="M62 82 C62 46, 138 46, 138 82 C138 114, 122 132, 100 132 C78 132, 62 114, 62 82 Z" fill="#ffe5d9" stroke="#2c221e" stroke-width="2.5"/>
-          <!-- ほっぺのチーク -->
-          <ellipse cx="75" cy="105" rx="6" ry="3.5" fill="#fda4af" opacity="0.7"/>
-          <ellipse cx="125" cy="105" rx="6" ry="3.5" fill="#fda4af" opacity="0.7"/>
-          <!-- 大きな青い瞳 -->
-          <ellipse cx="82" cy="92" rx="8.5" ry="10" fill="#1e3a8a"/>
-          <ellipse cx="82" cy="94" rx="6.5" ry="7" fill="#3b82f6"/>
-          <circle cx="79" cy="88" r="3" fill="#ffffff"/>
-          <circle cx="85" cy="96" r="1.5" fill="#ffffff"/>
-          <ellipse cx="118" cy="92" rx="8.5" ry="10" fill="#1e3a8a"/>
-          <ellipse cx="118" cy="94" rx="6.5" ry="7" fill="#3b82f6"/>
-          <circle cx="115" cy="88" r="3" fill="#ffffff"/>
-          <circle cx="121" cy="96" r="1.5" fill="#ffffff"/>
-          <!-- 眉毛＆笑顔の口 -->
-          <path d="M74 77 Q82 74 89 77" fill="none" stroke="#4a3b32" stroke-width="2" stroke-linecap="round"/>
-          <path d="M111 77 Q118 74 126 77" fill="none" stroke="#4a3b32" stroke-width="2" stroke-linecap="round"/>
-          <path d="M94 113 Q100 119 106 113" fill="none" stroke="#9f1239" stroke-width="2.2" stroke-linecap="round"/>
-          <!-- 前髪・ショートボブヘア -->
-          <path d="M56 88 C52 50, 76 32, 100 32 C124 32, 148 50, 144 88 C142 104, 138 118, 134 124 C135 106, 133 88, 126 76 C121 86, 115 90, 110 82 C105 90, 96 90, 91 81 C85 90, 78 88, 74 76 C67 88, 65 106, 66 124 C62 118, 58 104, 56 88 Z" fill="#635147" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M58 78 C58 46, 142 46, 142 78 C142 108, 124 126, 100 126 C76 126, 58 108, 58 78 Z" fill="#ffe6d8" stroke="#2d2226" stroke-width="3"/>
+          <!-- チーク -->
+          <ellipse cx="73" cy="102" rx="7" ry="4" fill="#fda4af" opacity="0.65"/>
+          <ellipse cx="127" cy="102" rx="7" ry="4" fill="#fda4af" opacity="0.65"/>
+          <!-- 大きな青い瞳（左） -->
+          <ellipse cx="81" cy="89" rx="9" ry="10.5" fill="#1e3a8a" stroke="#2d2226" stroke-width="2"/>
+          <ellipse cx="81" cy="91" rx="6.5" ry="7" fill="#3b82f6"/>
+          <circle cx="81" cy="89" r="3.5" fill="#172554"/>
+          <circle cx="77.5" cy="84.5" r="3" fill="#ffffff"/>
+          <circle cx="84.5" cy="93.5" r="1.5" fill="#ffffff"/>
+          <!-- 大きな青い瞳（右） -->
+          <ellipse cx="119" cy="89" rx="9" ry="10.5" fill="#1e3a8a" stroke="#2d2226" stroke-width="2"/>
+          <ellipse cx="119" cy="91" rx="6.5" ry="7" fill="#3b82f6"/>
+          <circle cx="119" cy="89" r="3.5" fill="#172554"/>
+          <circle cx="115.5" cy="84.5" r="3" fill="#ffffff"/>
+          <circle cx="122.5" cy="93.5" r="1.5" fill="#ffffff"/>
+          <!-- 眉毛と笑顔の口 -->
+          <path d="M73 74 Q81 71 88 74" fill="none" stroke="#3f2e2b" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M112 74 Q119 71 127 74" fill="none" stroke="#3f2e2b" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M94 108 Q100 114 106 108" fill="none" stroke="#2d2226" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 前髪・サイド髪 -->
+          <path d="M50 84 C48 44, 76 26, 100 26 C124 26, 152 44, 150 84 C146 72, 138 64, 133 58 C132 69, 126 76, 121 79 C119 67, 113 58, 108 54 C105 67, 99 75, 93 78 C91 66, 86 58, 82 54 C77 66, 70 74, 65 78 C60 72, 54 76, 50 84 Z" fill="#5c4742" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
           <!-- 髪のハイライト -->
-          <path d="M74 56 Q86 52 94 56 M106 56 Q116 52 126 56" fill="none" stroke="#8c766a" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M72 48 Q84 44 92 48 M108 48 Q118 44 128 48" fill="none" stroke="#8c726c" stroke-width="2.5" stroke-linecap="round"/>
           <!-- 黄色い星型ヘアピン -->
-          <path d="M126 54 L139 50 L137 59 Z" fill="#3b82f6" stroke="#1e293b" stroke-width="1.5"/>
-          <polygon points="124,45 127,51 134,52 129,57 130,63 124,60 118,63 119,57 114,52 121,51" fill="#facc15" stroke="#854d0e" stroke-width="1.6" stroke-linejoin="round"/>
+          <g transform="translate(124, 52) rotate(15)">
+            <rect x="2" y="-3" width="16" height="6" rx="3" fill="#3b82f6" stroke="#2d2226" stroke-width="2"/>
+            <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#facc15" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
+          </g>
         </svg>
       `;
     }
 
-    // キャラクター表示の描画更新（表紙・練習画面）
-    function renderCharacters() {
-      const coverBox = document.getElementById('cover-char-container');
-      const miniBox = document.getElementById('practice-char-avatar');
+    // キャラクター表示の描画更新（表紙・練習画面の両方）
+    function renderCharacterDisplays() {
+      const coverContainer = document.getElementById('cover-char-container');
+      const avatarContainer = document.getElementById('practice-char-avatar');
+
       if (state.customCharUrl) {
-        if (coverBox) {
-          coverBox.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーター" class="w-full h-full object-contain rounded-2xl" />`;
+        if (coverContainer) {
+          coverContainer.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーターキャラクター" class="w-full h-full object-contain rounded-2xl" />`;
         }
-        if (miniBox) {
-          miniBox.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーター" class="w-full h-full object-cover object-top" />`;
+        if (avatarContainer) {
+          avatarContainer.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーター" class="w-full h-full object-cover object-top" />`;
         }
       } else {
-        if (coverBox) coverBox.innerHTML = getCharacterSvg(false);
-        if (miniBox) miniBox.innerHTML = getCharacterSvg(true);
+        if (coverContainer) coverContainer.innerHTML = getNavigatorSvg(false);
+        if (avatarContainer) avatarContainer.innerHTML = getNavigatorSvg(true);
       }
     }
 
-    // 原画ファイル選択ダイアログを開く
+    // 手元の画像ファイル（JPG/PNG）の選択ダイアログを開く
     function triggerCharacterUpload() {
       const input = document.getElementById('char-file-input');
       if (input) input.click();
     }
 
-    // 選択された原画ファイルをプレビュー反映
+    // 画像ファイル読み込み処理
     function handleCharacterImageUpload(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
-      if (state.customCharUrl) {
-        URL.revokeObjectURL(state.customCharUrl);
-      }
-      state.customCharUrl = URL.createObjectURL(file);
-      renderCharacters();
-      showToast('キャラクター画像を差し替えました！', 'info');
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        state.customCharUrl = e.target.result;
+        renderCharacterDisplays();
+        showToast('キャラクター画像を差し替えました！', 'info');
+      };
+      reader.readAsDataURL(file);
     }
 
-    // キャラクターの吹き出しセリフ更新
-    function updateCharacterSpeech(mode, extraText = '') {
+    // 練習画面のキャラクターセリフ更新
+    function setCharSpeech(text) {
       const speechEl = document.getElementById('char-speech-text');
-      if (!speechEl) return;
-      if (mode === 'start') {
-        const msgByLvl = {
-          beginner: 'まずは意味の塊ごとに並べよう！迷ったら「語順の型」や「赤線ヒント」を使ってね！',
-          intermediate: '中級はノーヒント勝負！前置詞や助動詞の位置に気をつけて組み立てよう！',
-          advanced: '上級チャレンジ！ダミーの単語に惑わされず、正確な英文を完成させよう！'
-        };
-        speechEl.textContent = msgByLvl[state.level];
-      } else if (mode === 'progress') {
-        speechEl.textContent = 'いいね！その調子で次のパーツをつなげよう！';
-      } else if (mode === 'hint') {
-        speechEl.textContent = '赤線の部分に注目！英語ではこの順番で言葉を並べるよ！';
-      } else if (mode === 'error') {
-        speechEl.textContent = `おっと！「${extraText}」はまだ先だよ。主語や動詞の順番を思い出してみよう！`;
-      } else if (mode === 'solved') {
-        speechEl.textContent = state.lastEarnedStars === 3
-          ? 'パーフェクト！ノーヒント＆ノーミスで大正解だよ！すごい！'
-          : '正解おめでとう！下の「学習ポイント」もチェックしておこうね！';
-      }
+      if (speechEl) speechEl.textContent = text;
     }
 
     // 表紙画面での難易度選択
@@ -921,29 +935,62 @@
     // 表紙画面から練習をスタート
     function startPracticeFromCover() {
       switchMainTab('practice');
+      if (state.orderMode === 'random') {
+        const filtered = getFilteredQuestions();
+        if (filtered.length > 0) {
+          const pick = filtered[Math.floor(Math.random() * filtered.length)];
+          state.randomHistory = [];
+          loadQuestion(pick.id);
+        }
+      }
     }
 
-    // 習得率＆獲得スター集計とダッシュボード更新
+    // 出題順モード切り替え（sequential: 順番通り / random: ランダム）
+    function setOrderMode(mode) {
+      state.orderMode = mode;
+      state.randomHistory = [];
+
+      const activeClass = 'px-2.5 py-1 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm';
+      const inactiveClass = 'px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900';
+
+      ['btn-order', 'cover-order'].forEach(prefix => {
+        const seqBtn = document.getElementById(`${prefix}-sequential`);
+        const rndBtn = document.getElementById(`${prefix}-random`);
+        if (seqBtn) seqBtn.className = mode === 'sequential' ? activeClass : inactiveClass;
+        if (rndBtn) rndBtn.className = mode === 'random' ? activeClass : inactiveClass;
+      });
+
+      if (state.mainTab === 'practice') {
+        if (mode === 'random') {
+          showToast('🔀 ランダムモードに切り替えました！「次の問題」でランダムに出題されます', 'info');
+          nextQuestion();
+        } else {
+          showToast('🔢 順番通りモードに切り替えました！Q番号順に進みます', 'info');
+        }
+      }
+    }
+
+    // 習得率（％）＆ 獲得スター集計のダッシュボード更新
     function updateScoreDisplays() {
-      const scores = Object.values(state.bestScores);
       const starsList = Object.values(state.bestStars);
       const totalStars = starsList.reduce((sum, s) => sum + s, 0);
-      const clearedCount = scores.length;
-      const masteryRate = Math.round((clearedCount / QUESTIONS.length) * 100);
+      const clearedCount = starsList.length;
       const perfectCount = starsList.filter(s => s === 3).length;
+      const masteryRate = Math.round((clearedCount / QUESTIONS.length) * 100);
 
       const headerStars = document.getElementById('header-total-stars');
       if (headerStars) headerStars.textContent = totalStars;
 
       const coverRate = document.getElementById('cover-mastery-rate');
       const coverBar = document.getElementById('cover-mastery-bar');
-      const coverStars = document.getElementById('cover-total-stars');
       const coverCleared = document.getElementById('cover-cleared-count');
+      const coverTotalStars = document.getElementById('cover-total-stars');
       const coverPerfect = document.getElementById('cover-perfect-count');
+
       if (coverRate) coverRate.textContent = masteryRate;
       if (coverBar) coverBar.style.width = `${masteryRate}%`;
-      if (coverStars) coverStars.textContent = totalStars;
       if (coverCleared) coverCleared.textContent = clearedCount;
+      if (coverTotalStars) coverTotalStars.textContent = totalStars;
       if (coverPerfect) coverPerfect.textContent = perfectCount;
     }
 
@@ -985,7 +1032,7 @@
       }
     }
 
-    // 現在のフィルタ条件（習ったパートのみ ＋ パート選択）に合致する問題一覧を取得
+    // 現在のフィルタ条件（習ったパートのみ ＋ パート絞り込み）に合致する問題一覧を取得
     function getFilteredQuestions() {
       return QUESTIONS.filter(q => {
         const unitMatch = state.unitFilter === 'ALL' || q.unitGroup === state.unitFilter;
@@ -1006,7 +1053,7 @@
       }
     }
 
-    // 練習画面の「習ったパートだけ出題する」チェック切り替え
+    // 練習画面の「習ったパートだけ出題」チェック切り替え
     function toggleOnlyLearnedMode() {
       const checkbox = document.getElementById('toggle-only-learned');
       state.onlyLearned = checkbox.checked;
@@ -1026,7 +1073,7 @@
       renderQuestionSelector();
 
       if (filtered.length === 0) {
-        showToast('条件に合う問題がありません。「単元・文法」タブで出題したい問題をONにしてください。', 'error');
+        showToast('条件に合う問題がありません。「単元・文法」タブで習ったパートをONにしてください。', 'error');
         return;
       }
 
@@ -1056,15 +1103,15 @@
       } else if (preset === 'U2_ALL') {
         QUESTIONS.filter(q => q.id <= 48).forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'U3_ONLY') {
-        QUESTIONS.filter(q => q.id >= 49 && q.id <= 67).forEach(q => state.learnedIds.add(q.id));
+        QUESTIONS.filter(q => q.unitGroup.startsWith('Unit 3')).forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'LR1_ONLY') {
-        QUESTIONS.filter(q => q.id >= 68 && q.id <= 74).forEach(q => state.learnedIds.add(q.id));
+        QUESTIONS.filter(q => q.unitGroup === "Let's Read 1").forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'U4_ONLY') {
-        QUESTIONS.filter(q => q.id >= 75 && q.id <= 92).forEach(q => state.learnedIds.add(q.id));
+        QUESTIONS.filter(q => q.unitGroup.startsWith('Unit 4')).forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'U5_ONLY') {
-        QUESTIONS.filter(q => q.id >= 93 && q.id <= 103).forEach(q => state.learnedIds.add(q.id));
+        QUESTIONS.filter(q => q.unitGroup.startsWith('Unit 5')).forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'U6_ONLY') {
-        QUESTIONS.filter(q => q.id >= 104 && q.id <= 122).forEach(q => state.learnedIds.add(q.id));
+        QUESTIONS.filter(q => q.unitGroup.startsWith('Unit 6')).forEach(q => state.learnedIds.add(q.id));
       } else if (preset === 'ALL') {
         QUESTIONS.forEach(q => state.learnedIds.add(q.id));
       }
@@ -1114,10 +1161,8 @@
       container.innerHTML = filtered.map(q => {
         const g = GRAMMAR_FORMULAS[q.id] || { formula: q.en, desc: q.note };
         const isLearned = state.learnedIds.has(q.id);
-        const bestStar = state.bestStars[q.id];
-        const starBadge = bestStar
-          ? `<span class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-amber-100 text-amber-800">${'★'.repeat(bestStar)}${'☆'.repeat(3 - bestStar)}</span>`
-          : '';
+        const bestStarCount = state.bestStars[q.id];
+        const starText = bestStarCount ? ('★'.repeat(bestStarCount) + '☆'.repeat(3 - bestStarCount)) : '';
         const cardBorderClass = isLearned
           ? 'bg-white border-slate-200 shadow-sm'
           : 'bg-slate-100/80 border-slate-200/70 opacity-75';
@@ -1132,7 +1177,7 @@
                 <span class="px-2 py-0.5 text-xs font-bold rounded-md bg-slate-200/70 text-slate-700">Q.${q.id}</span>
                 <span class="px-2 py-0.5 text-xs font-bold rounded-md bg-teal-50 text-teal-700">${q.unitLabel}</span>
                 <h3 class="text-sm sm:text-base font-bold text-slate-800">${q.topic}</h3>
-                ${starBadge}
+                ${bestStarCount ? `<span class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-amber-100 text-amber-800">${starText}</span>` : ''}
               </div>
               <div class="flex items-center gap-2">
                 <button type="button" onclick="toggleLearnedUnit(${q.id})" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition ${toggleBtnClass}">
@@ -1214,7 +1259,7 @@
       loadQuestion(id);
     }
 
-    // 難易度レベル切り替え
+    // 難易度レベル切り替え（中級・上級はヒントボタン・語順ガイド非表示）
     function setLevel(newLevel) {
       state.level = newLevel;
 
@@ -1227,20 +1272,24 @@
       }
 
       const descMap = {
-        beginner: '初級：意味の塊ごとに並べて英語の骨格をつかもう（赤線ヒント・語順ガイド対応）',
-        intermediate: '中級：前置詞や助動詞が分離！ノーヒントで文法要素を組み立てよう',
-        advanced: '上級：1単語ずつ＋ダミー選択肢あり！ノーヒントで正確な語法と時制を見抜こう'
+        beginner: '初級：意味の塊ごとに並べて英語の骨格をつかもう（赤線ヒント・語順ガイドあり）',
+        intermediate: '中級：接続詞や前置詞も自力で判断しよう（ノーヒント挑戦）',
+        advanced: '上級：1単語ずつ＋ダミー選択肢あり！正確な語法を見抜こう（ノーヒント挑戦）'
       };
       document.getElementById('level-desc').textContent = descMap[newLevel];
 
-      // 初級のみヒント機能（「語順の型を見る」「次の語順ヒント」）を表示し、中級・上級では非表示にする
-      const isBeginner = newLevel === 'beginner';
-      const guideBtn = document.getElementById('btn-grammar-guide');
       const hintBtn = document.getElementById('btn-hint');
+      const guideBtn = document.getElementById('btn-grammar-guide');
       const guidePanel = document.getElementById('inline-grammar-panel');
-      if (guideBtn) guideBtn.classList.toggle('hidden', !isBeginner);
-      if (hintBtn) hintBtn.classList.toggle('hidden', !isBeginner);
-      if (!isBeginner && guidePanel) guidePanel.classList.add('hidden');
+
+      if (newLevel === 'beginner') {
+        if (hintBtn) hintBtn.classList.remove('hidden');
+        if (guideBtn) guideBtn.classList.remove('hidden');
+      } else {
+        if (hintBtn) hintBtn.classList.add('hidden');
+        if (guideBtn) guideBtn.classList.add('hidden');
+        if (guidePanel) guidePanel.classList.add('hidden');
+      }
 
       loadQuestion(state.currentQuestionId);
     }
@@ -1276,7 +1325,12 @@
       const selectEl = document.getElementById('question-select');
       if (selectEl) selectEl.value = String(id);
 
-      updateCharacterSpeech('start');
+      if (state.level === 'beginner') {
+        setCharSpeech(`Q.${q.id}（${q.unitLabel}）だよ！迷ったら「語順の型」や「赤線ヒント」も使ってみてね！`);
+      } else {
+        setCharSpeech(`Q.${q.id}（${state.level === 'intermediate' ? '中級' : '上級'}）に挑戦だね！ヒントなしで文のつながりを見抜こう！`);
+      }
+
       renderAll();
     }
 
@@ -1293,10 +1347,11 @@
       document.getElementById('inline-grammar-formula').textContent = guide.formula;
       document.getElementById('inline-grammar-desc').textContent = guide.desc;
 
-      const stars = (state.hintUsedCount === 0 && state.mistakeCount === 0)
-        ? '★★★'
-        : (state.hintUsedCount + state.mistakeCount <= 2 ? '★★☆' : '★☆☆');
-      document.getElementById('stars-display').textContent = stars;
+      const currentStars = (state.hintUsedCount === 0 && state.mistakeCount === 0)
+        ? 3
+        : (state.hintUsedCount + state.mistakeCount <= 2 ? 2 : 1);
+      const starsStr = '★'.repeat(currentStars) + '☆'.repeat(3 - currentStars);
+      document.getElementById('stars-display').textContent = starsStr;
 
       renderJapaneseWithHint(q, targetTokens);
       renderAnswerArea(targetTokens);
@@ -1307,11 +1362,10 @@
         resultCard.classList.remove('hidden');
         document.getElementById('result-english').textContent = q.en;
         document.getElementById('result-note').textContent = q.note;
-        const earnedStarStr = '★'.repeat(state.lastEarnedStars) + '☆'.repeat(3 - state.lastEarnedStars);
-        document.getElementById('result-score-pill').textContent = `${earnedStarStr} 獲得！`;
+        document.getElementById('result-score-pill').textContent = `${starsStr} 獲得！`;
 
         const ratingMsg = state.lastEarnedStars === 3
-          ? 'ノーヒント＆ノーミスでマスターしました！'
+          ? 'ノーヒント＆ノーミスで完璧にマスターしました！'
           : `クリア達成！（ヒント ${state.hintUsedCount}回 / ミス ${state.mistakeCount}回）`;
         document.getElementById('result-rating-text').textContent = ratingMsg;
 
@@ -1330,7 +1384,7 @@
       }
     }
 
-    // 日本語文と赤線ヒントの描画ロジック
+    // 日本語文と赤線ヒントの描画ロジック（初級専用）
     function renderJapaneseWithHint(q, targetTokens) {
       const jpContainer = document.getElementById('japanese-display');
       const specialBanner = document.getElementById('special-hint-banner');
@@ -1338,7 +1392,6 @@
 
       const nextSlotIndex = state.selectedTokens.length;
 
-      // 中級・上級またはヒント未発動時はヒントを一切表示しない
       if (state.level !== 'beginner' || !state.hintActive || state.isSolved || nextSlotIndex >= targetTokens.length) {
         jpContainer.textContent = q.jp;
         specialBanner.classList.add('hidden');
@@ -1434,20 +1487,30 @@
       if (state.selectedTokens.length === targetTokens.length) {
         state.isSolved = true;
         const rawScore = 100 - (state.hintUsedCount * 20) - (state.mistakeCount * 10);
-        const earned = Math.max(10, rawScore);
-        const earnedStars = earned === 100 ? 3 : (earned >= 70 ? 2 : 1);
-        state.lastEarnedScore = earned;
+        const earnedScore = Math.max(10, rawScore);
+        const earnedStars = (state.hintUsedCount === 0 && state.mistakeCount === 0)
+          ? 3
+          : (state.hintUsedCount + state.mistakeCount <= 2 ? 2 : 1);
+
+        state.lastEarnedScore = earnedScore;
         state.lastEarnedStars = earnedStars;
-        const prevBest = state.bestScores[q.id] || 0;
-        const prevStars = state.bestStars[q.id] || 0;
-        state.bestScores[q.id] = Math.max(prevBest, earned);
-        state.bestStars[q.id] = Math.max(prevStars, earnedStars);
+
+        const prevBestScore = state.bestScores[q.id] || 0;
+        const prevBestStars = state.bestStars[q.id] || 0;
+        state.bestScores[q.id] = Math.max(prevBestScore, earnedScore);
+        state.bestStars[q.id] = Math.max(prevBestStars, earnedStars);
+
+        if (earnedStars === 3) {
+          setCharSpeech('すごい！ノーヒント＆ノーミスで★★★（星3つ）達成だよ！');
+        } else {
+          setCharSpeech('正解おめでとう！音声も聞いてリズムを覚えよう♪');
+        }
+
         updateScoreDisplays();
-        updateCharacterSpeech('solved');
         renderAll();
         speakAnswer();
       } else {
-        updateCharacterSpeech('progress');
+        setCharSpeech(`いい調子！あと ${targetTokens.length - state.selectedTokens.length} パーツだよ！`);
         renderAll();
       }
     }
@@ -1464,14 +1527,14 @@
       renderAll();
     }
 
-    // ヒントボタン押下
+    // ヒントボタン押下（初級のみ）
     function activateHint() {
-      if (state.isSolved) return;
+      if (state.isSolved || state.level !== 'beginner') return;
       if (!state.hintActive) {
         state.hintActive = true;
         state.hintUsedCount += 1;
       }
-      updateCharacterSpeech('hint');
+      setCharSpeech('赤線がついた日本語の部分に注目して、合う英語を選んでみてね！');
       renderAll();
     }
 
@@ -1479,7 +1542,7 @@
     let toastTimer = null;
     function triggerErrorFeedback(wrongWord) {
       state.mistakeCount += 1;
-      updateCharacterSpeech('error', wrongWord);
+      setCharSpeech(`おっと、「${wrongWord}」はまだ先みたい！もういちど語順を考えてみよう！`);
       renderAll();
 
       const answerArea = document.getElementById('answer-area');
@@ -1516,19 +1579,44 @@
       else if (state.level === 'intermediate') setLevel('advanced');
     }
 
-    // 次の問題へ（フィルタされたリスト内を移動）
+    // 次の問題へ（順番通り または ランダムで移動）
     function nextQuestion() {
       const filtered = getFilteredQuestions();
       if (filtered.length === 0) return;
+
+      if (state.orderMode === 'random') {
+        if (filtered.length === 1) {
+          loadQuestion(filtered[0].id);
+          return;
+        }
+        state.randomHistory.push(state.currentQuestionId);
+        if (state.randomHistory.length > 50) state.randomHistory.shift();
+        const candidates = filtered.filter(q => q.id !== state.currentQuestionId);
+        const randomItem = candidates[Math.floor(Math.random() * candidates.length)];
+        loadQuestion(randomItem.id);
+        return;
+      }
+
       const currentIdx = filtered.findIndex(q => q.id === state.currentQuestionId);
       const nextIdx = (currentIdx + 1) % filtered.length;
       loadQuestion(filtered[nextIdx].id);
     }
 
-    // 前の問題へ（フィルタされたリスト内を移動）
+    // 前の問題へ（順番通り または ランダム履歴を戻る）
     function prevQuestion() {
       const filtered = getFilteredQuestions();
       if (filtered.length === 0) return;
+
+      if (state.orderMode === 'random') {
+        if (state.randomHistory.length > 0) {
+          const prevId = state.randomHistory.pop();
+          loadQuestion(prevId);
+        } else {
+          showToast('ランダム出題の履歴の最初です', 'info');
+        }
+        return;
+      }
+
       const currentIdx = filtered.findIndex(q => q.id === state.currentQuestionId);
       const prevIdx = (currentIdx - 1 + filtered.length) % filtered.length;
       loadQuestion(filtered[prevIdx].id);
@@ -1547,7 +1635,7 @@
 
     // 初期起動
     window.onload = () => {
-      renderCharacters();
+      renderCharacterDisplays();
       updateLearnedBadge();
       updateScoreDisplays();
       renderQuestionSelector();
