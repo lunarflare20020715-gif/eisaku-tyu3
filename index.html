@@ -60,9 +60,20 @@
     .animate-pop {
       animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    /* キャラクターのふわふわ待機アニメーション */
+    @keyframes floatChar {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-float {
+      animation: floatChar 3s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
+
+  <!-- キャラクター画像差し替え用の非表示ファイル入力 -->
+  <input type="file" id="char-file-input" accept="image/*" class="hidden" onchange="handleCharacterImageUpload(event)" />
 
   <!-- ヘッダー -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
@@ -103,15 +114,32 @@
       <div class="absolute -bottom-20 -left-16 w-44 h-44 bg-amber-50 rounded-full pointer-events-none"></div>
 
       <div class="relative z-10">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100 text-xs font-bold mb-3">
-          <span>📘 中学3年 教科書対応（Unit 0〜Unit 6・Let's Read 1 全122問）</span>
+        <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6">
+          <div class="flex-1 text-center sm:text-left">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100 text-xs font-bold mb-3">
+              <span>📘 中学3年 教科書対応（Unit 0〜Unit 6・Let's Read 1 全122問）</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
+              教科書の重要文をマスターしよう！<br class="hidden sm:inline" />選択式・英作文トレーニング
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              「誰が・どうする・何を・どこで・いつ」の英語の語順感覚を、3段階のブロック分割と赤線ヒントで楽しく身につける練習アプリです。
+            </p>
+          </div>
+
+          <!-- ナビゲーターキャラクター（表紙メイン表示） -->
+          <div class="shrink-0 flex flex-col items-center">
+            <div class="relative bg-gradient-to-b from-sky-50 to-teal-50/70 border-2 border-teal-200/80 rounded-3xl p-2 shadow-sm w-32 h-36 sm:w-36 sm:h-40 flex items-center justify-center overflow-hidden">
+              <div id="cover-char-container" class="w-full h-full flex items-center justify-center animate-float">
+                <!-- JSでキャラクターSVGまたはアップロード画像を描画 -->
+              </div>
+            </div>
+            <button type="button" onclick="triggerCharacterUpload()" class="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 transition shadow-sm" title="手元の画像ファイル（JPG/PNG）に差し替えられます">
+              <span>📷</span>
+              <span>原画に差し替え</span>
+            </button>
+          </div>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
-          教科書の重要文をマスターしよう！<br class="hidden sm:inline" />選択式・英作文トレーニング
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-          「誰が・どうする・何を・どこで・いつ」の英語の語順感覚を、3段階のブロック分割と赤線ヒントで楽しく身につける練習アプリです。
-        </p>
 
         <!-- 成績ダッシュボード（習得率＆獲得スターの見える化） -->
         <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-6">
@@ -272,6 +300,18 @@
         <p id="japanese-display" class="text-lg sm:text-xl font-bold text-slate-900 leading-loose tracking-wide">
           <!-- JSで描画 -->
         </p>
+      </div>
+
+      <!-- ナビゲーターキャラのワンポイント吹き出し -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
+        <div id="practice-char-avatar" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-50 border border-teal-200 overflow-hidden shrink-0 flex items-center justify-center shadow-sm">
+          <!-- JSでミニキャラを描画 -->
+        </div>
+        <div class="flex-1 bg-slate-50 border border-slate-200/80 rounded-2xl px-3.5 py-2 relative">
+          <p id="char-speech-text" class="text-xs sm:text-sm font-medium text-slate-700 leading-snug">
+            英語の語順「誰が ＋ どうする…」を意識してブロックを選んでみよう！
+          </p>
+        </div>
       </div>
 
       <!-- 機能語ヒント（インデックスが -1 の場合や中・上級の補助メッセージ） -->
@@ -716,7 +756,7 @@
       grammarFilter: 'ALL',
       unitFilter: 'ALL',
       onlyLearned: true,
-      learnedIds: new Set(QUESTIONS.map(q => q.id)), // 初期状態は全48問ON
+      learnedIds: new Set(QUESTIONS.map(q => q.id)), // 初期状態は全122問ON
       currentQuestionId: 1,
       level: 'beginner', // 'beginner' | 'intermediate' | 'advanced'
       selectedTokens: [], // { id, text }
@@ -728,8 +768,138 @@
       bestStars: {},      // { [questionId]: number (1〜3) }
       lastEarnedScore: 0,
       lastEarnedStars: 0,
-      isSolved: false
+      isSolved: false,
+      customCharUrl: null // ユーザーがアップロードした画像URL
     };
+
+    // キャラクターのカスタムSVG生成（青いカーディガン・星ヘアピン・指示棒・青い教科書）
+    function getCharacterSvg(isMini = false) {
+      const viewBox = isMini ? "20 12 160 155" : "0 5 200 230";
+      return `
+        <svg viewBox="${viewBox}" class="w-full h-full object-contain" xmlns="http://www.w3.org/2000/svg" aria-label="ナビゲーターキャラクター">
+          <!-- 後ろ髪 -->
+          <path d="M52 85 C42 115, 44 142, 58 148 C65 140, 68 125, 70 110 Z" fill="#54453d" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M148 85 C158 115, 156 142, 142 148 C135 140, 132 125, 130 110 Z" fill="#54453d" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 首 -->
+          <rect x="92" y="128" width="16" height="16" rx="4" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
+          <!-- チェックのプリーツスカート -->
+          <path d="M68 192 L58 228 L142 228 L132 192 Z" fill="#2b4c7e" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M78 192 L72 228 M92 192 L90 228 M108 192 L110 228 M122 192 L128 228" stroke="#1e3a5f" stroke-width="2"/>
+          <path d="M63 208 L137 208 M60 220 L140 220" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+          <!-- 白シャツ襟＆紺ベスト -->
+          <path d="M74 142 L126 142 L132 195 L68 195 Z" fill="#334155" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <polygon points="84,142 100,162 116,142" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+          <!-- 青ストライプのリボン -->
+          <path d="M100 153 L83 144 L80 160 Z" fill="#1d4ed8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M100 153 L117 144 L120 160 Z" fill="#1d4ed8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M96 156 L87 176 L96 173 Z" fill="#2563eb" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M104 156 L113 176 L104 173 Z" fill="#2563eb" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="95" y="149" width="10" height="9" rx="3" fill="#3b82f6" stroke="#1e293b" stroke-width="2"/>
+          <!-- 青いカーディガン（胴体＆袖） -->
+          <path d="M74 142 C62 146, 56 175, 52 200 L70 202 L78 158 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M126 142 C138 146, 144 175, 148 200 L130 202 L122 158 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 左腕（指示棒を持つ腕） -->
+          <path d="M68 146 C48 154, 38 140, 34 126 L46 122 C50 132, 56 138, 70 136 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 指示棒 -->
+          <line x1="42" y1="132" x2="18" y2="62" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+          <line x1="42" y1="132" x2="18" y2="62" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+          <polygon points="18,62 14,52 22,54" fill="#94a3b8" stroke="#1e293b" stroke-width="1.5"/>
+          <line x1="42" y1="132" x2="36" y2="114" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+          <!-- 左手 -->
+          <circle cx="39" cy="122" r="7" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
+          <!-- 青い教科書 -->
+          <rect x="102" y="156" width="26" height="34" rx="3" transform="rotate(-10 115 173)" fill="#38bdf8" stroke="#1e293b" stroke-width="2.2"/>
+          <line x1="106" y1="158" x2="111" y2="189" stroke="#ffffff" stroke-width="2.5"/>
+          <!-- 右腕＆手（本を抱える） -->
+          <path d="M132 146 C148 158, 146 178, 122 180 L120 169 C134 168, 134 158, 126 152 Z" fill="#2b8ac6" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="118" cy="175" r="6.5" fill="#ffe5d9" stroke="#2c221e" stroke-width="2"/>
+          <!-- 顔の輪郭 -->
+          <path d="M62 82 C62 46, 138 46, 138 82 C138 114, 122 132, 100 132 C78 132, 62 114, 62 82 Z" fill="#ffe5d9" stroke="#2c221e" stroke-width="2.5"/>
+          <!-- ほっぺのチーク -->
+          <ellipse cx="75" cy="105" rx="6" ry="3.5" fill="#fda4af" opacity="0.7"/>
+          <ellipse cx="125" cy="105" rx="6" ry="3.5" fill="#fda4af" opacity="0.7"/>
+          <!-- 大きな青い瞳 -->
+          <ellipse cx="82" cy="92" rx="8.5" ry="10" fill="#1e3a8a"/>
+          <ellipse cx="82" cy="94" rx="6.5" ry="7" fill="#3b82f6"/>
+          <circle cx="79" cy="88" r="3" fill="#ffffff"/>
+          <circle cx="85" cy="96" r="1.5" fill="#ffffff"/>
+          <ellipse cx="118" cy="92" rx="8.5" ry="10" fill="#1e3a8a"/>
+          <ellipse cx="118" cy="94" rx="6.5" ry="7" fill="#3b82f6"/>
+          <circle cx="115" cy="88" r="3" fill="#ffffff"/>
+          <circle cx="121" cy="96" r="1.5" fill="#ffffff"/>
+          <!-- 眉毛＆笑顔の口 -->
+          <path d="M74 77 Q82 74 89 77" fill="none" stroke="#4a3b32" stroke-width="2" stroke-linecap="round"/>
+          <path d="M111 77 Q118 74 126 77" fill="none" stroke="#4a3b32" stroke-width="2" stroke-linecap="round"/>
+          <path d="M94 113 Q100 119 106 113" fill="none" stroke="#9f1239" stroke-width="2.2" stroke-linecap="round"/>
+          <!-- 前髪・ショートボブヘア -->
+          <path d="M56 88 C52 50, 76 32, 100 32 C124 32, 148 50, 144 88 C142 104, 138 118, 134 124 C135 106, 133 88, 126 76 C121 86, 115 90, 110 82 C105 90, 96 90, 91 81 C85 90, 78 88, 74 76 C67 88, 65 106, 66 124 C62 118, 58 104, 56 88 Z" fill="#635147" stroke="#2c221e" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 髪のハイライト -->
+          <path d="M74 56 Q86 52 94 56 M106 56 Q116 52 126 56" fill="none" stroke="#8c766a" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 黄色い星型ヘアピン -->
+          <path d="M126 54 L139 50 L137 59 Z" fill="#3b82f6" stroke="#1e293b" stroke-width="1.5"/>
+          <polygon points="124,45 127,51 134,52 129,57 130,63 124,60 118,63 119,57 114,52 121,51" fill="#facc15" stroke="#854d0e" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+      `;
+    }
+
+    // キャラクター表示の描画更新（表紙・練習画面）
+    function renderCharacters() {
+      const coverBox = document.getElementById('cover-char-container');
+      const miniBox = document.getElementById('practice-char-avatar');
+      if (state.customCharUrl) {
+        if (coverBox) {
+          coverBox.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーター" class="w-full h-full object-contain rounded-2xl" />`;
+        }
+        if (miniBox) {
+          miniBox.innerHTML = `<img src="${state.customCharUrl}" alt="ナビゲーター" class="w-full h-full object-cover object-top" />`;
+        }
+      } else {
+        if (coverBox) coverBox.innerHTML = getCharacterSvg(false);
+        if (miniBox) miniBox.innerHTML = getCharacterSvg(true);
+      }
+    }
+
+    // 原画ファイル選択ダイアログを開く
+    function triggerCharacterUpload() {
+      const input = document.getElementById('char-file-input');
+      if (input) input.click();
+    }
+
+    // 選択された原画ファイルをプレビュー反映
+    function handleCharacterImageUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (state.customCharUrl) {
+        URL.revokeObjectURL(state.customCharUrl);
+      }
+      state.customCharUrl = URL.createObjectURL(file);
+      renderCharacters();
+      showToast('キャラクター画像を差し替えました！', 'info');
+    }
+
+    // キャラクターの吹き出しセリフ更新
+    function updateCharacterSpeech(mode, extraText = '') {
+      const speechEl = document.getElementById('char-speech-text');
+      if (!speechEl) return;
+      if (mode === 'start') {
+        const msgByLvl = {
+          beginner: 'まずは意味の塊ごとに並べよう！迷ったら「語順の型」や「赤線ヒント」を使ってね！',
+          intermediate: '中級はノーヒント勝負！前置詞や助動詞の位置に気をつけて組み立てよう！',
+          advanced: '上級チャレンジ！ダミーの単語に惑わされず、正確な英文を完成させよう！'
+        };
+        speechEl.textContent = msgByLvl[state.level];
+      } else if (mode === 'progress') {
+        speechEl.textContent = 'いいね！その調子で次のパーツをつなげよう！';
+      } else if (mode === 'hint') {
+        speechEl.textContent = '赤線の部分に注目！英語ではこの順番で言葉を並べるよ！';
+      } else if (mode === 'error') {
+        speechEl.textContent = `おっと！「${extraText}」はまだ先だよ。主語や動詞の順番を思い出してみよう！`;
+      } else if (mode === 'solved') {
+        speechEl.textContent = state.lastEarnedStars === 3
+          ? 'パーフェクト！ノーヒント＆ノーミスで大正解だよ！すごい！'
+          : '正解おめでとう！下の「学習ポイント」もチェックしておこうね！';
+      }
+    }
 
     // 表紙画面での難易度選択
     function selectCoverLevel(level) {
@@ -1106,6 +1276,7 @@
       const selectEl = document.getElementById('question-select');
       if (selectEl) selectEl.value = String(id);
 
+      updateCharacterSpeech('start');
       renderAll();
     }
 
@@ -1272,9 +1443,11 @@
         state.bestScores[q.id] = Math.max(prevBest, earned);
         state.bestStars[q.id] = Math.max(prevStars, earnedStars);
         updateScoreDisplays();
+        updateCharacterSpeech('solved');
         renderAll();
         speakAnswer();
       } else {
+        updateCharacterSpeech('progress');
         renderAll();
       }
     }
@@ -1298,6 +1471,7 @@
         state.hintActive = true;
         state.hintUsedCount += 1;
       }
+      updateCharacterSpeech('hint');
       renderAll();
     }
 
@@ -1305,6 +1479,7 @@
     let toastTimer = null;
     function triggerErrorFeedback(wrongWord) {
       state.mistakeCount += 1;
+      updateCharacterSpeech('error', wrongWord);
       renderAll();
 
       const answerArea = document.getElementById('answer-area');
@@ -1372,6 +1547,7 @@
 
     // 初期起動
     window.onload = () => {
+      renderCharacters();
       updateLearnedBadge();
       updateScoreDisplays();
       renderQuestionSelector();
