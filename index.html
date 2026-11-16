@@ -90,16 +90,19 @@
           <span class="text-xs font-bold text-amber-900"><span id="header-total-stars">0</span> <span class="text-[10px] font-normal text-amber-700">/ 366</span></span>
         </div>
 
-        <!-- メインモード切り替えタブ（表紙 / 練習 / 単元・文法） -->
+        <!-- メインモード切り替えタブ（表紙 / 練習 / 単元・文法 / 成績分析） -->
         <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200" role="tablist" aria-label="画面切り替え">
-          <button type="button" id="tab-cover" onclick="switchMainTab('cover')" class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-teal-700 shadow-sm">
+          <button type="button" id="tab-cover" onclick="switchMainTab('cover')" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-teal-700 shadow-sm">
             🏠 表紙
           </button>
-          <button type="button" id="tab-practice" onclick="switchMainTab('practice')" class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+          <button type="button" id="tab-practice" onclick="switchMainTab('practice')" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
             ✏️ 練習
           </button>
-          <button type="button" id="tab-grammar" onclick="switchMainTab('grammar')" class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+          <button type="button" id="tab-grammar" onclick="switchMainTab('grammar')" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
             📖 単元・文法
+          </button>
+          <button type="button" id="tab-analysis" onclick="switchMainTab('analysis')" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+            📊 成績分析
           </button>
         </div>
       </div>
@@ -123,7 +126,7 @@
               教科書の重要文をマスターしよう！<br class="hidden sm:inline" />選択式・英作文トレーニング
             </h2>
             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              「誰が・どうする・何を・どこで・いつ」の英語の語順感覚を、3段階のブロック分割と赤線ヒントで楽しく身につける練習アプリです。
+              現在完了・SVOC・形式主語・間接疑問文・分詞・関係代名詞・仮定法まで、中3教科書の重要表現を3段階のブロック分割と赤線ヒントで楽しく身につける練習アプリです。
             </p>
           </div>
 
@@ -160,6 +163,18 @@
             <span class="text-[11px] font-bold text-emerald-800 block mb-0.5">ノーヒント満点</span>
             <div class="text-xl sm:text-2xl font-bold text-emerald-600"><span id="cover-perfect-count">0</span><span class="text-xs font-semibold text-emerald-800 ml-0.5">問</span></div>
             <span class="text-[10px] font-semibold text-emerald-700 mt-1">★★★ マスター数</span>
+          </div>
+        </div>
+
+        <!-- 生徒情報＆自動記録ステータス（表紙で入力すると1問ごとに自動送信） -->
+        <div class="bg-teal-50/60 rounded-2xl p-4 border border-teal-200/80 mb-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-teal-900">👤 学習者情報（生徒IDと氏名を入力すると1問ごとに自動記録されます）</span>
+            <span id="auto-sync-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🟢 自動送信ON（操作不要）</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <input type="text" id="cover-student-id" placeholder="生徒ID (例: 31015)" oninput="syncStudentInputsFromCover()" class="bg-white border border-teal-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <input type="text" id="cover-student-name" placeholder="氏名 (例: 鈴木 花子)" oninput="syncStudentInputsFromCover()" class="bg-white border border-teal-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500" />
           </div>
         </div>
 
@@ -206,7 +221,7 @@
 
         <!-- スタートボタン -->
         <button type="button" onclick="startPracticeFromCover()" class="w-full py-3.5 sm:py-4 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-base sm:text-lg shadow-md hover:shadow-lg active:scale-[0.99] transition flex items-center justify-center gap-2">
-          <span>教科書英作文トレーニングを始める</span>
+          <span>中3教科書トレーニングを始める</span>
           <span>→</span>
         </button>
       </div>
@@ -500,7 +515,7 @@
           <button type="button" onclick="filterGrammarCards('Unit 3 Part 1')" id="gfilter-Unit 3 Part 1" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U3 Part 1 (5)</button>
           <button type="button" onclick="filterGrammarCards('Unit 3 Part 2')" id="gfilter-Unit 3 Part 2" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U3 Part 2 (4)</button>
           <button type="button" onclick="filterGrammarCards('Unit 3 Read & Think')" id="gfilter-Unit 3 Read & Think" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U3 R&T (10)</button>
-          <button type="button" onclick="filterGrammarCards('Let\'s Read 1')" id="gfilter-Let's Read 1" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Let's Read 1 (7)</button>
+          <button type="button" onclick="filterGrammarCards('LR1')" id="gfilter-LR1" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Let's Read 1 (7)</button>
           <button type="button" onclick="filterGrammarCards('Unit 4 Part 1')" id="gfilter-Unit 4 Part 1" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U4 Part 1 (5)</button>
           <button type="button" onclick="filterGrammarCards('Unit 4 Part 2')" id="gfilter-Unit 4 Part 2" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U4 Part 2 (4)</button>
           <button type="button" onclick="filterGrammarCards('Unit 4 Read & Think')" id="gfilter-Unit 4 Read & Think" class="gfilter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">U4 R&T (9)</button>
@@ -522,8 +537,134 @@
     </div>
   </section>
 
+  <!-- 成績分析＆スプレッドシート集計ビュー -->
+  <section id="view-analysis" class="hidden flex-1 max-w-3xl w-full mx-auto px-4 py-5 flex flex-col gap-4 animate-pop">
+    <!-- 学習者情報＆スプレッドシート出力パネル -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-800">📊 成績分析表 ＆ スプレッドシート集計（中3）</h2>
+          <p class="text-xs text-slate-500 mt-0.5">単元別の定着度を確認し、Googleスプレッドシートへ自動集計・転記できます。</p>
+        </div>
+        <button type="button" onclick="toggleWebhookSettings()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+          ⚙️ 自動送信URL設定
+        </button>
+      </div>
+
+      <!-- 生徒情報入力バー -->
+      <div class="grid grid-cols-2 gap-2.5 sm:gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 mb-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-500 block mb-1">生徒ID（例: 31015）</label>
+          <input type="text" id="student-id" placeholder="31015" oninput="saveStudentInfo()" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-500 block mb-1">氏名</label>
+          <input type="text" id="student-name" placeholder="鈴木 花子" oninput="saveStudentInfo()" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        </div>
+      </div>
+
+      <!-- 先生用：Google Apps Script 自動送信設定（折りたたみ） -->
+      <div id="webhook-settings-panel" class="hidden mb-3 p-3.5 rounded-xl bg-teal-50/70 border border-teal-200 animate-pop">
+        <p class="text-xs font-bold text-teal-900 mb-1">🔗 スプレッドシート直接送信（Google Apps Script WebアプリURL）</p>
+        <p class="text-[11px] text-slate-600 mb-2 leading-relaxed">
+          現在、登録済みのウェブアプリURLが設定されています。別のシートに送りたい場合のみURLを書き換えてください。
+        </p>
+        <div class="flex gap-2">
+          <input type="url" id="webhook-url-input" placeholder="https://script.google.com/macros/s/..." oninput="saveStudentInfo()" class="flex-1 bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          <button type="button" onclick="sendDataToSpreadsheetWebhook()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 transition shrink-0">
+            🚀 シートへ送信
+          </button>
+        </div>
+      </div>
+
+      <!-- スプレッドシート転記・出力ボタン群 -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" onclick="copySpreadsheetRowSummary(true)" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm active:scale-95 transition">
+          <span>📋</span>
+          <span>見出し＋成績1行をコピー</span>
+        </button>
+        <button type="button" onclick="copySpreadsheetRowSummary(false)" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-sm active:scale-95 transition">
+          <span>➕</span>
+          <span>成績データ1行だけコピー</span>
+        </button>
+        <button type="button" onclick="copyDetailedQuestionRows()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:scale-95 transition">
+          <span>📑</span>
+          <span>全122問の詳細明細をコピー</span>
+        </button>
+        <button type="button" onclick="downloadCsvReport()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:scale-95 transition">
+          <span>📥</span>
+          <span>CSV保存</span>
+        </button>
+      </div>
+      <div id="export-status-banner" class="hidden mt-2.5 px-3 py-2 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200"></div>
+    </div>
+
+    <!-- 全体サマリーカード（4指標） -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-500 block">全体習得率</span>
+        <div class="text-xl sm:text-2xl font-bold text-teal-600 mt-0.5"><span id="analysis-mastery-rate">0</span><span class="text-xs ml-0.5">%</span></div>
+        <span class="text-[10px] text-slate-500"><span id="analysis-cleared-count">0</span> / 122問 クリア</span>
+      </div>
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-500 block">獲得スター</span>
+        <div class="text-xl sm:text-2xl font-bold text-amber-500 mt-0.5">★ <span id="analysis-total-stars" class="text-amber-600">0</span></div>
+        <span class="text-[10px] text-slate-500">満点 366個中</span>
+      </div>
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-500 block">ノーミス一発率</span>
+        <div class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5"><span id="analysis-perfect-rate">0</span><span class="text-xs ml-0.5">%</span></div>
+        <span class="text-[10px] text-slate-500">★★★ <span id="analysis-perfect-count">0</span>問</span>
+      </div>
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-500 block">累計ミス回数</span>
+        <div class="text-xl sm:text-2xl font-bold text-rose-600 mt-0.5"><span id="analysis-total-mistakes">0</span><span class="text-xs ml-0.5">回</span></div>
+        <span class="text-[10px] text-slate-500">ヒント使用 <span id="analysis-total-hints">0</span>回</span>
+      </div>
+    </div>
+
+    <!-- 単元別（Unit別）成績分析テーブル -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm sm:text-base font-bold text-slate-800">📈 単元（Unit）別の習得・正答分析表</h3>
+        <span class="text-[11px] text-slate-500">横スクロール可</span>
+      </div>
+      <div class="overflow-x-auto -mx-2 px-2">
+        <table class="w-full text-left border-collapse min-w-[540px]">
+          <thead>
+            <tr class="border-b-2 border-slate-200 text-[11px] font-bold text-slate-500 bg-slate-50">
+              <th class="py-2.5 px-3 rounded-tl-lg">単元</th>
+              <th class="py-2.5 px-3">主な文法テーマ</th>
+              <th class="py-2.5 px-3 text-center">クリア数</th>
+              <th class="py-2.5 px-3">習得率</th>
+              <th class="py-2.5 px-3 text-center">獲得スター</th>
+              <th class="py-2.5 px-3 text-center">ミス数</th>
+              <th class="py-2.5 px-3 rounded-tr-lg text-center">判定</th>
+            </tr>
+          </thead>
+          <tbody id="analysis-unit-tbody" class="divide-y divide-slate-100 text-xs sm:text-sm">
+            <!-- JSで単元別行を生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 重点復習ピックアップ -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm mb-8">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-slate-800">🎯 重点復習ピックアップ（ミスあり・星1〜2の問題）</h3>
+          <p class="text-xs text-slate-500 mt-0.5">間違えた回数が多い問題やヒントを使った問題を優先表示しています。</p>
+        </div>
+      </div>
+      <div id="analysis-weak-list" class="flex flex-col gap-2">
+        <!-- JSで苦手問題リストを生成 -->
+      </div>
+    </div>
+  </section>
+
   <script>
-    // 中3教科書（Unit 0 〜 Unit 6・Let's Read 1）全122問マスターデータ
+    // 中3教科書（Unit 0 〜 Unit 6・Let's Read 1 全122問）マスターデータ
     const QUESTIONS = [
       { id: 1, unitGroup: "Unit 0", unitLabel: "Unit 0 (p.5)", topic: "過去形・副詞（finally）", jp: "私はついに家族とミュージカル「ライオンキング」を見ました。", jpParts: ["私は", "ついに", "家族と", "ミュージカル「ライオンキング」を", "見ました。"], en: "I finally saw the musical The Lion King with my family.", beginner: ["I", "finally saw", "the musical The Lion King", "with my family."], idxMap: [0, 4, 3, 2], intermediate: ["I", "finally", "saw", "the musical The Lion King", "with", "my family."], advanced: ["I", "finally", "saw", "the", "musical", "The", "Lion", "King", "with", "my", "family."], dummies: ["see", "seen", "by", "to"], note: "「誰が（I）＋ どうした（finally saw）＋ 何を（the musical...）＋ 誰と（with my family）」の基本語順です。" },
       { id: 2, unitGroup: "Unit 0", unitLabel: "Unit 0 (p.5)", topic: "熟語（be into 〜）", jp: "私はミュージカルに本当にはまっています。", jpParts: ["私は", "ミュージカルに", "本当にはまっています。"], en: "I'm really into musicals!", beginner: ["I'm", "really into", "musicals!"], idxMap: [0, 2, 1], intermediate: ["I'm", "really", "into", "musicals!"], advanced: ["I'm", "really", "into", "musicals!"], dummies: ["in", "on", "musical"], note: "熟語 be into 〜（〜にはまっている・夢中である）を1つの塊として捉えます。" },
@@ -551,83 +692,83 @@
       { id: 24, unitGroup: "Unit 1 Read & Think", unitLabel: "Unit 1 Read & Think (p.9)", topic: "受動態（過去形・by 行為者）", jp: "こういった技術は浮世絵画家によっても使われました。", jpParts: ["こういった技術は", "浮世絵画家によっても", "使われました。"], en: "These techniques were used by ukiyo-e artists, too.", beginner: ["These techniques", "were used", "by ukiyo-e artists,", "too."], idxMap: [0, 2, 1, 1], intermediate: ["These", "techniques", "were", "used", "by", "ukiyo-e artists,", "too."], advanced: ["These", "techniques", "were", "used", "by", "ukiyo-e", "artists,", "too."], dummies: ["This", "was", "use", "from"], note: "主語が複数（These techniques）なので be動詞は were を使い、行為者を by 〜 で表します。" },
       { id: 25, unitGroup: "Unit 1 Read & Think", unitLabel: "Unit 1 Read & Think (p.9)", topic: "熟語（come from 〜）", jp: "日本のポップカルチャーは伝統的な文化に由来します。", jpParts: ["日本のポップカルチャーは", "伝統的な文化に", "由来します。"], en: "Japanese pop culture comes from traditional culture.", beginner: ["Japanese pop culture", "comes from", "traditional culture."], idxMap: [0, 2, 1], intermediate: ["Japanese pop culture", "comes", "from", "traditional culture."], advanced: ["Japanese", "pop", "culture", "comes", "from", "traditional", "culture."], dummies: ["come", "coming", "of", "to"], note: "come from 〜（〜に由来する・〜から来ている）を使った表現です。" },
       { id: 26, unitGroup: "Unit 1 Read & Think", unitLabel: "Unit 1 Read & Think (p.9)", topic: "熟語（take advantage of 〜）", jp: "このスイーツは伝統的な日本の味である抹茶を活用しています。", jpParts: ["このスイーツは", "伝統的な日本の味である抹茶を", "活用しています。"], en: "This sweet takes advantage of a traditional Japanese taste, matcha.", beginner: ["This sweet", "takes advantage of", "a traditional Japanese taste, matcha."], idxMap: [0, 2, 1], intermediate: ["This", "sweet", "takes", "advantage", "of", "a traditional Japanese taste,", "matcha."], advanced: ["This", "sweet", "takes", "advantage", "of", "a", "traditional", "Japanese", "taste,", "matcha."], dummies: ["take", "taking", "for", "with"], note: "take advantage of 〜（〜を活用する・うまく利用する）を使った重要表現です。" },
-      { id: 27, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.38)", topic: "現在完了（完了・already）", jp: "私はもう家庭科の作文を終わらせました。", jpParts: ["私は", "もう", "家庭科の作文を", "終わらせました。"], en: "I have already finished my home economics essay.", beginner: ["I", "have", "already", "finished", "my home economics essay."], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "have", "already", "finished", "my", "home economics", "essay."], advanced: ["I", "have", "already", "finished", "my", "home", "economics", "essay."], dummies: ["has", "finish", "yet", "ever"], note: "already（すでに・もう）は have と過去分詞（finished）の間に入れます。" },
-      { id: 28, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.38)", topic: "現在完了（完了・疑問文 yet）", jp: "あなたはもうあなたの作文を終わらせましたか。", jpParts: ["あなたは", "もう", "あなたのものを", "終わらせましたか。"], en: "Have you finished yours yet?", beginner: ["Have", "you", "finished", "yours", "yet?"], idxMap: [3, 0, 3, 2, 1], intermediate: ["Have", "you", "finished", "yours", "yet?"], advanced: ["Have", "you", "finished", "yours", "yet?"], dummies: ["Did", "Has", "your", "already"], note: "現在完了の疑問文では「もう〜しましたか？」を表す yet を文末に置きます。" },
-      { id: 29, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.38)", topic: "現在完了（完了・just）", jp: "私はたった今あなたのメッセージを読みました！", jpParts: ["私は", "たった今", "あなたのメッセージを", "読みました！"], en: "I have just read your message!", beginner: ["I", "have", "just", "read", "your message!"], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "have", "just", "read", "your", "message!"], advanced: ["I", "have", "just", "read", "your", "message!"], dummies: ["has", "reading", "yet", "already"], note: "just（たった今）は have と過去分詞（read）の間に置きます。" },
-      { id: 30, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.38)", topic: "過去進行形・接続詞（when）", jp: "それが来たとき、私は寝ていました。", jpParts: ["それが", "来たとき、", "私は", "寝ていました。"], en: "I was sleeping when it came.", beginner: ["I", "was sleeping", "when", "it came."], idxMap: [2, 3, 1, 0], intermediate: ["I", "was", "sleeping", "when", "it", "came."], advanced: ["I", "was", "sleeping", "when", "it", "came."], dummies: ["am", "slept", "come", "while"], note: "「寝ていた（I was sleeping）」を先に言い、when it came を後ろにつなげます。" },
-      { id: 31, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.38)", topic: "現在完了（完了・否定文 yet）", jp: "私はまだ宿題を終えていません！", jpParts: ["私は", "まだ", "宿題を", "終えていません！"], en: "I haven't finished my homework yet!", beginner: ["I", "haven't finished", "my homework", "yet!"], idxMap: [0, 3, 2, 1], intermediate: ["I", "haven't", "finished", "my", "homework", "yet!"], advanced: ["I", "haven't", "finished", "my", "homework", "yet!"], dummies: ["didn't", "finish", "already", "just"], note: "現在完了の否定文では「まだ〜していない」を表す yet を文末に置きます。" },
-      { id: 32, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.40)", topic: "現在完了（継続・How long）", jp: "あなたはどのくらい長く日本に住んでいますか。", jpParts: ["あなたは", "どのくらい長く", "日本に", "住んでいますか。"], en: "How long have you lived in Japan?", beginner: ["How long", "have", "you", "lived", "in Japan?"], idxMap: [1, 3, 0, 3, 2], intermediate: ["How long", "have", "you", "lived", "in", "Japan?"], advanced: ["How", "long", "have", "you", "lived", "in", "Japan?"], dummies: ["How many", "did", "live", "at"], note: "期間を尋ねる疑問詞 How long を文頭に置き、後ろに have you lived を続けます。" },
-      { id: 33, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.40)", topic: "現在完了（継続・for 期間）", jp: "私は5年間日本に住んでいます。", jpParts: ["私は", "5年間", "日本に", "住んでいます。"], en: "I have lived in Japan for five years.", beginner: ["I", "have lived", "in Japan", "for five years."], idxMap: [0, 3, 2, 1], intermediate: ["I", "have", "lived", "in", "Japan", "for", "five years."], advanced: ["I", "have", "lived", "in", "Japan", "for", "five", "years."], dummies: ["has", "live", "since", "during"], note: "「5年間」のような時間の長さには前置詞 for を使います。" },
-      { id: 34, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.40)", topic: "受動態・熟語（be made of 〜）", jp: "この帽子はリサイクルされた素材でできています。", jpParts: ["この帽子は", "リサイクルされた素材で", "できています。"], en: "This hat is made of recycled materials.", beginner: ["This hat", "is made of", "recycled materials."], idxMap: [0, 2, 1], intermediate: ["This", "hat", "is", "made", "of", "recycled", "materials."], advanced: ["This", "hat", "is", "made", "of", "recycled", "materials."], dummies: ["make", "making", "from", "by"], note: "be made of 〜（〜でできている・材料がわかる場合）を使った表現です。" },
-      { id: 35, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.40)", topic: "現在完了（継続・since ＋ 過去）", jp: "SDGsが導入されてから、日本の人たちは関心を持つようになりました。", jpParts: ["SDGsが導入されてから、", "日本の人たちは", "関心を持つようになりました。"], en: "Japanese people have become concerned since the SDGs were introduced.", beginner: ["Japanese people", "have become concerned", "since", "the SDGs were introduced."], idxMap: [1, 2, 0, 0], intermediate: ["Japanese people", "have", "become", "concerned", "since", "the SDGs", "were", "introduced."], advanced: ["Japanese", "people", "have", "become", "concerned", "since", "the", "SDGs", "were", "introduced."], dummies: ["has", "became", "for", "was"], note: "since の後ろには「過去の出来事（〜されて以来）」を表す過去形の文を置きます。" },
-      { id: 36, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "現在完了進行形（since）", jp: "あなたは午後4時からずっとそれを読んでいますね。", jpParts: ["あなたは", "午後4時から", "ずっとそれを", "読んでいますね。"], en: "You have been reading that since 4 p.m.", beginner: ["You", "have been reading", "that", "since 4 p.m."], idxMap: [0, 3, 2, 1], intermediate: ["You", "have", "been", "reading", "that", "since", "4 p.m."], advanced: ["You", "have", "been", "reading", "that", "since", "4", "p.m."], dummies: ["has", "read", "for", "from"], note: "「have been 〜ing」で動作がずっと続いていることを表します。" },
-      { id: 37, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "現在完了進行形（比較級）", jp: "最近、エシカルファッションが世界中で人気を集めています。", jpParts: ["最近、", "エシカルファッションが", "世界中で", "人気を集めています。"], en: "Recently, ethical fashion has been getting more popular all over the world.", beginner: ["Recently,", "ethical fashion", "has been getting", "more popular", "all over the world."], idxMap: [0, 1, 3, 3, 2], intermediate: ["Recently,", "ethical fashion", "has", "been", "getting", "more", "popular", "all over the world."], advanced: ["Recently,", "ethical", "fashion", "has", "been", "getting", "more", "popular", "all", "over", "the", "world."], dummies: ["have", "got", "most", "in"], note: "主語が単数（ethical fashion）なので has been getting になります。" },
-      { id: 38, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "現在完了進行形・不定詞（目的）", jp: "いくつかの衣料品会社はエシカルな製品を作ろうと努力し続けています。", jpParts: ["いくつかの衣料品会社は", "エシカルな製品を", "作ろうと", "努力し続けています。"], en: "Some clothing companies have been making efforts to create ethical products.", beginner: ["Some clothing companies", "have been making efforts", "to create", "ethical products."], idxMap: [0, 3, 2, 1], intermediate: ["Some", "clothing companies", "have", "been", "making", "efforts", "to", "create", "ethical", "products."], advanced: ["Some", "clothing", "companies", "have", "been", "making", "efforts", "to", "create", "ethical", "products."], dummies: ["has", "made", "creating", "for"], note: "make efforts to 〜（〜しようと努力する）を現在完了進行形で表しています。" },
-      { id: 39, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "熟語（try to 〜）", jp: "彼らは工場で使う水や化学物質の量を少なくしようとしています。", jpParts: ["彼らは", "工場で", "使う", "水や化学物質の量を", "少なくしようとしています。"], en: "They try to use smaller amounts of water and chemicals in their factories.", beginner: ["They", "try to use", "smaller amounts of", "water and chemicals", "in their factories."], idxMap: [0, 4, 3, 3, 1], intermediate: ["They", "try", "to", "use", "smaller", "amounts", "of", "water and chemicals", "in", "their factories."], advanced: ["They", "try", "to", "use", "smaller", "amounts", "of", "water", "and", "chemicals", "in", "their", "factories."], dummies: ["tries", "using", "small", "at"], note: "try to ＋ 動詞の原形で「〜しようと試みる・努力する」を表します。" },
-      { id: 40, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "熟語（lead to 〜）", jp: "リサイクルされた素材を使うことは廃棄物を減らすことにもつながります。", jpParts: ["リサイクルされた素材を使うことは", "廃棄物を減らすことにも", "つながります。"], en: "The use of recycled materials also leads to less waste.", beginner: ["The use of recycled materials", "also leads to", "less waste."], idxMap: [0, 2, 1], intermediate: ["The", "use", "of", "recycled materials", "also", "leads", "to", "less", "waste."], advanced: ["The", "use", "of", "recycled", "materials", "also", "leads", "to", "less", "waste."], dummies: ["lead", "leading", "for", "little"], note: "lead to 〜（〜につながる・〜を引き起こす）を使った重要表現です。" },
-      { id: 41, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.42)", topic: "動詞＋動名詞（avoid 〜ing）", jp: "彼らはウールや毛皮を使うことも避けています。", jpParts: ["彼らは", "ウールや毛皮を", "使うことも", "避けています。"], en: "They avoid using wool and fur, too.", beginner: ["They", "avoid", "using", "wool and fur,", "too."], idxMap: [0, 3, 2, 1, 2], intermediate: ["They", "avoid", "using", "wool", "and", "fur,", "too."], advanced: ["They", "avoid", "using", "wool", "and", "fur,", "too."], dummies: ["avoids", "to use", "use", "either"], note: "avoid の後ろは to不定詞ではなく必ず動名詞（〜ing）を置きます。" },
-      { id: 42, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "現在完了（継続）", jp: "低賃金と長時間労働はファッション業界で大きな問題となってきました。", jpParts: ["低賃金と長時間労働は", "ファッション業界で", "大きな問題と", "なってきました。"], en: "Low wages and long working hours have been a big problem in the fashion industry.", beginner: ["Low wages and long working hours", "have been", "a big problem", "in the fashion industry."], idxMap: [0, 3, 2, 1], intermediate: ["Low wages", "and", "long working hours", "have", "been", "a big problem", "in", "the fashion industry."], advanced: ["Low", "wages", "and", "long", "working", "hours", "have", "been", "a", "big", "problem", "in", "the", "fashion", "industry."], dummies: ["has", "was", "problems", "on"], note: "主語が複数（Low wages and long working hours）なので have been を使います。" },
-      { id: 43, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "助動詞（have to）", jp: "時には子供でさえそのような条件で働かなければなりません。", jpParts: ["時には", "子供でさえ", "そのような条件で", "働かなければなりません。"], en: "Sometimes even children have to work in those conditions.", beginner: ["Sometimes", "even children", "have to work", "in those conditions."], idxMap: [0, 1, 3, 2], intermediate: ["Sometimes", "even", "children", "have to", "work", "in", "those conditions."], advanced: ["Sometimes", "even", "children", "have", "to", "work", "in", "those", "conditions."], dummies: ["has", "working", "on", "this"], note: "have to ＋ 動詞の原形（work）で「〜しなければならない」を表します。" },
-      { id: 44, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "現在完了進行形（try to）", jp: "エシカルファッションの会社はこの状況を変えようとしてきました。", jpParts: ["エシカルファッションの会社は", "この状況を", "変えようとしてきました。"], en: "Ethical fashion companies have been trying to change this situation.", beginner: ["Ethical fashion companies", "have been trying", "to change", "this situation."], idxMap: [0, 3, 2, 1], intermediate: ["Ethical fashion companies", "have", "been", "trying", "to", "change", "this", "situation."], advanced: ["Ethical", "fashion", "companies", "have", "been", "trying", "to", "change", "this", "situation."], dummies: ["has", "tried", "changing", "these"], note: "主語が複数（companies）なので have been trying to 〜 を使います。" },
-      { id: 45, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "熟語（become responsible for 〜）", jp: "今では、ますます多くの衣料品会社が労働者に責任を持つようになってきています。", jpParts: ["今では、", "ますます多くの衣料品会社が", "労働者に", "責任を持つようになってきています。"], en: "Now, more and more clothing companies have become responsible for their workers.", beginner: ["Now,", "more and more clothing companies", "have become responsible for", "their workers."], idxMap: [0, 1, 3, 2], intermediate: ["Now,", "more and more", "clothing companies", "have", "become", "responsible", "for", "their workers."], advanced: ["Now,", "more", "and", "more", "clothing", "companies", "have", "become", "responsible", "for", "their", "workers."], dummies: ["has", "became", "to", "of"], note: "be/become responsible for 〜（〜に責任がある）を現在完了で表しています。" },
-      { id: 46, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "形式主語（It is not 〜 to ...）", jp: "ファッションに関して道徳的に正しくあることは難しくありません。", jpParts: ["ファッションに関して", "道徳的に正しくあることは", "難しくありません。"], en: "It is not difficult to be ethical about fashion.", beginner: ["It", "is not", "difficult", "to be ethical", "about fashion."], idxMap: [-1, 2, 2, 1, 0], intermediate: ["It", "is", "not", "difficult", "to", "be", "ethical", "about", "fashion."], advanced: ["It", "is", "not", "difficult", "to", "be", "ethical", "about", "fashion."], dummies: ["This", "being", "for", "in"], note: "形式主語 It（インデックス-1）を文頭に置き、本体（to be ethical...）を後ろに置きます。" },
-      { id: 47, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "疑問詞＋to不定詞（what to buy）", jp: "買い物に行くときには、何を買うべきかよく考えて決めてください。", jpParts: ["買い物に行くときには、", "何を買うべきか", "よく考えて", "決めてください。"], en: "When you go shopping, decide carefully what to buy.", beginner: ["When you go shopping,", "decide carefully", "what", "to buy."], idxMap: [0, 3, 1, 1], intermediate: ["When", "you", "go shopping,", "decide", "carefully", "what", "to", "buy."], advanced: ["When", "you", "go", "shopping,", "decide", "carefully", "what", "to", "buy."], dummies: ["decides", "careful", "which", "buying"], note: "命令文 decide carefully の後ろに「what ＋ to ＋ 動詞の原形」を続けています。" },
-      { id: 48, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think (p.46)", topic: "前置詞＋動名詞（By 〜ing）", jp: "エシカルな製品を選ぶことで、あなたは労働者の生活を助けることができます。", jpParts: ["エシカルな製品を", "選ぶことで、", "あなたは", "労働者の生活を", "助けることができます。"], en: "By choosing ethical products, you can help the workers' lives.", beginner: ["By choosing", "ethical products,", "you", "can help", "the workers' lives."], idxMap: [1, 0, 2, 4, 3], intermediate: ["By", "choosing", "ethical products,", "you", "can", "help", "the workers' lives."], advanced: ["By", "choosing", "ethical", "products,", "you", "can", "help", "the", "workers'", "lives."], dummies: ["choose", "to choose", "helps", "life"], note: "「By ＋ 動詞のing形」で「〜することによって」という手段を表します。" },
-      { id: 49, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.60)", topic: "熟語（be in danger of 〜）", jp: "たくさんの種類の動物が、現在絶滅の危機にさらされています。", jpParts: ["たくさんの種類の動物が、", "現在", "絶滅の危機に", "さらされています。"], en: "Many kinds of animals are in danger of extinction today.", beginner: ["Many kinds of animals", "are in danger of", "extinction", "today."], idxMap: [0, 3, 2, 1], intermediate: ["Many", "kinds", "of", "animals", "are", "in", "danger", "of", "extinction", "today."], advanced: ["Many", "kinds", "of", "animals", "are", "in", "danger", "of", "extinction", "today."], dummies: ["is", "dangerous", "at", "for"], note: "be in danger of 〜（〜の危機にさらされている）を1つの塊として捉えます。" },
-      { id: 50, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.60)", topic: "前置詞句（because of 〜）", jp: "それらの動物は気候変動のために多くの難問に直面しています。", jpParts: ["それらの動物は", "気候変動のために", "多くの難問に", "直面しています。"], en: "They are facing a lot of challenges because of climate change.", beginner: ["They", "are facing", "a lot of challenges", "because of climate change."], idxMap: [0, 3, 2, 1], intermediate: ["They", "are", "facing", "a lot of", "challenges", "because of", "climate change."], advanced: ["They", "are", "facing", "a", "lot", "of", "challenges", "because", "of", "climate", "change."], dummies: ["is", "face", "because", "for"], note: "because of ＋ 名詞（〜のために）は文ではなく名詞句を後ろに置きます。" },
-      { id: 51, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.60)", topic: "形式主語（It is ... for 人/物 to ...）", jp: "絶滅危惧種がこのような状況で生き残ることは難しいです。", jpParts: ["絶滅危惧種が", "このような状況で", "生き残ることは", "難しいです。"], en: "It is difficult for endangered animals to survive in these conditions.", beginner: ["It", "is", "difficult", "for endangered animals", "to survive", "in these conditions."], idxMap: [-1, 3, 3, 0, 2, 1], intermediate: ["It", "is", "difficult", "for", "endangered animals", "to", "survive", "in", "these conditions."], advanced: ["It", "is", "difficult", "for", "endangered", "animals", "to", "survive", "in", "these", "conditions."], dummies: ["This", "of", "surviving", "this"], note: "形式主語 It（インデックス-1）を文頭に置き、「for ＋ 対象 ＋ to ＋ 動詞の原形」を続けます。" },
-      { id: 52, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.60)", topic: "形式主語（It is important for us to ...）", jp: "私たちがこの問題を理解することが重要です。", jpParts: ["私たちが", "この問題を", "理解することが", "重要です。"], en: "It is important for us to understand this problem.", beginner: ["It", "is", "important", "for us", "to understand", "this problem."], idxMap: [-1, 3, 3, 0, 2, 1], intermediate: ["It", "is", "important", "for", "us", "to", "understand", "this", "problem."], advanced: ["It", "is", "important", "for", "us", "to", "understand", "this", "problem."], dummies: ["This", "to us", "understanding", "we"], note: "「It is ＋ 形容詞 ＋ for 人 ＋ to ＋ 動詞の原形」の定番構文です。" },
-      { id: 53, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.60)", topic: "命令文, or 〜（〜しなさい、さもないと…）", jp: "私たちを救ってください、そうしないと困ったことになります。", jpParts: ["私たちを", "救ってください、", "そうしないと", "困ったことになります。"], en: "Save us, or there will be trouble.", beginner: ["Save", "us,", "or", "there will be", "trouble."], idxMap: [1, 0, 2, 3, 3], intermediate: ["Save", "us,", "or", "there", "will", "be", "trouble."], advanced: ["Save", "us,", "or", "there", "will", "be", "trouble."], dummies: ["Saves", "we", "and", "is"], note: "「命令文, or 〜」で「〜しなさい、さもないと…」という意味になります。" },
-      { id: 54, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.62)", topic: "現在完了（経験）・熟語（hear of 〜）", jp: "あなたは今までにIUCNレッドリストについて聞いたことがありますか。", jpParts: ["あなたは", "今までに", "IUCNレッドリストについて", "聞いたことがありますか。"], en: "Have you ever heard of the IUCN Red List?", beginner: ["Have", "you", "ever", "heard of", "the IUCN Red List?"], idxMap: [3, 0, 1, 3, 2], intermediate: ["Have", "you", "ever", "heard", "of", "the IUCN Red List?"], advanced: ["Have", "you", "ever", "heard", "of", "the", "IUCN", "Red", "List?"], dummies: ["Did", "hear", "about", "never"], note: "hear of 〜（〜のことを耳にする・聞いて知る）を使った現在完了の疑問文です。" },
-      { id: 55, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.62)", topic: "提案表現（Why don't we 〜?）", jp: "ぼくたちで学級新聞に記事を書かない？", jpParts: ["ぼくたちで", "学級新聞に", "記事を", "書かない？"], en: "Why don't we write an article for our class newspaper?", beginner: ["Why don't we", "write", "an article", "for our class newspaper?"], idxMap: [0, 3, 2, 1], intermediate: ["Why", "don't", "we", "write", "an", "article", "for", "our class newspaper?"], advanced: ["Why", "don't", "we", "write", "an", "article", "for", "our", "class", "newspaper?"], dummies: ["Why not", "writes", "a", "to"], note: "Why don't we ＋ 動詞の原形? で「一緒に〜しませんか？」と提案します。" },
-      { id: 56, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.62)", topic: "SVOC（want ＋ 人 ＋ to 〜）", jp: "私はみんなに絶滅のおそれのある動物について知ってほしいです。", jpParts: ["私は", "みんなに", "絶滅のおそれのある動物について", "知ってほしいです。"], en: "I want everyone to know about endangered animals.", beginner: ["I", "want", "everyone", "to know", "about endangered animals."], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "want", "everyone", "to", "know", "about", "endangered", "animals."], advanced: ["I", "want", "everyone", "to", "know", "about", "endangered", "animals."], dummies: ["wants", "knowing", "for", "animal"], note: "「want ＋ 人（everyone）＋ to ＋ 動詞の原形」で「人に〜してほしい」を表します。" },
-      { id: 57, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.62)", topic: "SVOC（want ＋ 人 ＋ to 〜）", jp: "理子はクラスメートたちに自分たちの記事を読んでほしいです。", jpParts: ["理子は", "クラスメートたちに", "自分たちの記事を", "読んでほしいです。"], en: "Riko wants her classmates to read their article.", beginner: ["Riko", "wants", "her classmates", "to read", "their article."], idxMap: [0, 3, 1, 3, 2], intermediate: ["Riko", "wants", "her", "classmates", "to", "read", "their", "article."], advanced: ["Riko", "wants", "her", "classmates", "to", "read", "their", "article."], dummies: ["want", "reading", "them", "classmate"], note: "主語が Riko（三人称単数）なので wants にし、後ろに「人 ＋ to do」を続けます。" },
-      { id: 58, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.64)", topic: "構文（one of the ＋ 複数名詞）", jp: "それは世界の絶滅のおそれのある動物の1種です。", jpParts: ["それは", "世界の", "絶滅のおそれのある動物の", "1種です。"], en: "It is one of the world's endangered animals.", beginner: ["It", "is", "one of", "the world's endangered animals."], idxMap: [0, 3, 3, 2], intermediate: ["It", "is", "one", "of", "the world's", "endangered", "animals."], advanced: ["It", "is", "one", "of", "the", "world's", "endangered", "animals."], dummies: ["are", "animal", "a", "in"], note: "one of the ＋ 複数名詞（animals）で「〜の1つ」を表す重要表現です。" },
-      { id: 59, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.64)", topic: "使役動詞（let ＋ 人 ＋ 動詞の原形）", jp: "ラッコについてみなさんに伝えさせてください。", jpParts: ["ラッコについて", "みなさんに", "伝えさせてください。"], en: "Let us tell you about sea otters.", beginner: ["Let", "us", "tell", "you", "about sea otters."], idxMap: [2, 2, 2, 1, 0], intermediate: ["Let", "us", "tell", "you", "about", "sea", "otters."], advanced: ["Let", "us", "tell", "you", "about", "sea", "otters."], dummies: ["Lets", "we", "to tell", "for"], note: "「Let ＋ 人（us）＋ 動詞の原形（tell）」で「（私たちに）〜させてください」を表します。" },
-      { id: 60, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.64)", topic: "SVOC（help ＋ 目的語 ＋ 動詞の原形）", jp: "人々はラッコが安全に生きられるよう支援しようと決意しました。", jpParts: ["人々は", "ラッコが", "安全に", "生きられるよう支援しようと", "決意しました。"], en: "People decided to help sea otters live safely.", beginner: ["People", "decided", "to help", "sea otters", "live", "safely."], idxMap: [0, 4, 3, 1, 3, 2], intermediate: ["People", "decided", "to", "help", "sea otters", "live", "safely."], advanced: ["People", "decided", "to", "help", "sea", "otters", "live", "safely."], dummies: ["decide", "helping", "to live", "safe"], note: "help ＋ 人・動物 ＋ 動詞の原形（live）で「〜が…するのを助ける」を表します。" },
-      { id: 61, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.64)", topic: "前置詞句（Thanks to 〜）", jp: "その努力のおかげで、個体数は再び増え始めました。", jpParts: ["その努力のおかげで、", "個体数は", "再び", "増え始めました。"], en: "Thanks to their efforts, the population started to increase again.", beginner: ["Thanks to their efforts,", "the population", "started", "to increase", "again."], idxMap: [0, 1, 3, 3, 2], intermediate: ["Thanks to", "their efforts,", "the", "population", "started", "to", "increase", "again."], advanced: ["Thanks", "to", "their", "efforts,", "the", "population", "started", "to", "increase", "again."], dummies: ["Thank", "for", "increasing", "start"], note: "Thanks to 〜（〜のおかげで）を文頭に置き、カンマ（,）で区切ります。" },
-      { id: 62, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.64)", topic: "前置詞句（due to 〜）", jp: "ラッコは石油の流出のためにまだ絶滅の危機に直面しています。", jpParts: ["ラッコは", "石油の流出のために", "まだ", "絶滅の危機に", "直面しています。"], en: "Sea otters are still facing the danger of extinction due to oil spills.", beginner: ["Sea otters", "are still facing", "the danger of extinction", "due to oil spills."], idxMap: [0, 4, 3, 1], intermediate: ["Sea otters", "are", "still", "facing", "the danger", "of", "extinction", "due to", "oil spills."], advanced: ["Sea", "otters", "are", "still", "facing", "the", "danger", "of", "extinction", "due", "to", "oil", "spills."], dummies: ["is", "face", "because", "for"], note: "due to 〜（〜のために・〜が原因で）は because of 〜 と同じ働きをする重要表現です。" },
-      { id: 63, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.68)", topic: "熟語（be native to 〜）", jp: "それは日本の西表島に固有の動物です。", jpParts: ["それは", "日本の", "西表島に", "固有の動物です。"], en: "It is native to the Japanese island of Iriomote.", beginner: ["It", "is native to", "the Japanese island", "of Iriomote."], idxMap: [0, 3, 2, 1], intermediate: ["It", "is", "native", "to", "the", "Japanese", "island", "of", "Iriomote."], advanced: ["It", "is", "native", "to", "the", "Japanese", "island", "of", "Iriomote."], dummies: ["are", "for", "in", "islands"], note: "be native to 〜（〜に固有である・〜原産である）を使った表現です。" },
-      { id: 64, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.68)", topic: "現在完了進行形・不定詞（目的）", jp: "地元の住民がこのネコを保護するために活動し続けています。", jpParts: ["地元の住民が", "このネコを", "保護するために", "活動し続けています。"], en: "Local citizens have been working to protect the cats.", beginner: ["Local citizens", "have been working", "to protect", "the cats."], idxMap: [0, 3, 2, 1], intermediate: ["Local", "citizens", "have", "been", "working", "to", "protect", "the", "cats."], advanced: ["Local", "citizens", "have", "been", "working", "to", "protect", "the", "cats."], dummies: ["has", "worked", "protecting", "for"], note: "「have been 〜ing」で継続中の活動を表し、後ろに目的の不定詞（to protect）をつなげます。" },
-      { id: 65, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.68)", topic: "熟語（be related to / each other）", jp: "私たちはみんなおたがいに関係しています。", jpParts: ["私たちは", "みんな", "おたがいに", "関係しています。"], en: "We are all related to each other.", beginner: ["We", "are all", "related to", "each other."], idxMap: [0, 1, 3, 2], intermediate: ["We", "are", "all", "related", "to", "each", "other."], advanced: ["We", "are", "all", "related", "to", "each", "other."], dummies: ["is", "relate", "with", "another"], note: "be related to 〜（〜と関係がある）と each other（おたがいに）の組み合わせです。" },
-      { id: 66, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.68)", topic: "形式主語・熟語（take action）", jp: "ですから、私たちが今行動を起こすことが大切なのです。", jpParts: ["ですから、", "私たちが", "今", "行動を起こすことが", "大切なのです。"], en: "So, it is important for us to take action now.", beginner: ["So,", "it", "is", "important", "for us", "to take action", "now."], idxMap: [0, -1, 4, 4, 1, 3, 2], intermediate: ["So,", "it", "is", "important", "for", "us", "to", "take", "action", "now."], advanced: ["So,", "it", "is", "important", "for", "us", "to", "take", "action", "now."], dummies: ["this", "to us", "taking", "actions"], note: "形式主語 it（インデックス-1）と take action（行動を起こす）を使った重要文です。" },
-      { id: 67, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.68)", topic: "SVOC（Let's help 〜 動詞の原形）", jp: "これらの動物が生き残れるよう支援しましょう。", jpParts: ["これらの動物が", "生き残れるよう", "支援しましょう。"], en: "Let's help these animals survive.", beginner: ["Let's", "help", "these animals", "survive."], idxMap: [2, 2, 0, 1], intermediate: ["Let's", "help", "these", "animals", "survive."], advanced: ["Let's", "help", "these", "animals", "survive."], dummies: ["helps", "this", "surviving", "to survive"], note: "Let's help ＋ 目的語 ＋ 動詞の原形（survive）の語順です。" },
-      { id: 68, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.86)", topic: "現在完了（継続）・Through the years", jp: "これまでの何年もの間、その木はたくさんのことを見てきました。", jpParts: ["これまでの何年もの間、", "その木は", "たくさんのことを", "見てきました。"], en: "Through the years, it has seen many things.", beginner: ["Through the years,", "it", "has seen", "many things."], idxMap: [0, 1, 3, 2], intermediate: ["Through", "the years,", "it", "has", "seen", "many", "things."], advanced: ["Through", "the", "years,", "it", "has", "seen", "many", "things."], dummies: ["have", "saw", "see", "much"], note: "Through the years（何年もの間）を文頭に置き、has ＋ 過去分詞（seen）を続けます。" },
-      { id: 69, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.86)", topic: "SVC（sound ＋ 形容詞）", jp: "その歌は心地よく響きました。", jpParts: ["その歌は", "心地よく", "響きました。"], en: "The song sounded sweet.", beginner: ["The song", "sounded", "sweet."], idxMap: [0, 2, 1], intermediate: ["The", "song", "sounded", "sweet."], advanced: ["The", "song", "sounded", "sweet."], dummies: ["sound", "sweetly", "was"], note: "sound（〜に聞こえる・響く）の後ろには副詞ではなく形容詞（sweet）を置きます。" },
-      { id: 70, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.88)", topic: "受動態（過去形・複数）", jp: "多くの人々が命を落とし、ほかの多くの人々が傷を負いました。", jpParts: ["多くの人々が", "命を落とし、", "ほかの多くの人々が", "傷を負いました。"], en: "Many people lost their lives, and many others were injured.", beginner: ["Many people", "lost their lives,", "and", "many others", "were injured."], idxMap: [0, 1, 1, 2, 3], intermediate: ["Many", "people", "lost", "their lives,", "and", "many", "others", "were", "injured."], advanced: ["Many", "people", "lost", "their", "lives,", "and", "many", "others", "were", "injured."], dummies: ["lose", "life", "was", "injure"], note: "be injured で「けがをする・傷を負う」という受け身の形を作ります。" },
-      { id: 71, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.88)", topic: "熟語（try to be 〜）", jp: "少女はそのかわいそうな幼い男の子の母親になろうと努めました。", jpParts: ["少女は", "そのかわいそうな幼い男の子の", "母親になろうと", "努めました。"], en: "She tried to be a mother to the poor little boy.", beginner: ["She", "tried", "to be a mother", "to the poor little boy."], idxMap: [0, 3, 2, 1], intermediate: ["She", "tried", "to", "be", "a mother", "to", "the poor little boy."], advanced: ["She", "tried", "to", "be", "a", "mother", "to", "the", "poor", "little", "boy."], dummies: ["try", "trying", "for", "of"], note: "try to be 〜（〜になろうと努める）の語順です。" },
-      { id: 72, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.90)", topic: "動詞＋動名詞（stop 〜ing）", jp: "しばらくして、男の子は泣きやみました。", jpParts: ["しばらくして、", "男の子は", "泣きやみました。"], en: "After a while, the boy stopped crying.", beginner: ["After a while,", "the boy", "stopped", "crying."], idxMap: [0, 1, 2, 2], intermediate: ["After", "a while,", "the", "boy", "stopped", "crying."], advanced: ["After", "a", "while,", "the", "boy", "stopped", "crying."], dummies: ["stop", "to cry", "cried", "during"], note: "「〜するのをやめる」は stop の後ろに動名詞（crying）を置きます（to cry は「〜するために立ち止まる」）。" },
-      { id: 73, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.90)", topic: "比較（比較級 and 比較級）", jp: "少女の声はだんだんと小さくなっていきました。", jpParts: ["少女の声は", "だんだんと", "小さくなっていきました。"], en: "The girl's voice became weaker and weaker.", beginner: ["The girl's voice", "became", "weaker and weaker."], idxMap: [0, 2, 1], intermediate: ["The", "girl's", "voice", "became", "weaker", "and", "weaker."], advanced: ["The", "girl's", "voice", "became", "weaker", "and", "weaker."], dummies: ["become", "weak", "weakest", "or"], note: "「比較級 and 比較級（weaker and weaker）」で「だんだん〜になる」を表します。" },
-      { id: 74, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.90)", topic: "過去形・否定副詞（never）", jp: "太陽がのぼりましたが、少女は二度と動きませんでした。", jpParts: ["太陽が", "のぼりましたが、", "少女は", "二度と動きませんでした。"], en: "The sun rose, but the girl never moved again.", beginner: ["The sun", "rose,", "but", "the girl", "never moved again."], idxMap: [0, 1, 1, 2, 3], intermediate: ["The", "sun", "rose,", "but", "the", "girl", "never", "moved", "again."], advanced: ["The", "sun", "rose,", "but", "the", "girl", "never", "moved", "again."], dummies: ["rise", "risen", "and", "move"], note: "rise（のぼる）の過去形は rose です。never 〜 again で「二度と〜しない」を表します。" },
-      { id: 75, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.52)", topic: "熟語（be prepared for 〜）", jp: "あなたは災害に備えていますか。", jpParts: ["あなたは", "災害に", "備えていますか。"], en: "Are you prepared for a disaster?", beginner: ["Are", "you", "prepared for", "a disaster?"], idxMap: [2, 0, 2, 1], intermediate: ["Are", "you", "prepared", "for", "a", "disaster?"], advanced: ["Are", "you", "prepared", "for", "a", "disaster?"], dummies: ["Do", "prepare", "to", "at"], note: "be prepared for 〜（〜に備えている・準備ができている）を使った疑問文です。" },
-      { id: 76, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.52)", topic: "間接疑問文（where ＋ S ＋ V）", jp: "私は地域の避難所がどこにあるかを知っています。", jpParts: ["私は", "地域の避難所が", "どこにあるかを", "知っています。"], en: "I know where the local shelter is.", beginner: ["I", "know", "where", "the local shelter", "is."], idxMap: [0, 3, 2, 1, 2], intermediate: ["I", "know", "where", "the local shelter", "is."], advanced: ["I", "know", "where", "the", "local", "shelter", "is."], dummies: ["what", "which", "are", "at"], note: "疑問詞 where の後ろが「主語（the local shelter）＋ 動詞（is）」の語順になる間接疑問文です。" },
-      { id: 77, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.52)", topic: "間接疑問文（how much 〜 S ＋ V）", jp: "私はどれだけの食料と水を備蓄すべきかを知っています。", jpParts: ["私は", "どれだけの食料と水を", "備蓄すべきかを", "知っています。"], en: "I know how much food and water I should store.", beginner: ["I", "know", "how much food and water", "I should store."], idxMap: [0, 3, 1, 2], intermediate: ["I", "know", "how much", "food and water", "I", "should", "store."], advanced: ["I", "know", "how", "much", "food", "and", "water", "I", "should", "store."], dummies: ["many", "should I", "storing", "to store"], note: "how much ＋ 名詞の塊を先に置き、後ろに「主語＋助動詞＋動詞（I should store）」を続けます。" },
-      { id: 78, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.52)", topic: "間接疑問文・熟語（in case of 〜）", jp: "私は火事の場合に何番に電話すべきかを知っています。", jpParts: ["私は", "火事の場合に", "何番に", "電話すべきかを", "知っています。"], en: "I know what number I should call in case of a fire.", beginner: ["I", "know", "what number", "I should call", "in case of a fire."], idxMap: [0, 4, 2, 3, 1], intermediate: ["I", "know", "what", "number", "I", "should", "call", "in case of", "a fire."], advanced: ["I", "know", "what", "number", "I", "should", "call", "in", "case", "of", "a", "fire."], dummies: ["which", "should I", "calling", "for"], note: "in case of 〜（〜の場合には）を文末に置いた間接疑問文です。" },
-      { id: 79, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.52)", topic: "疑問詞＋to不定詞（how to 〜）", jp: "私は消火器の使い方を知っています。", jpParts: ["私は", "消火器の", "使い方を", "知っています。"], en: "I know how to use a fire extinguisher.", beginner: ["I", "know", "how to use", "a fire extinguisher."], idxMap: [0, 3, 2, 1], intermediate: ["I", "know", "how", "to", "use", "a", "fire", "extinguisher."], advanced: ["I", "know", "how", "to", "use", "a", "fire", "extinguisher."], dummies: ["what", "using", "used", "an"], note: "「how ＋ to ＋ 動詞の原形（how to use）」で「〜の仕方・使い方」を表します。" },
-      { id: 80, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.53)", topic: "動詞＋人＋what節（tell me what...）", jp: "あなたの家族が災害に備えるためにどんなことをしているか教えてください。", jpParts: ["あなたの家族が", "災害に備えるために", "どんなことをしているか", "私に教えてください。"], en: "Tell me what your family has done to prepare for a disaster.", beginner: ["Tell me", "what", "your family has done", "to prepare for a disaster."], idxMap: [3, 2, 0, 1], intermediate: ["Tell", "me", "what", "your family", "has", "done", "to", "prepare", "for", "a disaster."], advanced: ["Tell", "me", "what", "your", "family", "has", "done", "to", "prepare", "for", "a", "disaster."], dummies: ["Tells", "I", "have", "did"], note: "Tell me の後ろに「what ＋ 主語 ＋ 動詞（your family has done）」を続けています。" },
-      { id: 81, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.53)", topic: "形式主語（It is hard for us to ...）", jp: "私たちには災害についての日本語の情報を理解するのが難しいです。", jpParts: ["私たちには", "災害についての日本語の情報を", "理解するのが", "難しいです。"], en: "It is hard for us to understand the Japanese information about disasters.", beginner: ["It", "is", "hard", "for us", "to understand", "the Japanese information about disasters."], idxMap: [-1, 3, 3, 0, 2, 1], intermediate: ["It", "is", "hard", "for", "us", "to", "understand", "the", "Japanese information", "about", "disasters."], advanced: ["It", "is", "hard", "for", "us", "to", "understand", "the", "Japanese", "information", "about", "disasters."], dummies: ["This", "to us", "understanding", "for"], note: "形式主語 It（インデックス-1）を使った「It is hard for 人 to 〜」の構文です。" },
-      { id: 82, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.53)", topic: "動詞＋人＋what節（show you what...）", jp: "それはあなたに何を準備するべきかを英語で示しています。", jpParts: ["それは", "あなたに", "何を準備するべきかを", "英語で", "示しています。"], en: "It shows you what you should prepare in English.", beginner: ["It", "shows", "you", "what you should prepare", "in English."], idxMap: [0, 4, 1, 2, 3], intermediate: ["It", "shows", "you", "what", "you", "should", "prepare", "in", "English."], advanced: ["It", "shows", "you", "what", "you", "should", "prepare", "in", "English."], dummies: ["show", "your", "should you", "by"], note: "shows you の後ろに「what ＋ 主語 ＋ 助動詞 ＋ 動詞」の節を置いています。" },
-      { id: 83, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.53)", topic: "過去形（recommend）", jp: "私のお父さんが地震についての映画をすすめてくれました。", jpParts: ["私のお父さんが", "地震についての映画を", "すすめてくれました。"], en: "My dad recommended a movie about an earthquake.", beginner: ["My dad", "recommended", "a movie", "about an earthquake."], idxMap: [0, 2, 1, 1], intermediate: ["My", "dad", "recommended", "a", "movie", "about", "an", "earthquake."], advanced: ["My", "dad", "recommended", "a", "movie", "about", "an", "earthquake."], dummies: ["recommends", "recommending", "a", "for"], note: "recommend（〜をすすめる）の過去形 recommended を使った文です。" },
-      { id: 84, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.54)", topic: "過去分詞の後置修飾（called 〜）", jp: "「Live Your Dream」と呼ばれる映画があります。", jpParts: ["「Live Your Dream」と", "呼ばれる映画が", "あります。"], en: "There is a movie called Live Your Dream.", beginner: ["There is", "a movie", "called", "Live Your Dream."], idxMap: [2, 1, 0, 0], intermediate: ["There", "is", "a", "movie", "called", "Live", "Your", "Dream."], advanced: ["There", "is", "a", "movie", "called", "Live", "Your", "Dream."], dummies: ["are", "call", "calling", "which"], note: "名詞（a movie）の後ろに過去分詞（called 〜）を置いて「〜と呼ばれる映画」と修飾します。" },
-      { id: 85, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.54)", topic: "現在分詞の後置修飾（smiling 〜）", jp: "写真の中で着物を着てほほえんでいる女性はテイラーさんです。", jpParts: ["写真の中で", "着物を着てほほえんでいる", "女性は", "テイラーさんです。"], en: "The woman smiling in a kimono in the picture is Taylor.", beginner: ["The woman", "smiling in a kimono", "in the picture", "is Taylor."], idxMap: [2, 1, 0, 3], intermediate: ["The", "woman", "smiling", "in", "a kimono", "in", "the picture", "is", "Taylor."], advanced: ["The", "woman", "smiling", "in", "a", "kimono", "in", "the", "picture", "is", "Taylor."], dummies: ["smiles", "smiled", "are", "at"], note: "主語（The woman）を後ろから現在分詞（smiling 〜）で修飾し、最後に is Taylor を置きます。" },
-      { id: 86, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.54)", topic: "不定詞・前置詞（between A and B）", jp: "彼女は日本とアメリカのかけ橋になりたかったのです。", jpParts: ["彼女は", "日本とアメリカの", "かけ橋に", "なりたかったのです。"], en: "She wanted to become a bridge between Japan and America.", beginner: ["She", "wanted to become", "a bridge", "between Japan and America."], idxMap: [0, 3, 2, 1], intermediate: ["She", "wanted", "to", "become", "a", "bridge", "between", "Japan", "and", "America."], advanced: ["She", "wanted", "to", "become", "a", "bridge", "between", "Japan", "and", "America."], dummies: ["wants", "becoming", "among", "from"], note: "between A and B（AとBの間）を使った表現です。" },
-      { id: 87, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.54)", topic: "前置詞句（thanks to 〜）", jp: "彼女の明るい性格のおかげで多くの生徒たちが英語に興味を持つようになりました。", jpParts: ["彼女の明るい性格のおかげで", "多くの生徒たちが", "英語に", "興味を持つようになりました。"], en: "Many students became interested in English thanks to her bright personality.", beginner: ["Many students", "became interested in", "English", "thanks to her bright personality."], idxMap: [1, 3, 2, 0], intermediate: ["Many", "students", "became", "interested", "in", "English", "thanks to", "her bright personality."], advanced: ["Many", "students", "became", "interested", "in", "English", "thanks", "to", "her", "bright", "personality."], dummies: ["become", "interesting", "because", "for"], note: "thanks to 〜（〜のおかげで）を文末に置いた語順です。" },
-      { id: 88, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.55)", topic: "受動態・熟語（be caught in 〜）", jp: "テイラーさんはその途中で津波にのまれました。", jpParts: ["テイラーさんは", "その途中で", "津波に", "のまれました。"], en: "Taylor was caught in the tsunami on her way.", beginner: ["Taylor", "was caught", "in the tsunami", "on her way."], idxMap: [0, 3, 2, 1], intermediate: ["Taylor", "was", "caught", "in", "the", "tsunami", "on", "her", "way."], advanced: ["Taylor", "was", "caught", "in", "the", "tsunami", "on", "her", "way."], dummies: ["catch", "catching", "at", "by"], note: "be caught in 〜（〜に巻き込まれる・あう）と on her way（途中で）の組み合わせです。" },
-      { id: 89, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.55)", topic: "不定詞（副詞的用法・目的）", jp: "テイラーさんの両親は「テイラー文庫」を設置するために力を合わせました。", jpParts: ["テイラーさんの両親は", "「テイラー文庫」を", "設置するために", "力を合わせました。"], en: "Taylor's parents worked together to create Taylor Reading Corner.", beginner: ["Taylor's parents", "worked together", "to create", "Taylor Reading Corner."], idxMap: [0, 3, 2, 1], intermediate: ["Taylor's", "parents", "worked", "together", "to", "create", "Taylor", "Reading", "Corner."], advanced: ["Taylor's", "parents", "worked", "together", "to", "create", "Taylor", "Reading", "Corner."], dummies: ["work", "creating", "for", "with"], note: "worked together（協力した）の後ろに目的を表す「to ＋ 動詞の原形（to create）」をつなげます。" },
-      { id: 90, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.55)", topic: "熟語（keep on 〜ing）", jp: "テイラーさんの生徒の多くは英語を勉強し続けました。", jpParts: ["テイラーさんの生徒の多くは", "英語を", "勉強し続けました。"], en: "Many of Taylor's students kept on studying English.", beginner: ["Many of Taylor's students", "kept on", "studying English."], idxMap: [0, 2, 1], intermediate: ["Many", "of", "Taylor's", "students", "kept", "on", "studying", "English."], advanced: ["Many", "of", "Taylor's", "students", "kept", "on", "studying", "English."], dummies: ["keep", "to study", "study", "in"], note: "keep on ＋ 動詞のing形（〜し続ける）の過去形 kept on 〜ing です。" },
-      { id: 91, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.55)", topic: "熟語（no longer / live on）", jp: "テイラーさんは今はもう私たちのもとにいませんが、彼女の夢は生き続けています。", jpParts: ["テイラーさんは", "今はもう私たちのもとにいませんが、", "彼女の夢は", "生き続けています。"], en: "Taylor is no longer with us today, but her dream lives on.", beginner: ["Taylor", "is no longer with us today,", "but", "her dream", "lives on."], idxMap: [0, 1, 1, 2, 3], intermediate: ["Taylor", "is", "no longer", "with", "us", "today,", "but", "her", "dream", "lives", "on."], advanced: ["Taylor", "is", "no", "longer", "with", "us", "today,", "but", "her", "dream", "lives", "on."], dummies: ["was", "live", "living", "and"], note: "no longer（もはや〜ない）と live on（生き続ける）を使った表現です。" },
-      { id: 92, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.55)", topic: "形式主語（It is necessary for us to ...）", jp: "緊急時に私たちがたがいを支え合うことが必要なのです。", jpParts: ["緊急時に", "私たちが", "たがいを支え合うことが", "必要なのです。"], en: "It is necessary for us to support each other in times of crisis.", beginner: ["It", "is", "necessary", "for us", "to support each other", "in times of crisis."], idxMap: [-1, 3, 3, 1, 2, 0], intermediate: ["It", "is", "necessary", "for", "us", "to", "support", "each other", "in", "times", "of", "crisis."], advanced: ["It", "is", "necessary", "for", "us", "to", "support", "each", "other", "in", "times", "of", "crisis."], dummies: ["This", "to us", "supporting", "at"], note: "形式主語 It（インデックス-1）と in times of crisis（緊急時に）を使った重要文です。" },
-      { id: 93, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.120)", topic: "関係代名詞の省略（接触節）", jp: "これは私がインターネットで見つけた写真です。", jpParts: ["これは", "私がインターネットで", "見つけた", "写真です。"], en: "This is a picture I found on the internet.", beginner: ["This", "is", "a picture", "I found", "on the internet."], idxMap: [0, 3, 3, 2, 1], intermediate: ["This", "is", "a", "picture", "I", "found", "on", "the", "internet."], advanced: ["This", "is", "a", "picture", "I", "found", "on", "the", "internet."], dummies: ["find", "finding", "in", "at"], note: "名詞（a picture）の直後に「主語＋動詞（I found）」を置いて後ろから詳しく説明します。" },
-      { id: 94, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.120)", topic: "間接疑問文（who this person is）", jp: "あなたはこの人がだれか知っていますか。", jpParts: ["あなたは", "この人が", "だれか", "知っていますか。"], en: "Do you know who this person is?", beginner: ["Do", "you", "know", "who", "this person is?"], idxMap: [3, 0, 3, 2, 1], intermediate: ["Do", "you", "know", "who", "this", "person", "is?"], advanced: ["Do", "you", "know", "who", "this", "person", "is?"], dummies: ["Does", "is this person", "what", "are"], note: "Do you know の後ろは「who ＋ 主語（this person）＋ 動詞（is）」の語順になります。" },
-      { id: 95, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.120)", topic: "関係代名詞の省略（目的格）", jp: "彼はインドの人たちがとても尊敬している指導者です。", jpParts: ["彼は", "インドの人たちが", "とても尊敬している", "指導者です。"], en: "He is a leader Indian people respect greatly.", beginner: ["He", "is", "a leader", "Indian people", "respect greatly."], idxMap: [0, 3, 3, 1, 2], intermediate: ["He", "is", "a", "leader", "Indian", "people", "respect", "greatly."], advanced: ["He", "is", "a", "leader", "Indian", "people", "respect", "greatly."], dummies: ["are", "respects", "great", "who"], note: "名詞（a leader）を後ろから「Indian people respect greatly」が修飾しています。" },
-      { id: 96, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.122)", topic: "関係代名詞（主格・who）", jp: "ガンディーは世界中の多くの人々に影響を与えた人です。", jpParts: ["ガンディーは", "世界中の多くの人々に", "影響を与えた", "人です。"], en: "Gandhi is a man who has influenced a lot of people.", beginner: ["Gandhi", "is", "a man", "who", "has influenced a lot of people."], idxMap: [0, 3, 3, -1, 2], intermediate: ["Gandhi", "is", "a", "man", "who", "has", "influenced", "a lot of", "people."], advanced: ["Gandhi", "is", "a", "man", "who", "has", "influenced", "a", "lot", "of", "people."], dummies: ["which", "what", "have", "influence"], note: "先行詞が人（a man）なので関係代名詞 who（インデックス-1）を置いて後ろから説明します。" },
-      { id: 97, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.122)", topic: "受動態・関係代名詞（who）", jp: "彼は人権のためにたたかっている人たちから今でも尊敬されています。", jpParts: ["彼は", "人権のために", "たたかっている人たちから", "今でも尊敬されています。"], en: "He is still respected by people who fight for human rights.", beginner: ["He", "is still respected", "by people", "who", "fight for human rights."], idxMap: [0, 3, 2, -1, 1], intermediate: ["He", "is", "still", "respected", "by", "people", "who", "fight", "for", "human", "rights."], advanced: ["He", "is", "still", "respected", "by", "people", "who", "fight", "for", "human", "rights."], dummies: ["respects", "which", "fights", "to"], note: "受動態（is respected by people）の後ろに関係代名詞 who がつながっています。" },
-      { id: 98, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.122)", topic: "熟語（go on 〜）・不定詞（目的）", jp: "彼は抗議をするために断食もしました。", jpParts: ["彼は", "抗議をするために", "断食も", "しました。"], en: "He also went on fasts to protest.", beginner: ["He", "also", "went on fasts", "to protest."], idxMap: [0, 2, 2, 1], intermediate: ["He", "also", "went", "on", "fasts", "to", "protest."], advanced: ["He", "also", "went", "on", "fasts", "to", "protest."], dummies: ["go", "goes", "protesting", "for"], note: "go on 〜（〜をする・行う）の過去形 went on と目的の不定詞（to protest）です。" },
-      { id: 99, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.124)", topic: "There were ＋ 関係代名詞（that）", jp: "インド人の客を受け入れないホテルもありました。", jpParts: ["インド人の客を", "受け入れない", "ホテルも", "ありました。"], en: "There were also hotels that did not accept Indian guests.", beginner: ["There were also", "hotels", "that", "did not accept", "Indian guests."], idxMap: [3, 2, -1, 1, 0], intermediate: ["There", "were", "also", "hotels", "that", "did", "not", "accept", "Indian", "guests."], advanced: ["There", "were", "also", "hotels", "that", "did", "not", "accept", "Indian", "guests."], dummies: ["was", "who", "accepted", "hotel"], note: "先行詞がモノ（hotels）なので関係代名詞 that（または which）を使って修飾します。" },
-      { id: 100, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.124)", topic: "関係代名詞（that）・比較級の強調（even）", jp: "1906年、イギリス人はインド人に対してさらに不公平な法律を作りました。", jpParts: ["1906年、", "イギリス人は", "インド人に対してさらに不公平な", "法律を作りました。"], en: "In 1906, the British made a law that was even more unfair.", beginner: ["In 1906,", "the British", "made a law", "that", "was even more unfair."], idxMap: [0, 1, 3, -1, 2], intermediate: ["In", "1906,", "the", "British", "made", "a", "law", "that", "was", "even", "more", "unfair."], advanced: ["In", "1906,", "the", "British", "made", "a", "law", "that", "was", "even", "more", "unfair."], dummies: ["make", "who", "very", "most"], note: "even ＋ 比較級（even more unfair）で「いっそう・さらに不公平な」という意味を表します。" },
-      { id: 101, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.124)", topic: "不定詞（decide to / 目的 to）", jp: "ガンディーは自分たちの権利を守るための運動を主導しようと決心しました。", jpParts: ["ガンディーは", "自分たちの権利を", "守るための", "運動を主導しようと決心しました。"], en: "Gandhi decided to lead a movement to protect their rights.", beginner: ["Gandhi", "decided to lead", "a movement", "to protect their rights."], idxMap: [0, 3, 3, 1], intermediate: ["Gandhi", "decided", "to", "lead", "a", "movement", "to", "protect", "their", "rights."], advanced: ["Gandhi", "decided", "to", "lead", "a", "movement", "to", "protect", "their", "rights."], dummies: ["decide", "leading", "protecting", "right"], note: "decide to ＋ 動詞の原形（〜しようと決心する）と形容詞的用法の不定詞（to protect）の組み合わせです。" },
-      { id: 102, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.124)", topic: "接続詞（show that 〜）", jp: "そのことは非暴力運動が効果的であり得ることを示しました。", jpParts: ["そのことは", "非暴力運動が", "効果的であり得ることを", "示しました。"], en: "It showed that non-violent movements can be effective.", beginner: ["It", "showed", "that", "non-violent movements", "can be effective."], idxMap: [0, 3, -1, 1, 2], intermediate: ["It", "showed", "that", "non-violent", "movements", "can", "be", "effective."], advanced: ["It", "showed", "that", "non-violent", "movements", "can", "be", "effective."], dummies: ["show", "which", "could", "effectively"], note: "show that ＋ 主語 ＋ 動詞 で「〜ということを示した」を表します。" },
-      { id: 103, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.126)", topic: "関係代名詞（目的格・that）", jp: "非暴力の抗議運動はガンディーが残した遺産です。", jpParts: ["非暴力の抗議運動は", "ガンディーが", "残した", "遺産です。"], en: "Non-violent protest is the legacy that Gandhi left.", beginner: ["Non-violent protest", "is", "the legacy", "that", "Gandhi left."], idxMap: [0, 3, 3, -1, 1], intermediate: ["Non-violent", "protest", "is", "the", "legacy", "that", "Gandhi", "left."], advanced: ["Non-violent", "protest", "is", "the", "legacy", "that", "Gandhi", "left."], dummies: ["are", "who", "leave", "leaving"], note: "先行詞（the legacy）の後ろに目的格の関係代名詞 that ＋ 主語＋動詞（Gandhi left）をつなげます。" },
+      { id: 27, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.22)", topic: "現在完了（完了・already）", jp: "私たちはすでに新しいパンダについて聞いています。", jpParts: ["私たちは", "すでに", "新しいパンダについて", "聞いています。"], en: "We have already heard about the new pandas.", beginner: ["We", "have", "already", "heard about", "the new pandas."], idxMap: [0, 3, 1, 3, 2], intermediate: ["We", "have", "already", "heard", "about", "the new pandas."], advanced: ["We", "have", "already", "heard", "about", "the", "new", "pandas."], dummies: ["has", "hear", "yet", "for"], note: "already（すでに）は have と過去分詞（heard）の間に置きます。" },
+      { id: 28, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.22)", topic: "現在完了（完了・疑問文 yet）", jp: "あなたはもう彼らの動画を見ましたか。", jpParts: ["あなたは", "もう", "彼らの動画を", "見ましたか。"], en: "Have you watched their video yet?", beginner: ["Have", "you", "watched", "their video", "yet?"], idxMap: [3, 0, 3, 2, 1], intermediate: ["Have", "you", "watched", "their", "video", "yet?"], advanced: ["Have", "you", "watched", "their", "video", "yet?"], dummies: ["Did", "Has", "already", "watch"], note: "現在完了の疑問文で「もう〜しましたか？」と尋ねるときは文末に yet を置きます。" },
+      { id: 29, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.22)", topic: "現在完了（完了・否定文 not ... yet）", jp: "いいえ、まだ見ていません。", jpParts: ["いいえ、", "まだ", "見ていません。"], en: "No, I haven't watched it yet.", beginner: ["No,", "I", "haven't watched", "it", "yet."], idxMap: [0, 2, 2, 2, 1], intermediate: ["No,", "I", "haven't", "watched", "it", "yet."], advanced: ["No,", "I", "haven't", "watched", "it", "yet."], dummies: ["didn't", "hasn't", "already", "watch"], note: "否定文の文末に yet を置くと「まだ〜していない」という意味になります。" },
+      { id: 30, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.22)", topic: "現在完了（完了・just）", jp: "私はちょうどランチを食べ終えたところです。", jpParts: ["私は", "ちょうど", "ランチを", "食べ終えたところです。"], en: "I have just finished lunch.", beginner: ["I", "have", "just", "finished", "lunch."], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "have", "just", "finished", "lunch."], advanced: ["I", "have", "just", "finished", "lunch."], dummies: ["has", "finish", "already", "yet"], note: "「ちょうど〜したところだ」を表す just は have と過去分詞の間に挟みます。" },
+      { id: 31, unitGroup: "Unit 2 Part 1", unitLabel: "Unit 2 Part 1 (p.22)", topic: "現在完了（経験・回数）", jp: "私は今までに2回その動物園に行ったことがあります。", jpParts: ["私は", "今までに", "2回", "その動物園に", "行ったことがあります。"], en: "I have been to the zoo twice.", beginner: ["I", "have been", "to the zoo", "twice."], idxMap: [0, 4, 3, 2], intermediate: ["I", "have", "been", "to", "the zoo", "twice."], advanced: ["I", "have", "been", "to", "the", "zoo", "twice."], dummies: ["gone", "two", "at", "has"], note: "「2回」を表す twice は文末に置きます。" },
+      { id: 32, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.23)", topic: "現在完了（継続・since）", jp: "私たちは2021年からずっとこのパンダたちを知っています。", jpParts: ["私たちは", "2021年からずっと", "このパンダたちを", "知っています。"], en: "We have known these pandas since 2021.", beginner: ["We", "have known", "these pandas", "since 2021."], idxMap: [0, 3, 2, 1], intermediate: ["We", "have", "known", "these", "pandas", "since", "2021."], advanced: ["We", "have", "known", "these", "pandas", "since", "2021."], dummies: ["has", "knew", "for", "from"], note: "「〜からずっと」と過去の起点を表すときは since を使います。" },
+      { id: 33, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.23)", topic: "現在完了（継続・疑問詞 How long）", jp: "あなたはどのくらいの間、日本に住んでいますか。", jpParts: ["あなたは", "どのくらいの間、", "日本に", "住んでいますか。"], en: "How long have you lived in Japan?", beginner: ["How long", "have", "you", "lived", "in Japan?"], idxMap: [1, 3, 0, 3, 2], intermediate: ["How", "long", "have", "you", "lived", "in", "Japan?"], advanced: ["How", "long", "have", "you", "lived", "in", "Japan?"], dummies: ["many", "did", "live", "at"], note: "期間の長さを尋ねる疑問詞 How long を文頭に置き、後ろに「have ＋ 主語 ＋ 過去分詞」を続けます。" },
+      { id: 34, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.23)", topic: "現在完了進行形（継続中の動作）", jp: "私は3年間ずっと英語を勉強し続けています。", jpParts: ["私は", "3年間ずっと", "英語を", "勉強し続けています。"], en: "I have been studying English for three years.", beginner: ["I", "have been studying", "English", "for three years."], idxMap: [0, 3, 2, 1], intermediate: ["I", "have", "been", "studying", "English", "for", "three", "years."], advanced: ["I", "have", "been", "studying", "English", "for", "three", "years."], dummies: ["has", "studied", "since", "in"], note: "「have been ＋ 動詞のing形」で、今も動作が続いていることを強調します。" },
+      { id: 35, unitGroup: "Unit 2 Part 2", unitLabel: "Unit 2 Part 2 (p.23)", topic: "現在完了進行形（疑問文）", jp: "あなたは朝からずっとゲームをし続けているのですか。", jpParts: ["あなたは", "朝からずっと", "ゲームを", "し続けているのですか。"], en: "Have you been playing games since this morning?", beginner: ["Have", "you", "been playing", "games", "since this morning?"], idxMap: [3, 0, 3, 2, 1], intermediate: ["Have", "you", "been", "playing", "games", "since", "this", "morning?"], advanced: ["Have", "you", "been", "playing", "games", "since", "this", "morning?"], dummies: ["Are", "played", "for", "from"], note: "現在完了進行形の疑問文は Have を主語の前に出します。" },
+      { id: 36, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 1 (p.24)", topic: "過去形・前置詞（from ... to 〜）", jp: "1994年から2020年まで、永明（エイメイ）は和歌山で暮らしました。", jpParts: ["1994年から2020年まで、", "永明は", "和歌山で", "暮らしました。"], en: "From 1994 to 2020, Eimei lived in Wakayama.", beginner: ["From 1994 to 2020,", "Eimei", "lived", "in Wakayama."], idxMap: [0, 1, 3, 2], intermediate: ["From", "1994", "to", "2020,", "Eimei", "lived", "in", "Wakayama."], advanced: ["From", "1994", "to", "2020,", "Eimei", "lived", "in", "Wakayama."], dummies: ["Since", "lives", "at", "on"], note: "「AからBまで」の期間は from A to B で表します。" },
+      { id: 37, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 1 (p.24)", topic: "現在完了・副詞（still）", jp: "多くの人々が今でも彼を愛しています。", jpParts: ["多くの人々が", "今でも", "彼を", "愛しています。"], en: "Many people still love him.", beginner: ["Many people", "still", "love", "him."], idxMap: [0, 1, 3, 2], intermediate: ["Many", "people", "still", "love", "him."], advanced: ["Many", "people", "still", "love", "him."], dummies: ["Much", "loves", "he", "his"], note: "副詞 still（今でも・まだ）は一般動詞（love）の前に置きます。" },
+      { id: 38, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 1 (p.24)", topic: "不定詞（副詞的用法・目的）", jp: "動物たちは生き残るために十分な食料と安全な場所を必要とします。", jpParts: ["動物たちは", "生き残るために", "十分な食料と安全な場所を", "必要とします。"], en: "Animals need enough food and safe places to survive.", beginner: ["Animals", "need", "enough food and safe places", "to survive."], idxMap: [0, 3, 2, 1], intermediate: ["Animals", "need", "enough", "food", "and", "safe", "places", "to", "survive."], advanced: ["Animals", "need", "enough", "food", "and", "safe", "places", "to", "survive."], dummies: ["needs", "surviving", "for", "animal"], note: "「〜を必要とする（need 〜）」の後ろに目的を表す「to ＋ 動詞の原形（to survive）」を置きます。" },
+      { id: 39, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 1 (p.24)", topic: "動名詞（cutting down）", jp: "人々は道路や町を作るために森を切り倒してきました。", jpParts: ["人々は", "道路や町を作るために", "森を", "切り倒してきました。"], en: "People have cut down forests to build roads and towns.", beginner: ["People", "have cut down", "forests", "to build roads and towns."], idxMap: [0, 3, 2, 1], intermediate: ["People", "have", "cut", "down", "forests", "to", "build", "roads", "and", "towns."], advanced: ["People", "have", "cut", "down", "forests", "to", "build", "roads", "and", "towns."], dummies: ["has", "cutting", "for", "forest"], note: "cut の過去分詞は cut（原形・過去形・過去分詞が同じ形）です。" },
+      { id: 40, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 1 (p.24)", topic: "熟語（as a result）", jp: "その結果、野生のパンダの数は減少しました。", jpParts: ["その結果、", "野生のパンダの数は", "減少しました。"], en: "As a result, the number of wild pandas decreased.", beginner: ["As a result,", "the number of wild pandas", "decreased."], idxMap: [0, 1, 2], intermediate: ["As", "a", "result,", "the", "number", "of", "wild", "pandas", "decreased."], advanced: ["As", "a", "result,", "the", "number", "of", "wild", "pandas", "decreased."], dummies: ["In", "decrease", "decreasing", "panda"], note: "As a result（その結果）と the number of 〜（〜の数）の重要表現です。" },
+      { id: 41, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.26)", topic: "現在完了（継続・for decades）", jp: "研究者たちは何十年もの間、パンダを保護しようと努力してきました。", jpParts: ["研究者たちは", "何十年もの間、", "パンダを保護しようと", "努力してきました。"], en: "Researchers have tried to protect pandas for decades.", beginner: ["Researchers", "have tried to", "protect pandas", "for decades."], idxMap: [0, 3, 2, 1], intermediate: ["Researchers", "have", "tried", "to", "protect", "pandas", "for", "decades."], advanced: ["Researchers", "have", "tried", "to", "protect", "pandas", "for", "decades."], dummies: ["has", "trying", "since", "panda"], note: "try to ＋ 動詞の原形（〜しようと努力する）の現在完了形 have tried to です。" },
+      { id: 42, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.26)", topic: "現在完了（継続・has grown）", jp: "近年、パンダの個体数は増えてきています。", jpParts: ["近年、", "パンダの個体数は", "増えてきています。"], en: "In recent years, the panda population has grown.", beginner: ["In recent years,", "the panda population", "has grown."], idxMap: [0, 1, 2], intermediate: ["In", "recent", "years,", "the", "panda", "population", "has", "grown."], advanced: ["In", "recent", "years,", "the", "panda", "population", "has", "grown."], dummies: ["At", "have", "grew", "grow"], note: "grow（増える・成長する）の過去分詞は grown です。" },
+      { id: 43, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.26)", topic: "接続詞（However）・受動態", jp: "しかしながら、多くの他の動物たちが今でも絶滅の危機に瀕しています。", jpParts: ["しかしながら、", "多くの他の動物たちが", "今でも", "絶滅の危機に瀕しています。"], en: "However, many other animals are still in danger.", beginner: ["However,", "many other animals", "are", "still in danger."], idxMap: [0, 1, 3, 2], intermediate: ["However,", "many", "other", "animals", "are", "still", "in", "danger."], advanced: ["However,", "many", "other", "animals", "are", "still", "in", "danger."], dummies: ["But", "is", "dangerous", "another"], note: "in danger で「危機に瀕している」という意味を表します。" },
+      { id: 44, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.26)", topic: "熟語（one of the ＋ 複数名詞）", jp: "ホッキョクグマはそれらの動物の1つです。", jpParts: ["ホッキョクグマは", "それらの動物の", "1つです。"], en: "The polar bear is one of those animals.", beginner: ["The polar bear", "is", "one of", "those animals."], idxMap: [0, 2, 2, 1], intermediate: ["The", "polar", "bear", "is", "one", "of", "those", "animals."], advanced: ["The", "polar", "bear", "is", "one", "of", "those", "animals."], dummies: ["are", "that", "animal", "a"], note: "one of ＋ 複数名詞（those animals）で「それらの〜のうちの1つ」を表します。" },
+      { id: 45, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.26)", topic: "比較級・熟語（because of 〜）", jp: "地球温暖化のために、北極の氷が以前よりも速く溶けています。", jpParts: ["地球温暖化のために、", "北極の氷が", "以前よりも速く", "溶けています。"], en: "Because of global warming, Arctic ice is melting faster than before.", beginner: ["Because of global warming,", "Arctic ice", "is melting", "faster than before."], idxMap: [0, 1, 3, 2], intermediate: ["Because", "of", "global", "warming,", "Arctic", "ice", "is", "melting", "faster", "than", "before."], advanced: ["Because", "of", "global", "warming,", "Arctic", "ice", "is", "melting", "faster", "than", "before."], dummies: ["Because", "are", "melted", "fast"], note: "because of ＋ 名詞句 で「〜のために（原因）」を表します。" },
+      { id: 46, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.27)", topic: "助動詞（must）・不定詞（to save）", jp: "私たちはそれらを救うために行動を起こさなければなりません。", jpParts: ["私たちは", "それらを救うために", "行動を起こさなければなりません。"], en: "We must take action to save them.", beginner: ["We", "must take action", "to save", "them."], idxMap: [0, 2, 1, 1], intermediate: ["We", "must", "take", "action", "to", "save", "them."], advanced: ["We", "must", "take", "action", "to", "save", "them."], dummies: ["has", "took", "saving", "they"], note: "take action（行動を起こす）の後ろに目的（to save them）をつなげています。" },
+      { id: 47, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.27)", topic: "不定詞（名詞的用法・need to）", jp: "私たちは動物たちと彼らの生息地を守る必要があります。", jpParts: ["私たちは", "動物たちと彼らの生息地を", "守る必要があります。"], en: "We need to protect animals and their habitats.", beginner: ["We", "need to protect", "animals and their habitats."], idxMap: [0, 2, 1], intermediate: ["We", "need", "to", "protect", "animals", "and", "their", "habitats."], advanced: ["We", "need", "to", "protect", "animals", "and", "their", "habitats."], dummies: ["needs", "protecting", "them", "habitat"], note: "need to ＋ 動詞の原形（protect）で「〜する必要がある」を表します。" },
+      { id: 48, unitGroup: "Unit 2 Read & Think", unitLabel: "Unit 2 Read & Think 2 (p.27)", topic: "動名詞（stop 〜ing）", jp: "私たちは地球温暖化を食い止めるために協力できます。", jpParts: ["私たちは", "地球温暖化を食い止めるために", "協力できます。"], en: "We can work together to stop global warming.", beginner: ["We", "can work together", "to stop global warming."], idxMap: [0, 2, 1], intermediate: ["We", "can", "work", "together", "to", "stop", "global", "warming."], advanced: ["We", "can", "work", "together", "to", "stop", "global", "warming."], dummies: ["works", "stopping", "for", "with"], note: "work together（協力する・いっしょに働く）を使った表現です。" },
+      { id: 49, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.38)", topic: "形式主語（It is ... to 〜）", jp: "朝早く起きることは私にとって難しいです。", jpParts: ["朝早く起きることは", "私にとって", "難しい", "です。"], en: "It is hard for me to get up early in the morning.", beginner: ["It", "is", "hard", "for me", "to get up early in the morning."], idxMap: [-1, 3, 2, 1, 0], intermediate: ["It", "is", "hard", "for", "me", "to", "get", "up", "early", "in", "the", "morning."], advanced: ["It", "is", "hard", "for", "me", "to", "get", "up", "early", "in", "the", "morning."], dummies: ["This", "to me", "getting", "I"], note: "形式主語 It（インデックス-1）を文頭に置き、「for 人 ＋ to ＋ 動詞の原形」を後ろに置きます。" },
+      { id: 50, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.38)", topic: "形式主語（It is important for 人 to 〜）", jp: "私たちが十分な睡眠をとることは大切です。", jpParts: ["私たちが", "十分な睡眠をとることは", "大切です。"], en: "It is important for us to get enough sleep.", beginner: ["It", "is", "important", "for us", "to get enough sleep."], idxMap: [-1, 2, 2, 0, 1], intermediate: ["It", "is", "important", "for", "us", "to", "get", "enough", "sleep."], advanced: ["It", "is", "important", "for", "us", "to", "get", "enough", "sleep."], dummies: ["This", "to us", "getting", "we"], note: "It is ＋ 形容詞 ＋ for 人 ＋ to ＋ 動詞の原形 の基本構文です。" },
+      { id: 51, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.38)", topic: "形式主語（It is fun to 〜）", jp: "友達とスポーツをすることは楽しいです。", jpParts: ["友達とスポーツをすることは", "楽しい", "です。"], en: "It is fun to play sports with friends.", beginner: ["It", "is", "fun", "to play sports", "with friends."], idxMap: [-1, 2, 1, 0, 0], intermediate: ["It", "is", "fun", "to", "play", "sports", "with", "friends."], advanced: ["It", "is", "fun", "to", "play", "sports", "with", "friends."], dummies: ["This", "playing", "for", "friend"], note: "fun は「楽しい」という意味の形容詞・名詞として It is fun to 〜 の形でよく使われます。" },
+      { id: 52, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.38)", topic: "動名詞（avoid 〜ing）", jp: "私たちは寝る前にスマートフォンを使うのを避けるべきです。", jpParts: ["私たちは", "寝る前に", "スマートフォンを使うのを", "避けるべきです。"], en: "We should avoid using smartphones before going to bed.", beginner: ["We", "should avoid", "using smartphones", "before going to bed."], idxMap: [0, 3, 2, 1], intermediate: ["We", "should", "avoid", "using", "smartphones", "before", "going", "to", "bed."], advanced: ["We", "should", "avoid", "using", "smartphones", "before", "going", "to", "bed."], dummies: ["to use", "use", "after", "go"], note: "avoid（〜を避ける）の後ろは動名詞（using）を置きます。" },
+      { id: 53, unitGroup: "Unit 3 Part 1", unitLabel: "Unit 3 Part 1 (p.38)", topic: "助動詞（should）・熟語（turn off）", jp: "あなたは夜にテレビを消すべきです。", jpParts: ["あなたは", "夜に", "テレビを", "消すべきです。"], en: "You should turn off the TV at night.", beginner: ["You", "should turn off", "the TV", "at night."], idxMap: [0, 3, 2, 1], intermediate: ["You", "should", "turn", "off", "the", "TV", "at", "night."], advanced: ["You", "should", "turn", "off", "the", "TV", "at", "night."], dummies: ["turns", "on", "in", "a"], note: "should ＋ 動詞の原形（turn off：〜を消す）を使ったアドバイス表現です。" },
+      { id: 54, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.39)", topic: "SVOC（want ＋ 人 ＋ to 〜）", jp: "私はあなたにこの本を読んでもらいたいです。", jpParts: ["私は", "あなたに", "この本を", "読んでもらいたいです。"], en: "I want you to read this book.", beginner: ["I", "want", "you", "to read", "this book."], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "want", "you", "to", "read", "this", "book."], advanced: ["I", "want", "you", "to", "read", "this", "book."], dummies: ["wants", "your", "reading", "these"], note: "want ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜してもらいたい」を表します。" },
+      { id: 55, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.39)", topic: "SVOC（tell ＋ 人 ＋ to 〜）", jp: "私の母は私に部屋を掃除するように言いました。", jpParts: ["私の母は", "私に", "部屋を掃除するように", "言いました。"], en: "My mother told me to clean my room.", beginner: ["My mother", "told", "me", "to clean my room."], idxMap: [0, 3, 1, 2], intermediate: ["My", "mother", "told", "me", "to", "clean", "my", "room."], advanced: ["My", "mother", "told", "me", "to", "clean", "my", "room."], dummies: ["tell", "said", "I", "cleaning"], note: "tell ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜するよう言う・伝える」を表します。" },
+      { id: 56, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.39)", topic: "SVOC（ask ＋ 人 ＋ to 〜）", jp: "彼は私にドアを開けるように頼みました。", jpParts: ["彼は", "私に", "ドアを開けるように", "頼みました。"], en: "He asked me to open the door.", beginner: ["He", "asked", "me", "to open", "the door."], idxMap: [0, 3, 1, 3, 2], intermediate: ["He", "asked", "me", "to", "open", "the", "door."], advanced: ["He", "asked", "me", "to", "open", "the", "door."], dummies: ["ask", "I", "opening", "a"], note: "ask ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜するよう頼む」を表します。" },
+      { id: 57, unitGroup: "Unit 3 Part 2", unitLabel: "Unit 3 Part 2 (p.39)", topic: "SVOC（want ＋ 人 ＋ not to 〜）", jp: "私はあなたに夜更かしをしてほしくありません。", jpParts: ["私は", "あなたに", "夜更かしを", "してほしくありません。"], en: "I want you not to stay up late.", beginner: ["I", "want", "you", "not to stay up", "late."], idxMap: [0, 3, 1, 3, 2], intermediate: ["I", "want", "you", "not", "to", "stay", "up", "late."], advanced: ["I", "want", "you", "not", "to", "stay", "up", "late."], dummies: ["don't", "to not", "staying", "your"], note: "to不定詞の否定は to の直前に not を置いて「not to ＋ 動詞の原形」にします。" },
+      { id: 58, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.40)", topic: "SVOC（let ＋ 人 ＋ 原形）", jp: "あなたの脳に十分に休ませてください。", jpParts: ["あなたの脳に", "十分に", "休ませてください。"], en: "Let your brain rest enough.", beginner: ["Let", "your brain", "rest", "enough."], idxMap: [2, 0, 2, 1], intermediate: ["Let", "your", "brain", "rest", "enough."], advanced: ["Let", "your", "brain", "rest", "enough."], dummies: ["Lets", "to rest", "resting", "you"], note: "使役動詞 let の後ろは「人（もの）＋ 動詞の原形（rest）」になり、to は不要です。" },
+      { id: 59, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.40)", topic: "SVC（keep ＋ 目的語 ＋ 形容詞）", jp: "睡眠はあなたの体と心を健康に保ちます。", jpParts: ["睡眠は", "あなたの体と心を", "健康に", "保ちます。"], en: "Sleep keeps your body and mind healthy.", beginner: ["Sleep", "keeps", "your body and mind", "healthy."], idxMap: [0, 3, 1, 2], intermediate: ["Sleep", "keeps", "your", "body", "and", "mind", "healthy."], advanced: ["Sleep", "keeps", "your", "body", "and", "mind", "healthy."], dummies: ["keep", "health", "healthily", "you"], note: "「keep ＋ O ＋ 形容詞（healthy）」で「Oを〜な状態に保つ」を表します。" },
+      { id: 60, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.40)", topic: "SVOC（help ＋ 人 ＋ 原形）", jp: "睡眠はあなたが日中に学んだことを記憶するのを助けます。", jpParts: ["睡眠は", "あなたが", "日中に学んだことを", "記憶するのを助けます。"], en: "Sleep helps you remember what you learned during the day.", beginner: ["Sleep", "helps", "you", "remember", "what you learned during the day."], idxMap: [0, 3, 1, 3, 2], intermediate: ["Sleep", "helps", "you", "remember", "what", "you", "learned", "during", "the", "day."], advanced: ["Sleep", "helps", "you", "remember", "what", "you", "learned", "during", "the", "day."], dummies: ["help", "remembering", "which", "your"], note: "「help ＋ 人 ＋ 動詞の原形（remember）」で「人が〜するのを助ける」を表します。" },
+      { id: 61, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.40)", topic: "比較級（more than 〜）", jp: "中高生は毎晩8時間以上眠るべきです。", jpParts: ["中高生は", "毎晩", "8時間以上", "眠るべきです。"], en: "Teenagers should sleep for more than eight hours every night.", beginner: ["Teenagers", "should sleep", "for more than eight hours", "every night."], idxMap: [0, 3, 2, 1], intermediate: ["Teenagers", "should", "sleep", "for", "more", "than", "eight", "hours", "every", "night."], advanced: ["Teenagers", "should", "sleep", "for", "more", "than", "eight", "hours", "every", "night."], dummies: ["sleeps", "much", "hour", "at"], note: "more than ＋ 数字 で「〜より多くの・〜以上の」を表します。" },
+      { id: 62, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 1 (p.40)", topic: "接続詞（If 〜）", jp: "もし十分な睡眠をとらなければ、授業中に集中できません。", jpParts: ["もし", "十分な睡眠をとらなければ、", "あなたは", "授業中に", "集中できません。"], en: "If you don't get enough sleep, you cannot focus in class.", beginner: ["If", "you don't get enough sleep,", "you", "cannot focus", "in class."], idxMap: [0, 1, 2, 4, 3], intermediate: ["If", "you", "don't", "get", "enough", "sleep,", "you", "cannot", "focus", "in", "class."], advanced: ["If", "you", "don't", "get", "enough", "sleep,", "you", "cannot", "focus", "in", "class."], dummies: ["When", "didn't", "focusing", "at"], note: "条件を表す If 節を前に置くときはカンマ（,）で区切ります。" },
+      { id: 63, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.42)", topic: "形式主語（It is difficult to 〜）", jp: "多くの生徒にとって早く寝ることは難しいです。", jpParts: ["多くの生徒にとって", "早く寝ることは", "難しい", "です。"], en: "It is difficult for many students to go to bed early.", beginner: ["It", "is", "difficult", "for many students", "to go to bed early."], idxMap: [-1, 3, 2, 0, 1], intermediate: ["It", "is", "difficult", "for", "many", "students", "to", "go", "to", "bed", "early."], advanced: ["It", "is", "difficult", "for", "many", "students", "to", "go", "to", "bed", "early."], dummies: ["This", "to", "going", "much"], note: "It is difficult for 人 to 〜 の重要文です。" },
+      { id: 64, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.42)", topic: "熟語（stay up late）", jp: "彼らは遅くまで勉強したりテレビを見たりして夜更かしをします。", jpParts: ["彼らは", "勉強したりテレビを見たりして", "遅くまで", "夜更かしをします。"], en: "They stay up late studying or watching TV.", beginner: ["They", "stay up late", "studying or watching TV."], idxMap: [0, 2, 1], intermediate: ["They", "stay", "up", "late", "studying", "or", "watching", "TV."], advanced: ["They", "stay", "up", "late", "studying", "or", "watching", "TV."], dummies: ["stays", "study", "watch", "and"], note: "stay up late（夜更かしをする）の後ろに分詞（〜しながら）を続けています。" },
+      { id: 65, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.42)", topic: "熟語（be bad for 〜）", jp: "画面からの強い光はあなたの睡眠によくありません。", jpParts: ["画面からの強い光は", "あなたの睡眠に", "よくありません。"], en: "Strong light from screens is bad for your sleep.", beginner: ["Strong light from screens", "is bad for", "your sleep."], idxMap: [0, 2, 1], intermediate: ["Strong", "light", "from", "screens", "is", "bad", "for", "your", "sleep."], advanced: ["Strong", "light", "from", "screens", "is", "bad", "for", "your", "sleep."], dummies: ["are", "to", "at", "you"], note: "be bad for 〜（〜に悪い・よくない）を使った表現です。" },
+      { id: 66, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.43)", topic: "形式主語（It is good for 人 to 〜）", jp: "毎日同じ時間に起きることはあなたにとってよいことです。", jpParts: ["毎日同じ時間に起きることは", "あなたにとって", "よいこと", "です。"], en: "It is good for you to wake up at the same time every day.", beginner: ["It", "is", "good", "for you", "to wake up at the same time every day."], idxMap: [-1, 3, 2, 1, 0], intermediate: ["It", "is", "good", "for", "you", "to", "wake", "up", "at", "the", "same", "time", "every", "day."], advanced: ["It", "is", "good", "for", "you", "to", "wake", "up", "at", "the", "same", "time", "every", "day."], dummies: ["This", "to you", "waking", "in"], note: "It is good for you to 〜（〜することはあなたにとってよい）の文です。" },
+      { id: 67, unitGroup: "Unit 3 Read & Think", unitLabel: "Unit 3 Read & Think 2 (p.43)", topic: "命令文・助動詞（will）", jp: "これらの習慣を試してみてください、そうすればよりよく眠れるでしょう。", jpParts: ["これらの習慣を", "試してみてください、", "そうすれば", "よりよく", "眠れるでしょう。"], en: "Try these habits, and you will sleep better.", beginner: ["Try", "these habits,", "and", "you", "will sleep", "better."], idxMap: [1, 0, 2, 2, 4, 3], intermediate: ["Try", "these", "habits,", "and", "you", "will", "sleep", "better."], advanced: ["Try", "these", "habits,", "and", "you", "will", "sleep", "better."], dummies: ["Tries", "this", "or", "good"], note: "「命令文, and 〜」で「〜しなさい、そうすれば…」を表します。" },
+      { id: 68, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.46)", topic: "現在完了（経験・have heard of）", jp: "あなたは「フェアトレード」について聞いたことがありますか。", jpParts: ["あなたは", "「フェアトレード」について", "聞いたことがありますか。"], en: "Have you ever heard of \"fair trade\"?", beginner: ["Have", "you", "ever", "heard of", "\"fair trade\"?"], idxMap: [2, 0, 2, 2, 1], intermediate: ["Have", "you", "ever", "heard", "of", "\"fair", "trade\"?"], advanced: ["Have", "you", "ever", "heard", "of", "\"fair", "trade\"?"], dummies: ["Did", "hear", "about", "never"], note: "hear of 〜（〜のことを耳にする・聞いたことがある）の現在完了疑問文です。" },
+      { id: 69, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.46)", topic: "受動態（are grown in 〜）", jp: "カカオ豆は主に発展途上国で栽培されています。", jpParts: ["カカオ豆は", "主に", "発展途上国で", "栽培されています。"], en: "Cacao beans are mainly grown in developing countries.", beginner: ["Cacao beans", "are mainly grown", "in developing countries."], idxMap: [0, 3, 2], intermediate: ["Cacao", "beans", "are", "mainly", "grown", "in", "developing", "countries."], advanced: ["Cacao", "beans", "are", "mainly", "grown", "in", "developing", "countries."], dummies: ["is", "grew", "grow", "at"], note: "grow（栽培する）の過去分詞 grown を使った受け身の文です。" },
+      { id: 70, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.47)", topic: "受動態（are paid）", jp: "多くの農家の人々は十分な賃金を支払われていません。", jpParts: ["多くの農家の人々は", "十分な賃金を", "支払われていません。"], en: "Many farmers are not paid enough money.", beginner: ["Many farmers", "are not paid", "enough money."], idxMap: [0, 2, 1], intermediate: ["Many", "farmers", "are", "not", "paid", "enough", "money."], advanced: ["Many", "farmers", "are", "not", "paid", "enough", "money."], dummies: ["is", "pay", "paying", "much"], note: "pay の過去分詞 paid を使った受け身の否定文です。" },
+      { id: 71, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.47)", topic: "比較・熟語（instead of 〜）", jp: "学校に行く代わりに、多くの子供たちが農場で働いています。", jpParts: ["学校に行く代わりに、", "多くの子供たちが", "農場で", "働いています。"], en: "Instead of going to school, many children work on farms.", beginner: ["Instead of going to school,", "many children", "work", "on farms."], idxMap: [0, 1, 3, 2], intermediate: ["Instead", "of", "going", "to", "school,", "many", "children", "work", "on", "farms."], advanced: ["Instead", "of", "going", "to", "school,", "many", "children", "work", "on", "farms."], dummies: ["go", "works", "in", "child"], note: "instead of ＋ 動詞のing形（going）で「〜する代わりに」を表します。" },
+      { id: 72, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.48)", topic: "SVOC（help ＋ 人 ＋ 原形）", jp: "フェアトレードは農家の人々がよりよい生活を送るのを助けます。", jpParts: ["フェアトレードは", "農家の人々が", "よりよい生活を送るのを", "助けます。"], en: "Fair trade helps farmers live a better life.", beginner: ["Fair trade", "helps", "farmers", "live a better life."], idxMap: [0, 3, 1, 2], intermediate: ["Fair", "trade", "helps", "farmers", "live", "a", "better", "life."], advanced: ["Fair", "trade", "helps", "farmers", "live", "a", "better", "life."], dummies: ["help", "living", "good", "farmer"], note: "help ＋ 人（farmers）＋ 動詞の原形（live）の語順です。" },
+      { id: 73, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.49)", topic: "動名詞主語（Choosing 〜）", jp: "フェアトレード製品を選ぶことは世界を変える1つの方法です。", jpParts: ["フェアトレード製品を選ぶことは", "世界を変える", "1つの方法", "です。"], en: "Choosing fair trade products is one way to change the world.", beginner: ["Choosing fair trade products", "is", "one way", "to change the world."], idxMap: [0, 3, 2, 1], intermediate: ["Choosing", "fair", "trade", "products", "is", "one", "way", "to", "change", "the", "world."], advanced: ["Choosing", "fair", "trade", "products", "is", "one", "way", "to", "change", "the", "world."], dummies: ["Choose", "are", "changing", "product"], note: "動名詞（Choosing 〜）が主語なので単数扱いとなり、動詞は is を使います。" },
+      { id: 74, unitGroup: "Let's Read 1", unitLabel: "Let's Read 1 (p.49)", topic: "疑問詞＋to不定詞（what we can do）", jp: "私たちが何をできるか一緒に考えてみましょう。", jpParts: ["私たちが", "何をできるか", "一緒に", "考えてみましょう。"], en: "Let's think together about what we can do.", beginner: ["Let's think together", "about", "what", "we can do."], idxMap: [3, 2, 1, 0], intermediate: ["Let's", "think", "together", "about", "what", "we", "can", "do."], advanced: ["Let's", "think", "together", "about", "what", "we", "can", "do."], dummies: ["thinks", "which", "us", "does"], note: "前置詞 about の後ろに間接疑問文「what we can do」を置いています。" },
+      { id: 75, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.54)", topic: "間接疑問文（Do you know where 〜?）", jp: "あなたは図書館がどこにあるか知っていますか。", jpParts: ["あなたは", "図書館がどこに", "あるか", "知っていますか。"], en: "Do you know where the library is?", beginner: ["Do", "you", "know", "where", "the library is?"], idxMap: [3, 0, 3, 1, 2], intermediate: ["Do", "you", "know", "where", "the", "library", "is?"], advanced: ["Do", "you", "know", "where", "the", "library", "is?"], dummies: ["Are", "is the library", "what", "knows"], note: "文の途中に入る疑問詞節は「where ＋ 主語 ＋ 動詞（the library is）」の語順になります。" },
+      { id: 76, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.54)", topic: "間接疑問文（Please tell me how 〜）", jp: "駅への行き方を私に教えてください。", jpParts: ["駅への行き方を", "私に", "教えてください。"], en: "Please tell me how I can get to the station.", beginner: ["Please tell", "me", "how", "I can get to the station."], idxMap: [2, 1, 0, 0], intermediate: ["Please", "tell", "me", "how", "I", "can", "get", "to", "the", "station."], advanced: ["Please", "tell", "me", "how", "I", "can", "get", "to", "the", "station."], dummies: ["tells", "I", "what", "at"], note: "tell me の後ろに「how ＋ 主語 ＋ 動詞」の語順を続けています。" },
+      { id: 77, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.54)", topic: "間接疑問文（I don't know what 〜）", jp: "私は彼が何を言ったのかわかりません。", jpParts: ["私は", "彼が何を", "言ったのか", "わかりません。"], en: "I don't know what he said.", beginner: ["I", "don't know", "what", "he said."], idxMap: [0, 3, 1, 2], intermediate: ["I", "don't", "know", "what", "he", "said."], advanced: ["I", "don't", "know", "what", "he", "said."], dummies: ["didn't", "which", "did he say", "say"], note: "過去のことなので「what ＋ 主語 ＋ 過去形（he said）」の語順にします。" },
+      { id: 78, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.54)", topic: "間接疑問文（I wonder when 〜）", jp: "次のバスがいつ来るのかしら。", jpParts: ["次のバスが", "いつ", "来るのかしら。"], en: "I wonder when the next bus will come.", beginner: ["I wonder", "when", "the next bus", "will come."], idxMap: [2, 1, 0, 2], intermediate: ["I", "wonder", "when", "the", "next", "bus", "will", "come."], advanced: ["I", "wonder", "when", "the", "next", "bus", "will", "come."], dummies: ["wonders", "what", "comes", "came"], note: "I wonder ＋ 疑問詞 ＋ 主語 ＋ 動詞 で「〜かしら・〜だろうか」を表します。" },
+      { id: 79, unitGroup: "Unit 4 Part 1", unitLabel: "Unit 4 Part 1 (p.54)", topic: "間接疑問文（who is 〜：疑問詞が主語）", jp: "だれがその窓を割ったのか知っていますか。", jpParts: ["だれが", "その窓を割ったのか", "知っていますか。"], en: "Do you know who broke the window?", beginner: ["Do", "you", "know", "who", "broke the window?"], idxMap: [2, -1, 2, 0, 1], intermediate: ["Do", "you", "know", "who", "broke", "the", "window?"], advanced: ["Do", "you", "know", "who", "broke", "the", "window?"], dummies: ["Did", "whom", "break", "a"], note: "who 自体が主語なので「who ＋ 動詞（broke the window）」の語順になります。" },
+      { id: 80, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.55)", topic: "疑問詞＋to不定詞（how to 〜）", jp: "私はこの機械の使い方を知っています。", jpParts: ["私は", "この機械の使い方を", "知っています。"], en: "I know how to use this machine.", beginner: ["I", "know", "how to use", "this machine."], idxMap: [0, 2, 1, 1], intermediate: ["I", "know", "how", "to", "use", "this", "machine."], advanced: ["I", "know", "how", "to", "use", "this", "machine."], dummies: ["knows", "what", "using", "these"], note: "how ＋ to ＋ 動詞の原形 で「〜の仕方・使い方」を表します。" },
+      { id: 81, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.55)", topic: "疑問詞＋to不定詞（what to 〜）", jp: "彼女は彼に何を買うべきかわかりませんでした。", jpParts: ["彼女は", "彼に", "何を買うべきか", "わかりませんでした。"], en: "She didn't know what to buy for him.", beginner: ["She", "didn't know", "what to buy", "for him."], idxMap: [0, 3, 2, 1], intermediate: ["She", "didn't", "know", "what", "to", "buy", "for", "him."], advanced: ["She", "didn't", "know", "what", "to", "buy", "for", "him."], dummies: ["don't", "which", "buying", "he"], note: "what ＋ to ＋ 動詞の原形 で「何を〜すべきか」を表します。" },
+      { id: 82, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.55)", topic: "疑問詞＋to不定詞（where to 〜）", jp: "どこで切符を買えばよいか私に教えてください。", jpParts: ["どこで切符を買えばよいか", "私に", "教えてください。"], en: "Please tell me where to buy tickets.", beginner: ["Please tell", "me", "where to buy", "tickets."], idxMap: [2, 1, 0, 0], intermediate: ["Please", "tell", "me", "where", "to", "buy", "tickets."], advanced: ["Please", "tell", "me", "where", "to", "buy", "tickets."], dummies: ["tells", "I", "when", "buying"], note: "where ＋ to ＋ 動詞の原形 で「どこで〜すべきか」を表します。" },
+      { id: 83, unitGroup: "Unit 4 Part 2", unitLabel: "Unit 4 Part 2 (p.55)", topic: "疑問詞＋to不定詞（when to 〜）", jp: "私たちはいつ出発すべきか決めなければなりません。", jpParts: ["私たちは", "いつ出発すべきか", "決めなければなりません。"], en: "We have to decide when to leave.", beginner: ["We", "have to decide", "when to leave."], idxMap: [0, 2, 1], intermediate: ["We", "have to", "decide", "when", "to", "leave."], advanced: ["We", "have", "to", "decide", "when", "to", "leave."], dummies: ["has", "where", "leaving", "left"], note: "when ＋ to ＋ 動詞の原形 で「いつ〜すべきか」を表します。" },
+      { id: 84, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.56)", topic: "分詞の後置修飾（現在分詞）", jp: "ギターを弾いているあの少年を見てください。", jpParts: ["ギターを弾いている", "あの少年を", "見てください。"], en: "Look at that boy playing the guitar.", beginner: ["Look at", "that boy", "playing the guitar."], idxMap: [2, 1, 0], intermediate: ["Look", "at", "that", "boy", "playing", "the", "guitar."], advanced: ["Look", "at", "that", "boy", "playing", "the", "guitar."], dummies: ["Looks", "those", "plays", "a"], note: "名詞（that boy）の後ろに現在分詞（playing 〜）を置いて「〜している少年」と修飾します。" },
+      { id: 85, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.56)", topic: "分詞の後置修飾（現在分詞・主語）", jp: "ステージで歌っている少女は私の姉です。", jpParts: ["ステージで歌っている", "少女は", "私の姉です。"], en: "The girl singing on the stage is my sister.", beginner: ["The girl", "singing on the stage", "is", "my sister."], idxMap: [1, 0, 2, 2], intermediate: ["The", "girl", "singing", "on", "the", "stage", "is", "my", "sister."], advanced: ["The", "girl", "singing", "on", "the", "stage", "is", "my", "sister."], dummies: ["sings", "sang", "are", "in"], note: "主語 The girl singing on the stage（単数）に対して、全体の動詞は is になります。" },
+      { id: 86, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.56)", topic: "分詞の後置修飾（過去分詞）", jp: "これはイタリアで作られた車です。", jpParts: ["これは", "イタリアで作られた", "車", "です。"], en: "This is a car made in Italy.", beginner: ["This", "is", "a car", "made in Italy."], idxMap: [0, 3, 2, 1], intermediate: ["This", "is", "a", "car", "made", "in", "Italy."], advanced: ["This", "is", "a", "car", "made", "in", "Italy."], dummies: ["That", "are", "making", "make"], note: "「〜された車」と受け身の意味で後ろから説明するときは過去分詞（made）を使います。" },
+      { id: 87, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 1 (p.56)", topic: "分詞の後置修飾（過去分詞・written）", jp: "私は英語で書かれた本を読むのが好きです。", jpParts: ["私は", "英語で書かれた", "本を読むのが", "好きです。"], en: "I like reading books written in English.", beginner: ["I", "like reading", "books", "written in English."], idxMap: [0, 3, 2, 1], intermediate: ["I", "like", "reading", "books", "written", "in", "English."], advanced: ["I", "like", "reading", "books", "written", "in", "English."], dummies: ["likes", "wrote", "writing", "by"], note: "books の後ろに過去分詞（written in English）を置いて修飾しています。" },
+      { id: 88, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 2 (p.58)", topic: "分詞の後置修飾（called 〜）", jp: "それは「落語」と呼ばれる日本の伝統芸能です。", jpParts: ["それは", "「落語」と呼ばれる", "日本の伝統芸能", "です。"], en: "It is a traditional Japanese art called rakugo.", beginner: ["It", "is", "a traditional Japanese art", "called rakugo."], idxMap: [0, 3, 2, 1], intermediate: ["It", "is", "a", "traditional", "Japanese", "art", "called", "rakugo."], advanced: ["It", "is", "a", "traditional", "Japanese", "art", "called", "rakugo."], dummies: ["This", "calling", "call", "an"], note: "名詞の後ろに過去分詞 called 〜 を置いて「〜と呼ばれる…」と説明します。" },
+      { id: 89, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 2 (p.58)", topic: "分詞の後置修飾（used by 〜）", jp: "扇子と手ぬぐいは落語家によって使われる小道具です。", jpParts: ["扇子と手ぬぐいは", "落語家によって使われる", "小道具", "です。"], en: "A fan and a hand towel are props used by rakugo performers.", beginner: ["A fan and a hand towel", "are", "props", "used by rakugo performers."], idxMap: [0, 3, 2, 1], intermediate: ["A", "fan", "and", "a", "hand", "towel", "are", "props", "used", "by", "rakugo", "performers."], advanced: ["A", "fan", "and", "a", "hand", "towel", "are", "props", "used", "by", "rakugo", "performers."], dummies: ["is", "using", "use", "with"], note: "props の後ろに過去分詞 used by 〜 を置いて修飾しています。" },
+      { id: 90, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 2 (p.58)", topic: "分詞の後置修飾（sitting on 〜）", jp: "座布団の上に座っている演者は1人で多くの役を演じます。", jpParts: ["座布団の上に座っている", "演者は", "1人で", "多くの役を演じます。"], en: "A performer sitting on a cushion plays many roles alone.", beginner: ["A performer", "sitting on a cushion", "plays", "many roles", "alone."], idxMap: [1, 0, 3, 3, 2], intermediate: ["A", "performer", "sitting", "on", "a", "cushion", "plays", "many", "roles", "alone."], advanced: ["A", "performer", "sitting", "on", "a", "cushion", "plays", "many", "roles", "alone."], dummies: ["sits", "sat", "play", "in"], note: "主語 A performer sitting on a cushion が単数なので動詞は plays になります。" },
+      { id: 91, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 2 (p.59)", topic: "間接疑問文（how people lived）", jp: "私たちは江戸時代に人々がどのように暮らしていたかを知ることができます。", jpParts: ["私たちは", "江戸時代に人々がどのように暮らしていたかを", "知ることができます。"], en: "We can learn how people lived in the Edo period.", beginner: ["We", "can learn", "how people lived", "in the Edo period."], idxMap: [0, 2, 1, 1], intermediate: ["We", "can", "learn", "how", "people", "lived", "in", "the", "Edo", "period."], advanced: ["We", "can", "learn", "how", "people", "lived", "in", "the", "Edo", "period."], dummies: ["learns", "what", "live", "at"], note: "learn の後ろに間接疑問文「how people lived」を置いています。" },
+      { id: 92, unitGroup: "Unit 4 Read & Think", unitLabel: "Unit 4 Read & Think 2 (p.59)", topic: "形式主語（It is interesting to 〜）", jp: "落語を英語で聞くことはおもしろいです。", jpParts: ["落語を英語で聞くことは", "おもしろい", "です。"], en: "It is interesting to listen to rakugo in English.", beginner: ["It", "is", "interesting", "to listen to rakugo", "in English."], idxMap: [-1, 2, 1, 0, 0], intermediate: ["It", "is", "interesting", "to", "listen", "to", "rakugo", "in", "English."], advanced: ["It", "is", "interesting", "to", "listen", "to", "rakugo", "in", "English."], dummies: ["This", "interested", "listening", "by"], note: "It is interesting to 〜（〜することはおもしろい）の構文です。" },
+      { id: 93, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.66)", topic: "関係代名詞（主格・who）", jp: "私はオーストラリア出身の友達がいます。", jpParts: ["私は", "オーストラリア出身の", "友達が", "います。"], en: "I have a friend who is from Australia.", beginner: ["I", "have", "a friend", "who", "is from Australia."], idxMap: [0, 3, 2, -1, 1], intermediate: ["I", "have", "a", "friend", "who", "is", "from", "Australia."], advanced: ["I", "have", "a", "friend", "who", "is", "from", "Australia."], dummies: ["which", "what", "are", "has"], note: "先行詞が人（a friend）なので関係代名詞 who を置いて後ろから説明します。" },
+      { id: 94, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.66)", topic: "関係代名詞（主格・who ＋ 一般動詞）", jp: "これはとても上手に絵を描く少年です。", jpParts: ["これは", "とても上手に絵を描く", "少年", "です。"], en: "This is a boy who draws pictures very well.", beginner: ["This", "is", "a boy", "who", "draws pictures very well."], idxMap: [0, 3, 2, -1, 1], intermediate: ["This", "is", "a", "boy", "who", "draws", "pictures", "very", "well."], advanced: ["This", "is", "a", "boy", "who", "draws", "pictures", "very", "well."], dummies: ["which", "draw", "drawing", "are"], note: "先行詞 a boy が単数なので、who の後ろの動詞には s（draws）をつけます。" },
+      { id: 95, unitGroup: "Unit 5 Part 1", unitLabel: "Unit 5 Part 1 (p.66)", topic: "関係代名詞（主格・that / which）", jp: "私は長い尻尾を持っている猫を飼っています。", jpParts: ["私は", "長い尻尾を持っている", "猫を", "飼っています。"], en: "I have a cat that has a long tail.", beginner: ["I", "have", "a cat", "that", "has a long tail."], idxMap: [0, 3, 2, -1, 1], intermediate: ["I", "have", "a", "cat", "that", "has", "a", "long", "tail."], advanced: ["I", "have", "a", "cat", "that", "has", "a", "long", "tail."], dummies: ["who", "have", "had", "an"], note: "先行詞が動物（a cat）なので関係代名詞 that（または which）を使います。" },
+      { id: 96, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.67)", topic: "関係代名詞（目的格・which / that）", jp: "これは私が昨日撮った写真です。", jpParts: ["これは", "私が昨日撮った", "写真", "です。"], en: "This is a picture which I took yesterday.", beginner: ["This", "is", "a picture", "which", "I took yesterday."], idxMap: [0, 3, 2, -1, 1], intermediate: ["This", "is", "a", "picture", "which", "I", "took", "yesterday."], advanced: ["This", "is", "a", "picture", "which", "I", "took", "yesterday."], dummies: ["who", "take", "taken", "these"], note: "先行詞がモノ（a picture）で後ろに「主語＋動詞（I took）」が続く目的格の関係代名詞です。" },
+      { id: 97, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.67)", topic: "関係代名詞（目的格・that）", jp: "彼が作ったケーキはとてもおいしかったです。", jpParts: ["彼が作った", "ケーキは", "とてもおいしかったです。"], en: "The cake that he made was very delicious.", beginner: ["The cake", "that", "he made", "was", "very delicious."], idxMap: [1, -1, 0, 2, 2], intermediate: ["The", "cake", "that", "he", "made", "was", "very", "delicious."], advanced: ["The", "cake", "that", "he", "made", "was", "very", "delicious."], dummies: ["who", "make", "were", "a"], note: "主語 The cake that he made（単数）に対して、全体の動詞は was になります。" },
+      { id: 98, unitGroup: "Unit 5 Part 2", unitLabel: "Unit 5 Part 2 (p.67)", topic: "関係代名詞の省略（接触節）", jp: "私が毎日使っている辞書はこれです。", jpParts: ["私が毎日使っている", "辞書は", "これです。"], en: "The dictionary I use every day is this one.", beginner: ["The dictionary", "I use every day", "is", "this one."], idxMap: [1, 0, 2, 2], intermediate: ["The", "dictionary", "I", "use", "every", "day", "is", "this", "one."], advanced: ["The", "dictionary", "I", "use", "every", "day", "is", "this", "one."], dummies: ["uses", "used", "are", "it"], note: "目的格の関係代名詞（that / which）は省略して、名詞の後ろにすぐ「主語＋動詞」を置けます。" },
+      { id: 99, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.68)", topic: "関係代名詞（主格・who）", jp: "障害のある人々を助けるたくさんの犬がいます。", jpParts: ["障害のある人々を助ける", "たくさんの犬が", "います。"], en: "There are many dogs that help people with disabilities.", beginner: ["There are", "many dogs", "that", "help people with disabilities."], idxMap: [2, 1, -1, 0], intermediate: ["There", "are", "many", "dogs", "that", "help", "people", "with", "disabilities."], advanced: ["There", "are", "many", "dogs", "that", "help", "people", "with", "disabilities."], dummies: ["is", "who", "helps", "much"], note: "先行詞 many dogs が複数なので、関係代名詞 that の後ろの動詞 help には s をつけません。" },
+      { id: 100, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.68)", topic: "関係代名詞（目的格の省略）", jp: "盲導犬は彼らがする仕事のために特別な訓練を受けます。", jpParts: ["盲導犬は", "彼らがする", "仕事のために", "特別な訓練を受けます。"], en: "Guide dogs get special training for the work they do.", beginner: ["Guide dogs", "get special training", "for the work", "they do."], idxMap: [0, 3, 2, 1], intermediate: ["Guide", "dogs", "get", "special", "training", "for", "the", "work", "they", "do."], advanced: ["Guide", "dogs", "get", "special", "training", "for", "the", "work", "they", "do."], dummies: ["gets", "does", "them", "a"], note: "the work の後ろに関係代名詞が省略された「they do」が続いています。" },
+      { id: 101, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 1 (p.68)", topic: "関係代名詞（主格・that）", jp: "視覚障害のある人々を案内する犬は盲導犬と呼ばれます。", jpParts: ["視覚障害のある人々を案内する", "犬は", "盲導犬と呼ばれます。"], en: "Dogs that guide blind people are called guide dogs.", beginner: ["Dogs", "that", "guide blind people", "are called guide dogs."], idxMap: [1, -1, 0, 2], intermediate: ["Dogs", "that", "guide", "blind", "people", "are", "called", "guide", "dogs."], advanced: ["Dogs", "that", "guide", "blind", "people", "are", "called", "guide", "dogs."], dummies: ["who", "guides", "is", "calling"], note: "主語 Dogs that guide blind people（複数）に対して受け身の are called が続きます。" },
+      { id: 102, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 2 (p.70)", topic: "関係代名詞（主格・who）", jp: "私たちは補助犬と暮らす人々のことをもっと理解する必要があります。", jpParts: ["私たちは", "補助犬と暮らす", "人々のことを", "もっと理解する必要があります。"], en: "We need to understand people who live with assistance dogs more.", beginner: ["We", "need to understand", "people", "who", "live with assistance dogs", "more."], idxMap: [0, 3, 2, -1, 1, 3], intermediate: ["We", "need", "to", "understand", "people", "who", "live", "with", "assistance", "dogs", "more."], advanced: ["We", "need", "to", "understand", "people", "who", "live", "with", "assistance", "dogs", "more."], dummies: ["needs", "which", "lives", "much"], note: "先行詞 people（複数）を関係代名詞 who live with 〜 が後ろから修飾しています。" },
+      { id: 103, unitGroup: "Unit 5 Read & Think", unitLabel: "Unit 5 Read & Think 2 (p.70)", topic: "関係代名詞（主格・that）＋ 助動詞", jp: "私たちは誰もが心地よく暮らせる社会を作るべきです。", jpParts: ["私たちは", "誰もが心地よく暮らせる", "社会を", "作るべきです。"], en: "We should create a society that everyone can live in comfortably.", beginner: ["We", "should create", "a society", "that", "everyone can live in comfortably."], idxMap: [0, 3, 2, -1, 1], intermediate: ["We", "should", "create", "a", "society", "that", "everyone", "can", "live", "in", "comfortably."], advanced: ["We", "should", "create", "a", "society", "that", "everyone", "can", "live", "in", "comfortably."], dummies: ["creates", "who", "lives", "comfortable"], note: "live in a society（社会の中で暮らす）の前置詞 in が文中に残る形です。" },
       { id: 104, unitGroup: "Unit 6 Part 1", unitLabel: "Unit 6 Part 1 (p.78)", topic: "仮定法過去（I wish I could 〜）", jp: "私は学校に行くことができればいいのになあ。", jpParts: ["私は", "学校に", "行くことができれば", "いいのになあ。"], en: "I wish I could go to school.", beginner: ["I", "wish", "I could go", "to school."], idxMap: [0, 3, 2, 1], intermediate: ["I", "wish", "I", "could", "go", "to", "school."], advanced: ["I", "wish", "I", "could", "go", "to", "school."], dummies: ["can", "going", "at", "in"], note: "I wish の後ろは助動詞や動詞を過去形（could）にして、現実とは異なる願いを表します。" },
       { id: 105, unitGroup: "Unit 6 Part 1", unitLabel: "Unit 6 Part 1 (p.78)", topic: "仮定法過去（I wish I had 〜）", jp: "私はペンやノートを持っていればいいのになあ。", jpParts: ["私は", "ペンやノートを", "持っていれば", "いいのになあ。"], en: "I wish I had pens and notebooks.", beginner: ["I", "wish", "I had", "pens and notebooks."], idxMap: [0, 3, 2, 1], intermediate: ["I", "wish", "I", "had", "pens", "and", "notebooks."], advanced: ["I", "wish", "I", "had", "pens", "and", "notebooks."], dummies: ["have", "has", "pen", "notebook"], note: "現実には持っていないので、I wish の後ろの動詞を過去形（had）にします。" },
       { id: 106, unitGroup: "Unit 6 Part 1", unitLabel: "Unit 6 Part 1 (p.78)", topic: "命令文, and 〜（〜しなさい、そうすれば…）", jp: "私たちに未使用の学用品を送ってください、そうすれば海外の子供たちに送ります。", jpParts: ["私たちに", "未使用の学用品を", "送ってください、", "そうすれば", "海外の子供たちに", "送ります。"], en: "Send us unused school supplies, and we will send them to children abroad.", beginner: ["Send", "us", "unused school supplies,", "and", "we will send", "them", "to children abroad."], idxMap: [2, 0, 1, 3, 6, 5, 4], intermediate: ["Send", "us", "unused", "school supplies,", "and", "we", "will", "send", "them", "to", "children", "abroad."], advanced: ["Send", "us", "unused", "school", "supplies,", "and", "we", "will", "send", "them", "to", "children", "abroad."], dummies: ["Sends", "we", "they", "for"], note: "「命令文, and 〜」で「〜しなさい、そうすれば…」という意味になります。" },
@@ -649,135 +790,135 @@
       { id: 122, unitGroup: "Unit 6 Read & Think", unitLabel: "Unit 6 Read & Think 1 (p.81)", topic: "形式主語（It's necessary for us to continue 〜ing）", jp: "私たちがたがいを助け合い続けることが必要です。", jpParts: ["私たちが", "たがいを", "助け合い続けることが", "必要です。"], en: "It's necessary for us to continue helping each other.", beginner: ["It's", "necessary", "for us", "to continue", "helping", "each other."], idxMap: [-1, 3, 3, 0, 2, 1], intermediate: ["It's", "necessary", "for", "us", "to", "continue", "helping", "each", "other."], advanced: ["It's", "necessary", "for", "us", "to", "continue", "helping", "each", "other."], dummies: ["This", "to us", "help", "another"], note: "形式主語 It's と「continue 〜ing（〜し続ける）」を組み合わせた文です。" }
     ];
 
-    // 各問題の「語順の型（公式）」データ
+    // 各問題の「語順の型（公式）」データ（全122問）
     const GRAMMAR_FORMULAS = {
-      1: { formula: "主語 ＋ finally ＋ 動詞の過去形 ＋ 目的語 ＋ with 人", desc: "finally（ついに）などの副詞は一般動詞の前に置きます。「誰と」は文末に with 〜 でつなぎます。" },
-      2: { formula: "主語 ＋ be動詞 ＋ really ＋ into ＋ 名詞（〜にはまっている）", desc: "be into 〜 で「〜に夢中である・はまっている」。強調の really は be動詞の後ろに入れます。" },
-      3: { formula: "結果の文(I like 〜) ＋ because ＋ 理由の文(I enjoy 〜)", desc: "結論を先に言い、because で理由の文を後ろにつなげます。enjoy の後ろは動名詞（〜ing）にします。" },
-      4: { formula: "主語 ＋ didn't know ＋ (that) ＋ 主語 ＋ 動詞の過去形", desc: "「〜とは知らなかった」は didn't know の後ろに「主語＋動詞」を続け、時制を過去に揃えます。" },
-      5: { formula: "主語 ＋ like ＋ 対象 ＋ the best", desc: "「〜がいちばん好き」は like の後ろに対象を置き、文末に the best をつけます。" },
-      6: { formula: "主語 ＋ be動詞 ＋ interested in ＋ 名詞（〜に興味がある）", desc: "be interested in 〜 はセットで覚える重要熟語です。主語が複数（tourists）なので are を使います。" },
-      7: { formula: "主語 ＋ have/has ＋ 過去分詞 ＋ 目的語 ＋ 回数(many times)", desc: "現在完了の経験用法「〜したことがある」。回数（once, twice, many times）は文末に置きます。" },
-      8: { formula: "主語 ＋ be動詞 ＋ 感情の形容詞(excited) ＋ to ＋ 動詞の原形 〜", desc: "「〜してわくわくする」は感情を表す形容詞の後ろに「to ＋ 動詞の原形」を置いて原因を示します。" },
-      9: { formula: "主語 ＋ came here ＋ to ＋ 動詞の原形 〜（〜するために）", desc: "「ここに来た」という行動を先に言い、目的を表す「to ＋ 動詞の原形」を後ろに続けます。" },
-      10: { formula: "主語 ＋ have/has ＋ never ＋ been to ＋ 場所", desc: "「一度も〜に行ったことがない」は have never been to を使います（gone to は使いません）。" },
-      11: { formula: "主語(三人称単数) ＋ has ＋ never ＋ 過去分詞 ＋ 目的語", desc: "主語が Eddy（三人称単数）なので have ではなく has を使い、never を過去分詞の前に置きます。" },
-      12: { formula: "主語 ＋ is/are ＋ popular ＋ among ＋ 集団（〜の間で人気）", desc: "3人以上の集団の「〜の間で」は between ではなく前置詞 among を使います。" },
-      13: { formula: "主語 ＋ 頻度副詞(sometimes) ＋ 動詞 ＋ 目的語 ＋ to ＋ 動詞の原形", desc: "sometimes（ときどき）は一般動詞の前に置き、目的（〜するために）は文末に to不定詞で置きます。" },
-      14: { formula: "Have/Has ＋ 主語 ＋ ever ＋ 過去分詞 ＋ 目的語?", desc: "現在完了の疑問文「これまでに〜したことがありますか？」。ever は過去分詞の直前に置きます。" },
-      15: { formula: "Have/Has ＋ 主語 ＋ been to ＋ 場所?", desc: "「〜へ行ったことがありますか？」と経験を尋ねる定番の疑問文です。" },
-      16: { formula: "主語 ＋ have/has ＋ been to ＋ 場所 ＋ once", desc: "「一度〜に行ったことがある」は文末に once を置きます。" },
-      17: { formula: "What ＋ makes ＋ 対象(O) ＋ 状態・形容詞(C) ＋ 場所?", desc: "疑問詞 What が主語になり「何が（アニメ）を（人気に）させていますか？＝どうして人気なのですか？」を表します。" },
-      18: { formula: "Both A and B ＋ 動詞(複数扱い) ＋ 動名詞(〜ing)", desc: "Both A and B（AとBの両方）が主語のときは複数扱いになるため、enjoy に s はつけません。" },
-      19: { formula: "主語 ＋ make ＋ 人(O) ＋ 形容詞(C)（人を〜な状態にする）", desc: "make ＋ 人 ＋ 形容詞の語順です。「わくわくする（人）」は exciting ではなく excited を使います。" },
-      20: { formula: "主語 ＋ make ＋ 人(O) ＋ 形容詞1 and 形容詞2", desc: "make me の後ろに形容詞（happy and positive）を並べて「私を幸せで前向きにする」を表します。" },
-      21: { formula: "I hope ＋ (that) ＋ 主語 ＋ will be ＋ 過去分詞 〜", desc: "「〜であることを願う」の後ろに「will be ＋ 過去分詞（〜されるだろう）」の受け身の文を続けています。" },
-      22: { formula: "When ＋ 主語 ＋ 動詞 〜, 主語 ＋ cannot ＋ 動詞の原形 〜", desc: "「〜するとき」を表す When の塊を文頭に置き、カンマ（,）の後ろにメインの文を続けます。" },
-      23: { formula: "It is said that ＋ 主語 ＋ was/were ＋ 過去分詞 〜", desc: "「〜と言われている」を表す構文です。that の後ろに「〜された（was drawn）」という受け身の文が続きます。" },
-      24: { formula: "主語(複数) ＋ were ＋ 過去分詞 ＋ by ＋ 行為者, too.", desc: "主語が複数（These techniques）なので be動詞は were を使い、行為者を by 〜 で表します。" },
-      25: { formula: "主語 ＋ come(s) from ＋ 名詞（〜に由来する）", desc: "come from 〜 で「〜から来る・〜に由来する」。主語が単数なので comes になります。" },
-      26: { formula: "主語 ＋ take(s) advantage of ＋ 名詞（〜を活用する）", desc: "take advantage of 〜（〜を活用する・うまく利用する）を1つの動詞句として使いこなしましょう。" },
-      27: { formula: "主語 ＋ have/has ＋ already ＋ 過去分詞 ＋ 目的語", desc: "「すでに〜してしまった」の already は have/has と過去分詞の間に置きます。" },
-      28: { formula: "Have/Has ＋ 主語 ＋ 過去分詞 ＋ 目的語 ＋ yet?", desc: "現在完了の疑問文「もう〜しましたか？」では文末に yet を置きます。" },
-      29: { formula: "主語 ＋ have/has ＋ just ＋ 過去分詞 ＋ 目的語", desc: "「たった今〜したところだ」の just は have/has と過去分詞の間に入れます。" },
-      30: { formula: "主語 ＋ was/were ＋ 動詞のing形 ＋ when 主語 ＋ 過去形", desc: "「〜していた」を先に言い、when（〜したとき）の節を後ろにつなげます。" },
-      31: { formula: "主語 ＋ haven't/hasn't ＋ 過去分詞 ＋ 目的語 ＋ yet", desc: "現在完了の否定文「まだ〜していない」では文末に yet を置きます。" },
-      32: { formula: "How long ＋ have/has ＋ 主語 ＋ 過去分詞 ＋ 場所?", desc: "期間を尋ねる How long を文頭に置き、疑問文の語順（have you lived）を続けます。" },
-      33: { formula: "主語 ＋ have/has ＋ 過去分詞 ＋ 場所 ＋ for 期間", desc: "「〜の間ずっと…」という継続の期間を表すときは for を使います。" },
-      34: { formula: "主語 ＋ is/are ＋ made of ＋ 材料", desc: "「〜でできている（材料が外見からわかる場合）」は be made of 〜 を使います。" },
-      35: { formula: "主語 ＋ have/has ＋ 過去分詞 〜 ＋ since ＋ 過去の文", desc: "「〜して以来ずっと…」は since の後ろに過去形の文（S ＋ V過去）を続けます。" },
-      36: { formula: "主語 ＋ have/has been ＋ 動詞のing形 ＋ 目的語 ＋ since 起点", desc: "「（〜時から）ずっと…し続けている」は現在完了進行形（have been 〜ing）を使います。" },
-      37: { formula: "Recently, 主語 ＋ has/have been ＋ getting ＋ 比較級 〜", desc: "「最近〜になってきている」という変化の継続を現在完了進行形で表しています。" },
-      38: { formula: "主語 ＋ have/has been ＋ making efforts to ＋ 動詞の原形", desc: "「〜しようと努力し続けている」は make efforts to 〜 の進行形を使います。" },
-      39: { formula: "主語 ＋ try to ＋ 動詞の原形 ＋ 目的語 ＋ 場所", desc: "「〜しようと努力する・試みる」は try to ＋ 動詞の原形の語順で作ります。" },
-      40: { formula: "主語 ＋ lead(s) to ＋ 名詞（〜につながる）", desc: "lead to 〜（〜につながる・〜を引き起こす）は長文でも頻出の重要熟語です。" },
-      41: { formula: "主語 ＋ avoid ＋ 動詞のing形（〜することを避ける）", desc: "avoid の後ろは必ず動名詞（〜ing）を置くルール（to不定詞は不可）です。" },
-      42: { formula: "主語 ＋ have/has been ＋ 状態・名詞 ＋ in 場所・分野", desc: "「ずっと〜という状態だ」は be動詞の現在完了（have been）で表します。" },
-      43: { formula: "Sometimes ＋ 主語 ＋ have to ＋ 動詞の原形 〜", desc: "「〜しなければならない」は have to の後ろに動詞の原形（work）を置きます。" },
-      44: { formula: "主語 ＋ have/has been ＋ trying to ＋ 動詞の原形 〜", desc: "「ずっと〜しようと試みている」を現在完了進行形で表しています。" },
-      45: { formula: "主語 ＋ have/has become ＋ responsible for ＋ 対象", desc: "become responsible for 〜（〜に責任を持つようになる）の現在完了形です。" },
-      46: { formula: "It is (not) ＋ 形容詞 ＋ to ＋ 動詞の原形 〜", desc: "形式主語 It を先頭に置き、「〜することは…だ（ではない）」を表します。" },
-      47: { formula: "When ＋ 主語 ＋ 動詞, decide ＋ 副詞 ＋ what to ＋ 動詞の原形", desc: "「何を買うべきか」は「疑問詞 what ＋ to ＋ 動詞の原形」の塊を作ります。" },
-      48: { formula: "By ＋ 動詞のing形 〜, 主語 ＋ can ＋ 動詞の原形 〜", desc: "前置詞 By の後ろに動名詞（choosing）を置いて「〜することによって」を表します。" },
-      49: { formula: "主語 ＋ be動詞 ＋ in danger of ＋ 名詞（〜の危機にある）", desc: "be in danger of 〜（〜の絶滅・危険にさらされている）を1つの熟語として使いこなしましょう。" },
-      50: { formula: "主語 ＋ be動詞 ＋ facing ＋ 目的語 ＋ because of 名詞", desc: "because の後ろは「主語＋動詞」、because of の後ろは「名詞（climate change）」を置きます。" },
-      51: { formula: "It is ＋ 形容詞 ＋ for 対象 ＋ to ＋ 動詞の原形 ＋ 場所", desc: "「（対象）が〜することは…だ」を表す形式主語 It の重要構文です。" },
-      52: { formula: "It is ＋ important ＋ for 人 ＋ to ＋ 動詞の原形 ＋ 目的語", desc: "「私たちが〜することが重要だ」は It is important for us to 〜 の型で作ります。" },
-      53: { formula: "命令文(動詞の原形 〜), or ＋ 結果の文(there will be 〜)", desc: "「〜しなさい、さもないと…」は命令文の後ろにカンマ＋or をつなげます。" },
-      54: { formula: "Have/Has ＋ 主語 ＋ ever ＋ heard of ＋ 対象?", desc: "「今までに〜について聞いたことがありますか？」は hear of の過去分詞 heard of を使います。" },
-      55: { formula: "Why don't we ＋ 動詞の原形 ＋ 目的語 ＋ for 〜?", desc: "「一緒に〜しませんか？」と提案する定番表現です。後ろは動詞の原形を置きます。" },
-      56: { formula: "主語 ＋ want ＋ 人(everyone) ＋ to ＋ 動詞の原形 〜", desc: "「みんなに〜してほしい」は want の後ろに「人 → to ＋ 動詞の原形」を並べます。" },
-      57: { formula: "主語(三人称単数) ＋ wants ＋ 人 ＋ to ＋ 動詞の原形 〜", desc: "主語が Riko なので wants にし、後ろに「her classmates ＋ to read」を続けます。" },
-      58: { formula: "主語 ＋ is ＋ one of the ＋ 複数名詞（〜の1つ）", desc: "「〜の1つ」を表す one of the の後ろは必ず複数名詞（animals）になります。" },
-      59: { formula: "Let ＋ 人(us) ＋ 動詞の原形(tell) ＋ 人(you) ＋ about 〜", desc: "「（私たちに）〜させてください」は Let ＋ 人 ＋ 動詞の原形の語順を作ります。" },
-      60: { formula: "主語 ＋ decided to help ＋ 対象 ＋ 動詞の原形(live) ＋ 副詞", desc: "help ＋ 目的語 ＋ 動詞の原形 で「〜が…するのを助ける・支援する」を表します。" },
-      61: { formula: "Thanks to ＋ 名詞, 主語 ＋ started to ＋ 動詞の原形 〜", desc: "「〜のおかげで」を表す Thanks to 〜 を文頭に置き、カンマで区切ります。" },
-      62: { formula: "主語 ＋ be動詞 ＋ facing ＋ 目的語 ＋ due to 名詞", desc: "due to 〜（〜のために・〜が原因で）は理由を表す名詞句を後ろにつなぎます。" },
-      63: { formula: "主語 ＋ is/are ＋ native to ＋ 場所（〜に固有である）", desc: "be native to 〜 で「〜原産の・〜に固有の」という意味になります。" },
-      64: { formula: "主語 ＋ have/has been ＋ 動詞のing形 ＋ to ＋ 動詞の原形", desc: "「〜するためにずっと活動している」は現在完了進行形＋目的の不定詞で表します。" },
-      65: { formula: "主語 ＋ are ＋ all ＋ related to ＋ each other", desc: "be related to 〜（〜と関係がある）と each other（おたがいに）の組み合わせです。" },
-      66: { formula: "So, it is ＋ important ＋ for us ＋ to take action ＋ now", desc: "形式主語 it と熟語 take action（行動を起こす）を組み合わせた重要文です。" },
-      67: { formula: "Let's ＋ help ＋ 対象(these animals) ＋ 動詞の原形(survive)", desc: "Let's help の後ろに「対象 ＋ 動詞の原形」を置いて「〜が生き残るのを助けよう」を表します。" },
-      68: { formula: "Through the years, 主語 ＋ has/have ＋ 過去分詞 〜", desc: "「これまでの何年もの間」を文頭に置き、現在完了形（has seen）を続けます。" },
-      69: { formula: "主語 ＋ sounded ＋ 形容詞(sweet)（〜に響いた）", desc: "sound（〜に聞こえる・響く）の後ろには副詞ではなく形容詞を置きます。" },
-      70: { formula: "主語 ＋ lost their lives, and ＋ 主語(複数) ＋ were injured", desc: "「傷を負った」は受け身の形（be injured）で表します。" },
-      71: { formula: "主語 ＋ tried to be ＋ 名詞 ＋ to 人（〜になろうと努めた）", desc: "try to be 〜（〜になろうと努力する）の語順です。" },
-      72: { formula: "After a while, 主語 ＋ stopped ＋ 動詞のing形(crying)", desc: "「〜するのをやめる」は stop の後ろに動名詞（〜ing）を置きます。" },
-      73: { formula: "主語 ＋ became ＋ 比較級 and 比較級（だんだん〜になった）", desc: "weaker and weaker のように比較級を and でつなぐと「だんだん〜になる」を表します。" },
-      74: { formula: "主語 ＋ rose, but ＋ 主語 ＋ never ＋ 過去形 ＋ again", desc: "never 〜 again で「二度と〜しない」を表す重要表現です。" },
-      75: { formula: "Are/Is ＋ 主語 ＋ prepared for ＋ 名詞（〜に備えていますか）", desc: "be prepared for 〜 で「〜の準備ができている・備えている」を表します。" },
-      76: { formula: "主語 ＋ know ＋ where ＋ 主語 ＋ 動詞（間接疑問文）", desc: "文の途中に疑問詞が入るときは、後ろが「主語 → 動詞（the local shelter is）」の語順になります。" },
-      77: { formula: "主語 ＋ know ＋ how much 名詞 ＋ 主語 ＋ should ＋ 動詞の原形", desc: "「どれだけの〜を…すべきか」は how much 名詞 の後ろに「主語＋動詞」を続けます。" },
-      78: { formula: "主語 ＋ know ＋ what 名詞 ＋ 主語 ＋ should ＋ 動詞 ＋ in case of 〜", desc: "「〜の場合に何番に電話すべきか」は間接疑問文の後ろに in case of 〜 を置きます。" },
-      79: { formula: "主語 ＋ know ＋ how to ＋ 動詞の原形 ＋ 目的語", desc: "「how ＋ to ＋ 動詞の原形」で「〜の仕方・使い方」を表します。" },
-      80: { formula: "Tell me ＋ what ＋ 主語 ＋ 動詞 〜（〜が何をしたか教えて）", desc: "Tell ＋ 人 ＋ what節 で「人に（what以下のこと）を教える」という語順を作ります。" },
-      81: { formula: "It is ＋ hard ＋ for 人 ＋ to ＋ 動詞の原形 〜", desc: "形式主語 It を文頭に置き、「人にとって〜することは難しい」を表します。" },
-      82: { formula: "主語 ＋ shows ＋ 人 ＋ what ＋ 主語 ＋ should ＋ 動詞の原形", desc: "show ＋ 人 ＋ what節 で「人に（what以下のこと）を示す」を表します。" },
-      83: { formula: "主語 ＋ recommended ＋ 名詞 ＋ about 〜", desc: "recommend（〜をすすめる）の後ろに対象（a movie about 〜）を置きます。" },
-      84: { formula: "There is ＋ 名詞 ＋ called ＋ 名前（〜と呼ばれる…がある）", desc: "過去分詞 called を名詞の後ろに置いて「〜と呼ばれる…」と説明します。" },
-      85: { formula: "名詞(The woman) ＋ 動詞のing形(smiling 〜) ＋ 全体の動詞(is ...)", desc: "「ほほえんでいる女性」は名詞を先に置き、後ろから 〜ing で説明します。" },
-      86: { formula: "主語 ＋ wanted to become ＋ 名詞 ＋ between A and B", desc: "between A and B（AとBの間）を使って2つの国のつながりを表しています。" },
-      87: { formula: "主語 ＋ became interested in ＋ 名詞 ＋ thanks to 〜", desc: "thanks to 〜（〜のおかげで）を文末に置いて理由を示します。" },
-      88: { formula: "主語 ＋ was/were caught in ＋ 名詞 ＋ on one's way", desc: "be caught in 〜（〜にあう・巻き込まれる）と on her way（途中で）の組み合わせです。" },
-      89: { formula: "主語 ＋ worked together ＋ to ＋ 動詞の原形 〜", desc: "「〜するために協力した」は worked together の後ろに目的の不定詞を続けます。" },
-      90: { formula: "Many of 複数名詞 ＋ kept on ＋ 動詞のing形 〜", desc: "keep on 〜ing で「〜し続ける」。過去形は kept on 〜ing になります。" },
-      91: { formula: "主語 ＋ is no longer 〜, but ＋ 主語 ＋ lives on", desc: "no longer（もはや〜ない）と live on（生き続ける）の対比表現です。" },
-      92: { formula: "It is ＋ necessary ＋ for 人 ＋ to ＋ 動詞の原形 ＋ in times of 〜", desc: "形式主語 It を使い「緊急時に私たちが〜することが必要だ」を表します。" },
-      93: { formula: "This is ＋ 名詞(a picture) ＋ 主語 ＋ 動詞(I found) 〜", desc: "関係代名詞の省略（接触節）。名詞の直後に「主語＋動詞」を置いて修飾します。" },
-      94: { formula: "Do you know ＋ who ＋ 主語(this person) ＋ 動詞(is)?", desc: "間接疑問文なので who の後ろは「主語 → 動詞（this person is）」の語順になります。" },
-      95: { formula: "主語 ＋ is ＋ 名詞(a leader) ＋ 主語 ＋ 動詞(respect) 〜", desc: "「インドの人々が尊敬している指導者」は a leader の後ろに「主語＋動詞」を続けます。" },
-      96: { formula: "主語 ＋ is ＋ 先行詞(人) ＋ who ＋ 動詞 〜", desc: "「〜した人」を表す関係代名詞 who（主格）を使った基本文です。" },
-      97: { formula: "主語 ＋ is respected by ＋ 先行詞(people) ＋ who ＋ 動詞 〜", desc: "受動態の行為者 people を関係代名詞 who で後ろから説明しています。" },
-      98: { formula: "主語 ＋ also ＋ went on 名詞 ＋ to ＋ 動詞の原形（〜するために）", desc: "went on fasts（断食を行った）の後ろに目的の不定詞（to protest）を置きます。" },
-      99: { formula: "There were ＋ 先行詞(モノ) ＋ that ＋ 動詞 〜", desc: "先行詞がモノ（hotels）のときは関係代名詞 that（または which）を使います。" },
-      100: { formula: "主語 ＋ made ＋ 先行詞(a law) ＋ that ＋ was even more 形容詞", desc: "比較級の強調（even more unfair）を含む関係代名詞節で a law を修飾しています。" },
-      101: { formula: "主語 ＋ decided to ＋ 動詞の原形 ＋ 名詞 ＋ to ＋ 動詞の原形", desc: "decide to 〜（〜しようと決心する）と目的・修飾の不定詞を組み合わせた文です。" },
-      102: { formula: "主語 ＋ showed ＋ that ＋ 主語 ＋ can be ＋ 形容詞", desc: "接続詞 that を使って「〜ということを示した」という内容をつないでいます。" },
-      103: { formula: "主語 ＋ is ＋ 先行詞(モノ) ＋ that ＋ 主語 ＋ 動詞", desc: "目的格の関係代名詞 that を使って「ガンディーが残した遺産」と後ろから修飾しています。" },
-      104: { formula: "I wish ＋ 主語 ＋ could ＋ 動詞の原形 〜（〜できたらいいのに）", desc: "I wish の後ろに助動詞の過去形 could を置いて「〜できたらいいのになあ」を表します。" },
-      105: { formula: "I wish ＋ 主語 ＋ 動詞の過去形(had) ＋ 目的語", desc: "現実とは違う願いを表すときは、I wish の後ろの動詞を過去形（had）にします。" },
-      106: { formula: "命令文(動詞の原形 〜), and ＋ 主語 ＋ will ＋ 動詞の原形", desc: "「〜しなさい、そうすれば…」は命令文の後ろにカンマ＋and をつなげます。" },
-      107: { formula: "Have/Has ＋ 主語 ＋ ever ＋ 過去分詞(felt) ＋ this way?", desc: "「今までにこのように感じたことがありますか？」は feel の過去分詞 felt を使います。" },
-      108: { formula: "Have you ever heard of ＋ 先行詞(groups) ＋ that ＋ 動詞 〜?", desc: "先行詞 groups が複数なので、関係代名詞 that の後ろの動詞（collect）に s はつけません。" },
-      109: { formula: "So far, 主語(複数) ＋ have been ＋ 過去分詞(sent)", desc: "「これまでずっと〜されている」は現在完了の受け身（have been ＋ 過去分詞）で表します。" },
-      110: { formula: "If ＋ 主語 ＋ were 〜, 主語 ＋ would ＋ 動詞の原形 〜", desc: "「もし〜なら…するのに」は If の中の be動詞を were にし、後ろの文に would を使います。" },
-      111: { formula: "If I were you, I would ＋ 動詞の原形 〜", desc: "「もし私があなたなら」は If I were you の決まり文句で覚えましょう。" },
-      112: { formula: "主語 ＋ can ＋ 動詞の原形 ＋ 目的語 ＋ by ＋ 動詞のing形", desc: "「〜することによって」は前置詞 by の後ろに動名詞（donating）を置きます。" },
-      113: { formula: "If ＋ 主語 ＋ didn't ＋ 動詞の原形, 主語 ＋ couldn't ＋ 動詞の原形", desc: "一般動詞の仮定法過去では If の中を過去形（didn't study）にし、後ろを couldn't にします。" },
-      114: { formula: "場所, there are ＋ 名詞(children) ＋ 動詞のing形(living 〜)", desc: "「〜している子供たちがいる」は children の後ろに現在分詞（living 〜）を続けます。" },
-      115: { formula: "主語 ＋ encourages ＋ 人 ＋ to ＋ 動詞の原形 〜", desc: "encourage ＋ 人 ＋ to do で「人に〜するよう促す・励ます」の語順を作ります。" },
-      116: { formula: "So, 主語 ＋ will be ready for ＋ 名詞（〜の用意ができる）", desc: "be ready for 〜（〜の準備ができている）を will の後ろに原形で置いています。" },
-      117: { formula: "主語(複数) ＋ have been ＋ 動詞のing形 ＋ 目的語", desc: "「ずっと変え続けている」は現在完了進行形（have been changing）で表します。" },
-      118: { formula: "主語 ＋ depends on ＋ 名詞 ＋ for 〜", desc: "depend on 〜 で「〜に頼る・依存する」を表す重要熟語です。" },
-      119: { formula: "One-third of 名詞 ＋ that ＋ 主語 ＋ 動詞 ＋ comes from 〜", desc: "目的格の関係代名詞 that で修飾された主語に、動詞 comes from が続いています。" },
-      120: { formula: "If ＋ 主語 ＋ didn't ＋ 動詞の原形 〜, 主語 ＋ would be ＋ 形容詞", desc: "「もし〜していなければ…になるだろう」を表す仮定法過去の応用文です。" },
-      121: { formula: "先行詞(複数) ＋ that ＋ are 過去分詞 〜 ＋ are 過去分詞", desc: "関係代名詞節の中も文全体の述語も、どちらも受け身（be ＋ 過去分詞）の形です。" },
-      122: { formula: "It's ＋ necessary ＋ for 人 ＋ to continue ＋ 動詞のing形", desc: "形式主語 It's と「continue 〜ing（〜し続ける）」を組み合わせた表現です。" }
+      1: { formula: "主語 ＋ finally saw ＋ 目的語 ＋ with 人", desc: "「誰が → どうした → 何を → 誰と」の英語の基本語順です。" },
+      2: { formula: "主語 ＋ be動詞 ＋ really into ＋ 名詞（〜に夢中）", desc: "be into 〜 で「〜にはまっている・夢中である」を表します。" },
+      3: { formula: "結果の文 ＋ because ＋ 理由の文（enjoy 〜ing）", desc: "結果を先に言い、because で理由を後ろにつなげる英語特有の語順です。" },
+      4: { formula: "I didn't know ＋ 主語 ＋ 動詞の過去形 〜", desc: "know の後ろに「主語＋動詞（you liked musicals）」の文をそのままつなげています。" },
+      5: { formula: "主語 ＋ like ＋ 対象 ＋ the best", desc: "「like ＋ 対象 ＋ the best」で「〜がいちばん好き」という語順を作ります。" },
+      6: { formula: "主語(複数) ＋ are interested in ＋ 名詞", desc: "be interested in 〜（〜に興味がある）の塊を意識する定番表現です。" },
+      7: { formula: "主語 ＋ have ＋ 過去分詞(watched) ＋ 目的語 ＋ many times", desc: "「have ＋ 過去分詞」で経験を表し、回数（many times）は文末に置きます。" },
+      8: { formula: "I'm excited ＋ to ＋ 動詞の原形 ＋ 場所", desc: "感情を表す形容詞（excited）の後ろに「to ＋ 動詞の原形」を置いて原因を示します。" },
+      9: { formula: "主語 ＋ came here ＋ to ＋ 動詞の原形（〜するために）", desc: "「ここに来た（came here）」を先に言い、目的（to eat 〜）を後ろに続けます。" },
+      10: { formula: "主語 ＋ have never been to ＋ 場所", desc: "「一度も〜に行ったことがない」は have never been to を使います。" },
+      11: { formula: "主語(三人称単数) ＋ has never ＋ 過去分詞 ＋ 目的語", desc: "主語が Eddy（三人称単数）なので、have ではなく has を使います。" },
+      12: { formula: "主語 ＋ is so popular ＋ among ＋ 複数名詞", desc: "3人以上の「〜の間で」を表す前置詞 among を使った表現です。" },
+      13: { formula: "主語 ＋ sometimes ＋ 動詞 ＋ 目的語 ＋ to ＋ 動詞の原形", desc: "頻度を表す副詞 sometimes は一般動詞（use）の前に置きます。" },
+      14: { formula: "Have ＋ you ＋ ever ＋ 過去分詞(watched) ＋ 目的語?", desc: "現在完了の疑問文は Have を文頭に出し、ever は過去分詞の直前に置きます。" },
+      15: { formula: "Have ＋ you ＋ been to ＋ 場所?", desc: "「〜へ行ったことがありますか？」は Have you been to 〜? の語順で作ります。" },
+      16: { formula: "主語 ＋ have been to ＋ 場所 ＋ once", desc: "「一度」を表す once は文末に置きます。" },
+      17: { formula: "What ＋ makes ＋ 目的語 ＋ so popular ＋ 場所?", desc: "直訳は「何がアニメをそれほど人気にさせていますか？」で、What が主語になっています。" },
+      18: { formula: "Both A and B ＋ enjoy ＋ 動詞のing形", desc: "Both A and B（AとBの両方）が主語なので、動詞 enjoy は複数扱いにします。" },
+      19: { formula: "主語 ＋ make ＋ 人(me) ＋ 形容詞(excited)", desc: "「make ＋ 人 ＋ 形容詞」で「人を〜な気持ちにさせる」を表します。" },
+      20: { formula: "主語 ＋ make ＋ 人(me) ＋ 形容詞1 and 形容詞2", desc: "make me の後ろに形容詞を2つ並べています。" },
+      21: { formula: "I hope ＋ 主語 ＋ will be ＋ 過去分詞(enjoyed) 〜", desc: "「will ＋ be ＋ 過去分詞」で未来の受け身（〜されるだろう）を表します。" },
+      22: { formula: "When ＋ 主語 ＋ talk about 〜, 主語 ＋ cannot 動詞 〜", desc: "When で始まる節を文頭に置き、カンマ（,）で区切って主文を続けます。" },
+      23: { formula: "It is said that ＋ 主語 ＋ was/were ＋ 過去分詞 〜", desc: "「It is said that 〜（〜と言われている）」の重要構文です。" },
+      24: { formula: "主語(複数) ＋ were ＋ 過去分詞(used) ＋ by 行為者, too.", desc: "主語が複数なので be動詞は were を使い、行為者を by 〜 で表します。" },
+      25: { formula: "主語 ＋ comes from ＋ 名詞（〜に由来する）", desc: "come from 〜（〜に由来する・〜から来ている）を使った表現です。" },
+      26: { formula: "主語 ＋ takes advantage of ＋ 名詞（〜を活用する）", desc: "take advantage of 〜（〜を活用する・うまく利用する）を使った重要表現です。" },
+      27: { formula: "主語 ＋ have ＋ already ＋ 過去分詞 ＋ about 〜", desc: "already（すでに）は have と過去分詞の間に置きます。" },
+      28: { formula: "Have ＋ you ＋ 過去分詞 ＋ 目的語 ＋ yet?", desc: "現在完了の疑問文で「もう〜しましたか？」と尋ねるときは文末に yet を置きます。" },
+      29: { formula: "No, I haven't ＋ 過去分詞 ＋ it ＋ yet.", desc: "否定文の文末に yet を置くと「まだ〜していない」という意味になります。" },
+      30: { formula: "主語 ＋ have ＋ just ＋ 過去分詞 ＋ 目的語", desc: "「ちょうど〜したところだ」を表す just は have と過去分詞の間に挟みます。" },
+      31: { formula: "主語 ＋ have been to ＋ 場所 ＋ twice", desc: "「2回」を表す twice は文末に置きます。" },
+      32: { formula: "主語 ＋ have ＋ 過去分詞 ＋ 目的語 ＋ since 起点", desc: "「〜からずっと」と過去の起点を表すときは since を使います。" },
+      33: { formula: "How long ＋ have ＋ you ＋ 過去分詞 ＋ 場所?", desc: "期間の長さを尋ねる疑問詞 How long を文頭に置きます。" },
+      34: { formula: "主語 ＋ have been ＋ 動詞のing形 ＋ 目的語 ＋ for 期間", desc: "「have been ＋ 動詞のing形」で、今も動作が続いていることを強調します。" },
+      35: { formula: "Have ＋ you ＋ been ＋ 動詞のing形 ＋ 目的語 ＋ since 起点?", desc: "現在完了進行形の疑問文は Have を主語の前に出します。" },
+      36: { formula: "From 年 to 年, 主語 ＋ 過去形 ＋ 場所", desc: "「AからBまで」の期間は from A to B で表します。" },
+      37: { formula: "主語 ＋ still ＋ 動詞 ＋ 目的語", desc: "副詞 still（今でも・まだ）は一般動詞の前に置きます。" },
+      38: { formula: "主語 ＋ need ＋ 目的語 ＋ to ＋ 動詞の原形", desc: "「〜を必要とする」の後ろに目的を表す「to ＋ 動詞の原形」を置きます。" },
+      39: { formula: "主語 ＋ have cut down ＋ 目的語 ＋ to ＋ 動詞の原形", desc: "cut の過去分詞は cut（原形・過去形・過去分詞が同じ形）です。" },
+      40: { formula: "As a result, the number of 複数名詞 ＋ 過去形", desc: "As a result（その結果）と the number of 〜（〜の数）の重要表現です。" },
+      41: { formula: "主語 ＋ have tried to ＋ 動詞の原形 ＋ 目的語 ＋ for 期間", desc: "try to ＋ 動詞の原形 の現在完了形 have tried to です。" },
+      42: { formula: "In recent years, 主語(単数) ＋ has grown.", desc: "grow（増える・成長する）の過去分詞は grown です。" },
+      43: { formula: "However, 主語(複数) ＋ are still in danger.", desc: "in danger で「危機に瀕している」という意味を表します。" },
+      44: { formula: "主語 ＋ is ＋ one of ＋ those 複数名詞", desc: "one of ＋ 複数名詞 で「それらの〜のうちの1つ」を表します。" },
+      45: { formula: "Because of 名詞句, 主語 ＋ is 〜ing ＋ 比較級 than before.", desc: "because of ＋ 名詞句 で「〜のために（原因）」を表します。" },
+      46: { formula: "主語 ＋ must take action ＋ to ＋ 動詞の原形 ＋ 目的語", desc: "take action（行動を起こす）の後ろに目的をつなげています。" },
+      47: { formula: "主語 ＋ need to ＋ 動詞の原形 ＋ 目的語", desc: "need to ＋ 動詞の原形 で「〜する必要がある」を表します。" },
+      48: { formula: "主語 ＋ can work together ＋ to ＋ 動詞の原形 〜", desc: "work together（協力する）の後ろに目的（to stop 〜）をつなげています。" },
+      49: { formula: "It is ＋ 形容詞 ＋ for 人 ＋ to ＋ 動詞の原形 〜", desc: "形式主語 It を文頭に置き、「for 人 ＋ to ＋ 動詞の原形」を後ろに置きます。" },
+      50: { formula: "It is important ＋ for 人 ＋ to ＋ 動詞の原形 〜", desc: "「人にとって〜することは大切だ」を表す重要構文です。" },
+      51: { formula: "It is fun ＋ to ＋ 動詞の原形 ＋ with 人", desc: "It is fun to 〜（〜することは楽しい）の文です。" },
+      52: { formula: "主語 ＋ should avoid ＋ 動詞のing形 ＋ before 動名詞", desc: "avoid（〜を避ける）の後ろは動名詞（using）を置きます。" },
+      53: { formula: "主語 ＋ should turn off ＋ 目的語 ＋ at night", desc: "should ＋ 動詞の原形（turn off：〜を消す）を使ったアドバイス表現です。" },
+      54: { formula: "主語 ＋ want ＋ 人 ＋ to ＋ 動詞の原形 ＋ 目的語", desc: "want ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜してもらいたい」を表します。" },
+      55: { formula: "主語 ＋ told ＋ 人 ＋ to ＋ 動詞の原形 ＋ 目的語", desc: "tell ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜するよう言う・伝える」を表します。" },
+      56: { formula: "主語 ＋ asked ＋ 人 ＋ to ＋ 動詞の原形 ＋ 目的語", desc: "ask ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜するよう頼む」を表します。" },
+      57: { formula: "主語 ＋ want ＋ 人 ＋ not to ＋ 動詞の原形 〜", desc: "to不定詞の否定は to の直前に not を置いて「not to ＋ 動詞の原形」にします。" },
+      58: { formula: "Let ＋ 目的語(your brain) ＋ 動詞の原形(rest) ＋ enough", desc: "使役動詞 let の後ろは「人（もの）＋ 動詞の原形」になり、to は不要です。" },
+      59: { formula: "主語 ＋ keeps ＋ 目的語 ＋ 形容詞(healthy)", desc: "「keep ＋ O ＋ 形容詞」で「Oを〜な状態に保つ」を表します。" },
+      60: { formula: "主語 ＋ helps ＋ 人 ＋ 動詞の原形(remember) ＋ 目的語", desc: "「help ＋ 人 ＋ 動詞の原形」で「人が〜するのを助ける」を表します。" },
+      61: { formula: "主語 ＋ should sleep ＋ for more than 数字 hours ＋ every night", desc: "more than ＋ 数字 で「〜より多くの・〜以上の」を表します。" },
+      62: { formula: "If ＋ 主語 ＋ don't 動詞 〜, 主語 ＋ cannot 動詞 〜", desc: "条件を表す If 節を前に置くときはカンマ（,）で区切ります。" },
+      63: { formula: "It is difficult ＋ for 人 ＋ to ＋ 動詞の原形 〜", desc: "It is difficult for 人 to 〜 の重要文です。" },
+      64: { formula: "主語 ＋ stay up late ＋ 動詞のing形 or 動詞のing形", desc: "stay up late（夜更かしをする）の後ろに分詞（〜しながら）を続けています。" },
+      65: { formula: "主語 ＋ is bad for ＋ 名詞", desc: "be bad for 〜（〜に悪い・よくない）を使った表現です。" },
+      66: { formula: "It is good ＋ for you ＋ to ＋ 動詞の原形 〜", desc: "It is good for you to 〜（〜することはあなたにとってよい）の文です。" },
+      67: { formula: "命令文(Try 〜), and ＋ 主語 ＋ will 動詞 ＋ better", desc: "「命令文, and 〜」で「〜しなさい、そうすれば…」を表します。" },
+      68: { formula: "Have ＋ you ＋ ever ＋ heard of ＋ 名詞?", desc: "hear of 〜（〜のことを耳にする・聞いたことがある）の現在完了疑問文です。" },
+      69: { formula: "主語(複数) ＋ are mainly grown ＋ in 場所", desc: "grow（栽培する）の過去分詞 grown を使った受け身の文です。" },
+      70: { formula: "主語(複数) ＋ are not paid ＋ enough money", desc: "pay の過去分詞 paid を使った受け身の否定文です。" },
+      71: { formula: "Instead of ＋ 動詞のing形 〜, 主語 ＋ 動詞 ＋ 場所", desc: "instead of ＋ 動詞のing形 で「〜する代わりに」を表します。" },
+      72: { formula: "主語 ＋ helps ＋ 人 ＋ 動詞の原形(live) ＋ 目的語", desc: "help ＋ 人 ＋ 動詞の原形 の語順です。" },
+      73: { formula: "動名詞(Choosing 〜) ＋ is ＋ one way to ＋ 動詞の原形 〜", desc: "動名詞が主語なので単数扱いとなり、動詞は is を使います。" },
+      74: { formula: "Let's think together about ＋ what ＋ 主語 ＋ can do", desc: "前置詞 about の後ろに間接疑問文「what we can do」を置いています。" },
+      75: { formula: "Do you know ＋ where ＋ 主語 ＋ is?", desc: "文の途中に入る疑問詞節は「where ＋ 主語 ＋ 動詞」の語順になります。" },
+      76: { formula: "Please tell me ＋ how ＋ 主語 ＋ can 動詞 〜", desc: "tell me の後ろに「how ＋ 主語 ＋ 動詞」の語順を続けています。" },
+      77: { formula: "I don't know ＋ what ＋ 主語 ＋ 動詞の過去形", desc: "過去のことなので「what ＋ 主語 ＋ 過去形」の語順にします。" },
+      78: { formula: "I wonder ＋ when ＋ 主語 ＋ will 動詞", desc: "I wonder ＋ 疑問詞 ＋ 主語 ＋ 動詞 で「〜かしら・〜だろうか」を表します。" },
+      79: { formula: "Do you know ＋ who ＋ 動詞の過去形 ＋ 目的語?", desc: "who 自体が主語なので「who ＋ 動詞」の語順になります。" },
+      80: { formula: "主語 ＋ know ＋ how to ＋ 動詞の原形 ＋ 目的語", desc: "how ＋ to ＋ 動詞の原形 で「〜の仕方・使い方」を表します。" },
+      81: { formula: "主語 ＋ didn't know ＋ what to ＋ 動詞の原形 ＋ for 人", desc: "what ＋ to ＋ 動詞の原形 で「何を〜すべきか」を表します。" },
+      82: { formula: "Please tell me ＋ where to ＋ 動詞の原形 ＋ 目的語", desc: "where ＋ to ＋ 動詞の原形 で「どこで〜すべきか」を表します。" },
+      83: { formula: "主語 ＋ have to decide ＋ when to ＋ 動詞の原形", desc: "when ＋ to ＋ 動詞の原形 で「いつ〜すべきか」を表します。" },
+      84: { formula: "Look at ＋ 名詞(that boy) ＋ 動詞のing形 〜", desc: "名詞の後ろに現在分詞を置いて「〜している少年」と修飾します。" },
+      85: { formula: "名詞(The girl) ＋ 動詞のing形 〜 ＋ is ＋ 名詞", desc: "主語 The girl singing on the stage（単数）に対して全体の動詞は is になります。" },
+      86: { formula: "This is ＋ 名詞(a car) ＋ 過去分詞(made) ＋ in 場所", desc: "「〜された車」と受け身の意味で後ろから説明するときは過去分詞を使います。" },
+      87: { formula: "主語 ＋ like reading ＋ 名詞(books) ＋ 過去分詞(written) 〜", desc: "books の後ろに過去分詞（written in English）を置いて修飾しています。" },
+      88: { formula: "It is ＋ 名詞 ＋ called ＋ 呼び名", desc: "名詞の後ろに過去分詞 called 〜 を置いて「〜と呼ばれる…」と説明します。" },
+      89: { formula: "主語(複数) ＋ are ＋ 名詞(props) ＋ used by 行為者", desc: "props の後ろに過去分詞 used by 〜 を置いて修飾しています。" },
+      90: { formula: "名詞(A performer) ＋ 動詞のing形 〜 ＋ plays ＋ 目的語 ＋ alone", desc: "主語が単数なので動詞は plays になります。" },
+      91: { formula: "主語 ＋ can learn ＋ how ＋ 主語 ＋ lived ＋ 時", desc: "learn の後ろに間接疑問文「how people lived」を置いています。" },
+      92: { formula: "It is interesting ＋ to ＋ 動詞の原形 〜", desc: "It is interesting to 〜（〜することはおもしろい）の構文です。" },
+      93: { formula: "主語 ＋ have ＋ 人(a friend) ＋ who ＋ is from 場所", desc: "先行詞が人（a friend）なので関係代名詞 who を置いて後ろから説明します。" },
+      94: { formula: "This is ＋ 人(a boy) ＋ who ＋ 動詞(s) 〜", desc: "先行詞 a boy が単数なので、who の後ろの動詞には s をつけます。" },
+      95: { formula: "主語 ＋ have ＋ 動物(a cat) ＋ that ＋ has 〜", desc: "先行詞が動物（a cat）なので関係代名詞 that（または which）を使います。" },
+      96: { formula: "This is ＋ モノ(a picture) ＋ which ＋ 主語 ＋ 過去形 〜", desc: "先行詞がモノで後ろに「主語＋動詞」が続く目的格の関係代名詞です。" },
+      97: { formula: "モノ(The cake) ＋ that ＋ 主語 ＋ 過去形 ＋ was ＋ 形容詞", desc: "主語 The cake that he made（単数）に対して全体の動詞は was になります。" },
+      98: { formula: "モノ(The dictionary) ＋ 主語 ＋ 動詞 〜 ＋ is ＋ this one", desc: "目的格の関係代名詞は省略して、名詞の後ろにすぐ「主語＋動詞」を置けます。" },
+      99: { formula: "There are ＋ 複数名詞(many dogs) ＋ that ＋ 動詞 〜", desc: "先行詞 many dogs が複数なので、that の後ろの動詞には s をつけません。" },
+      100: { formula: "主語 ＋ get special training for ＋ モノ(the work) ＋ 主語 ＋ 動詞", desc: "the work の後ろに関係代名詞が省略された「they do」が続いています。" },
+      101: { formula: "複数名詞(Dogs) ＋ that ＋ 動詞 〜 ＋ are called ＋ 呼び名", desc: "主語 Dogs that guide blind people（複数）に対して受け身の are called が続きます。" },
+      102: { formula: "主語 ＋ need to understand ＋ 人(people) ＋ who ＋ 動詞 〜 ＋ more", desc: "先行詞 people（複数）を関係代名詞 who live with 〜 が後ろから修飾しています。" },
+      103: { formula: "主語 ＋ should create ＋ 名詞(a society) ＋ that ＋ 主語 ＋ can live in 〜", desc: "live in a society の前置詞 in が文中に残る形です。" },
+      104: { formula: "I wish ＋ I ＋ could ＋ 動詞の原形 〜", desc: "I wish の後ろは助動詞や動詞を過去形（could）にして、現実とは異なる願いを表します。" },
+      105: { formula: "I wish ＋ I ＋ had ＋ 名詞", desc: "現実には持っていないので、I wish の後ろの動詞を過去形（had）にします。" },
+      106: { formula: "命令文(Send 〜), and ＋ 主語 ＋ will 動詞 〜", desc: "「命令文, and 〜」で「〜しなさい、そうすれば…」という意味になります。" },
+      107: { formula: "Have ＋ you ＋ ever ＋ 過去分詞(felt) ＋ this way?", desc: "feel（感じる）の過去分詞は felt です。this way で「このように」を表します。" },
+      108: { formula: "Have you ever heard of ＋ 複数名詞(groups) ＋ that ＋ 動詞 〜?", desc: "先行詞 groups が複数なので、関係代名詞 that の後ろの動詞には s をつけません。" },
+      109: { formula: "So far, 複数名詞 ＋ have been ＋ 過去分詞(sent)", desc: "「have been ＋ 過去分詞」で「（今までずっと）〜されてきている」を表します。" },
+      110: { formula: "If I were ＋ 名詞, I ＋ would ＋ 動詞の原形 〜", desc: "仮定法過去では主語が I でも be動詞は were を使い、後ろは would ＋ 動詞の原形にします。" },
+      111: { formula: "If I were you, I ＋ would ask ＋ 人 ＋ for help", desc: "If I were you（もし私があなたなら）と ask 人 for help（人に助けを求める）の表現です。" },
+      112: { formula: "主語 ＋ can help 人 ＋ by ＋ 動詞のing形(donating) 〜", desc: "by ＋ 動詞のing形 で「〜することによって」という手段を表します。" },
+      113: { formula: "If ＋ 主語 ＋ didn't 動詞の原形, 主語 ＋ couldn't ＋ 動詞の原形 〜", desc: "現実とは反対の仮定なので、If の中は過去形、後ろは couldn't にします。" },
+      114: { formula: "場所, there are ＋ 複数名詞(children) ＋ 動詞のing形(living) 〜", desc: "children の後ろに現在分詞を置いて「このように暮らしている子供たち」と修飾します。" },
+      115: { formula: "主語 ＋ encourages ＋ 人 ＋ to ＋ 動詞の原形 〜", desc: "encourage ＋ 人 ＋ to ＋ 動詞の原形 で「人に〜するよう促す」を表します。" },
+      116: { formula: "So, 主語 ＋ will be ready for ＋ 名詞", desc: "be ready for 〜（〜の準備ができている）を未来を表す will の後ろに置いています。" },
+      117: { formula: "主語(複数) ＋ have been ＋ 動詞のing形(changing) ＋ 目的語", desc: "主語が複数なので have been changing（〜し続けている）を使います。" },
+      118: { formula: "主語 ＋ depends on ＋ 名詞 ＋ for 〜", desc: "depend on 〜（〜に頼る・依存する）を使った重要表現です。" },
+      119: { formula: "主語(単数扱い) ＋ that ＋ 主語 ＋ 動詞 ＋ comes from ＋ 場所", desc: "主語を関係代名詞 that we eat が修飾し、全体の動詞は comes になります。" },
+      120: { formula: "If ＋ 主語 ＋ didn't 動詞 〜, 主語 ＋ would be ＋ 形容詞", desc: "If の中を過去形（didn't import）、主節を would be にする仮定法過去の文です。" },
+      121: { formula: "複数名詞 ＋ that ＋ are 過去分詞 〜 ＋ are 過去分詞 ＋ 場所", desc: "関係代名詞節の中と主文の両方に受け身が使われています。" },
+      122: { formula: "It's necessary for us ＋ to continue ＋ 動詞のing形(helping) 〜", desc: "形式主語 It's と「continue 〜ing（〜し続ける）」を組み合わせた文です。" }
     };
 
     // アプリケーション状態管理
     let state = {
-      mainTab: 'cover', // 'cover' | 'practice' | 'grammar'
+      mainTab: 'cover', // 'cover' | 'practice' | 'grammar' | 'analysis'
       grammarFilter: 'ALL',
       unitFilter: 'ALL',
       onlyLearned: true,
@@ -793,77 +934,150 @@
       mistakeCount: 0,
       bestScores: {},     // { [questionId]: number (0〜100) }
       bestStars: {},      // { [questionId]: number (1〜3) }
+      questionStats: {},  // { [questionId]: { attempts, mistakes, hints, clearedLevel, lastUpdated } }
+      studentInfo: { studentId: '', name: '', webhookUrl: 'https://script.google.com/macros/s/AKfycbzwLxhlzc8WZ1RPYjmmxkdy4wA3p2jsOLcgd5jZrBVAhoXT8TiPZxV4mx71bQ5iGAgrDg/exec' },
       lastEarnedScore: 0,
       lastEarnedStars: 0,
       isSolved: false,
       customCharUrl: null // ユーザーがアップロードした画像URL
     };
 
+    // 保存済み生徒情報の読み込み
+    function loadSavedStudentInfo() {
+      const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzwLxhlzc8WZ1RPYjmmxkdy4wA3p2jsOLcgd5jZrBVAhoXT8TiPZxV4mx71bQ5iGAgrDg/exec';
+      try {
+        const raw = localStorage.getItem('eng_g3_student_info');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.studentInfo = { ...state.studentInfo, ...parsed };
+        }
+      } catch (e) {}
+      if (!state.studentInfo.webhookUrl || state.studentInfo.webhookUrl.includes('AKfycbyCC1Sm4hDoJum3ggJHOjL_5v40J9heOLWWc7RwuS3WzN72qVVozV2AQjOb7KxSYEWj')) {
+        state.studentInfo.webhookUrl = DEFAULT_WEBHOOK_URL;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const paramUrl = params.get('webhook');
+      if (paramUrl) state.studentInfo.webhookUrl = paramUrl.trim();
+
+      const cId = document.getElementById('cover-student-id');
+      const cName = document.getElementById('cover-student-name');
+      const aId = document.getElementById('student-id');
+      const aName = document.getElementById('student-name');
+      const wInput = document.getElementById('webhook-url-input');
+
+      if (cId) cId.value = state.studentInfo.studentId || '';
+      if (cName) cName.value = state.studentInfo.name || '';
+      if (aId) aId.value = state.studentInfo.studentId || '';
+      if (aName) aName.value = state.studentInfo.name || '';
+      if (wInput) wInput.value = state.studentInfo.webhookUrl || '';
+
+      updateAutoSyncBadge();
+    }
+
+    function syncStudentInputsFromCover() {
+      const cId = document.getElementById('cover-student-id');
+      const cName = document.getElementById('cover-student-name');
+      state.studentInfo.studentId = cId ? cId.value.trim() : '';
+      state.studentInfo.name = cName ? cName.value.trim() : '';
+
+      const aId = document.getElementById('student-id');
+      const aName = document.getElementById('student-name');
+      if (aId) aId.value = state.studentInfo.studentId;
+      if (aName) aName.value = state.studentInfo.name;
+      persistStudentInfo();
+    }
+
+    function saveStudentInfo() {
+      const aId = document.getElementById('student-id');
+      const aName = document.getElementById('student-name');
+      const wInput = document.getElementById('webhook-url-input');
+      if (aId) state.studentInfo.studentId = aId.value.trim();
+      if (aName) state.studentInfo.name = aName.value.trim();
+      if (wInput) state.studentInfo.webhookUrl = wInput.value.trim();
+
+      const cId = document.getElementById('cover-student-id');
+      const cName = document.getElementById('cover-student-name');
+      if (cId) cId.value = state.studentInfo.studentId;
+      if (cName) cName.value = state.studentInfo.name;
+      persistStudentInfo();
+    }
+
+    function persistStudentInfo() {
+      try {
+        localStorage.setItem('eng_g3_student_info', JSON.stringify(state.studentInfo));
+      } catch (e) {}
+      updateAutoSyncBadge();
+    }
+
+    function updateAutoSyncBadge(statusOverride = null) {
+      const badge = document.getElementById('auto-sync-badge');
+      if (!badge) return;
+      if (statusOverride === 'sending') {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+        badge.textContent = '🔄 送信中...';
+        return;
+      }
+      if (statusOverride === 'sent') {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+        badge.textContent = '✅ 自動記録済み';
+        return;
+      }
+      if (state.studentInfo.webhookUrl) {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.textContent = '🟢 自動送信ON（操作不要）';
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-200';
+        badge.textContent = '⚪ URL未設定';
+      }
+    }
+
     // ナビゲーターキャラクターのSVG（青いカーディガン・星型ヘアピン・指示棒・青い教科書）
     function getNavigatorSvg(isAvatar = false) {
       const viewBox = isAvatar ? "22 10 156 145" : "0 0 200 220";
       return `
         <svg viewBox="${viewBox}" class="w-full h-full object-contain" xmlns="http://www.w3.org/2000/svg">
-          <!-- 後ろ髪 -->
           <path d="M52 76 C44 105, 48 134, 62 142 C72 146, 128 146, 138 142 C152 134, 156 105, 148 76 Z" fill="#4e3d38" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
-          <!-- 首 -->
           <rect x="92" y="122" width="16" height="16" rx="4" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
-          <!-- 制服スカート -->
           <path d="M68 184 L132 184 L142 214 L58 214 Z" fill="#1e3a5f" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
           <path d="M74 184 L68 214 M90 184 L88 214 M110 184 L112 214 M126 184 L132 214" stroke="#3b82f6" stroke-width="2.5"/>
           <path d="M62 198 L138 198 M60 207 L140 207" stroke="#3b82f6" stroke-width="2"/>
-          <!-- インナーのダークネイビーベスト -->
           <path d="M72 136 L128 136 L133 188 L67 188 Z" fill="#2c3545" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
-          <!-- 白シャツ襟 -->
           <path d="M84 134 L100 148 L116 134 L108 130 L100 138 L92 130 Z" fill="#ffffff" stroke="#2d2226" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- リボンタイ -->
           <path d="M100 145 L84 139 L81 153 L97 149 Z" fill="#1e40af" stroke="#2d2226" stroke-width="2.2" stroke-linejoin="round"/>
           <path d="M100 145 L116 139 L119 153 L103 149 Z" fill="#1e40af" stroke="#2d2226" stroke-width="2.2" stroke-linejoin="round"/>
           <path d="M96 149 L89 167 L98 164 L100 151 Z" fill="#1e3a8a" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
           <path d="M104 149 L111 167 L102 164 L100 151 Z" fill="#1e3a8a" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
           <rect x="95" y="141" width="10" height="9" rx="3" fill="#2563eb" stroke="#2d2226" stroke-width="2.2"/>
-          <!-- 青いカーディガン -->
           <path d="M74 134 C58 138, 48 156, 42 178 L58 182 L72 154 L70 192 L88 192 L90 142 Z" fill="#2b8ac6" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
           <path d="M126 134 C142 138, 152 156, 158 178 L142 182 L128 154 L130 192 L112 192 L110 142 Z" fill="#2b8ac6" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
-          <!-- 指示棒（右手） -->
           <line x1="42" y1="142" x2="22" y2="74" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
           <line x1="42" y1="142" x2="36" y2="122" stroke="#78350f" stroke-width="5.5" stroke-linecap="round"/>
           <polygon points="22,74 18,64 26,66" fill="#94a3b8" stroke="#2d2226" stroke-width="1.8" stroke-linejoin="round"/>
-          <!-- 右手 -->
           <circle cx="42" cy="134" r="7.5" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
-          <!-- 左手と青い教科書 -->
           <g transform="rotate(-10 124 166)">
             <rect x="104" y="148" width="32" height="40" rx="4" fill="#3898d4" stroke="#2d2226" stroke-width="2.8"/>
             <rect x="107" y="151" width="5" height="34" fill="#1d6fa5"/>
             <line x1="112" y1="148" x2="134" y2="148" stroke="#ffffff" stroke-width="3"/>
           </g>
           <circle cx="112" cy="172" r="7.5" fill="#ffe6d8" stroke="#2d2226" stroke-width="2.5"/>
-          <!-- 顔の輪郭 -->
           <path d="M58 78 C58 46, 142 46, 142 78 C142 108, 124 126, 100 126 C76 126, 58 108, 58 78 Z" fill="#ffe6d8" stroke="#2d2226" stroke-width="3"/>
-          <!-- チーク -->
           <ellipse cx="73" cy="102" rx="7" ry="4" fill="#fda4af" opacity="0.65"/>
           <ellipse cx="127" cy="102" rx="7" ry="4" fill="#fda4af" opacity="0.65"/>
-          <!-- 大きな青い瞳（左） -->
           <ellipse cx="81" cy="89" rx="9" ry="10.5" fill="#1e3a8a" stroke="#2d2226" stroke-width="2"/>
           <ellipse cx="81" cy="91" rx="6.5" ry="7" fill="#3b82f6"/>
           <circle cx="81" cy="89" r="3.5" fill="#172554"/>
           <circle cx="77.5" cy="84.5" r="3" fill="#ffffff"/>
           <circle cx="84.5" cy="93.5" r="1.5" fill="#ffffff"/>
-          <!-- 大きな青い瞳（右） -->
           <ellipse cx="119" cy="89" rx="9" ry="10.5" fill="#1e3a8a" stroke="#2d2226" stroke-width="2"/>
           <ellipse cx="119" cy="91" rx="6.5" ry="7" fill="#3b82f6"/>
           <circle cx="119" cy="89" r="3.5" fill="#172554"/>
           <circle cx="115.5" cy="84.5" r="3" fill="#ffffff"/>
           <circle cx="122.5" cy="93.5" r="1.5" fill="#ffffff"/>
-          <!-- 眉毛と笑顔の口 -->
           <path d="M73 74 Q81 71 88 74" fill="none" stroke="#3f2e2b" stroke-width="2.2" stroke-linecap="round"/>
           <path d="M112 74 Q119 71 127 74" fill="none" stroke="#3f2e2b" stroke-width="2.2" stroke-linecap="round"/>
           <path d="M94 108 Q100 114 106 108" fill="none" stroke="#2d2226" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 前髪・サイド髪 -->
           <path d="M50 84 C48 44, 76 26, 100 26 C124 26, 152 44, 150 84 C146 72, 138 64, 133 58 C132 69, 126 76, 121 79 C119 67, 113 58, 108 54 C105 67, 99 75, 93 78 C91 66, 86 58, 82 54 C77 66, 70 74, 65 78 C60 72, 54 76, 50 84 Z" fill="#5c4742" stroke="#2d2226" stroke-width="3" stroke-linejoin="round"/>
-          <!-- 髪のハイライト -->
           <path d="M72 48 Q84 44 92 48 M108 48 Q118 44 128 48" fill="none" stroke="#8c726c" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 黄色い星型ヘアピン -->
           <g transform="translate(124, 52) rotate(15)">
             <rect x="2" y="-3" width="16" height="6" rx="3" fill="#3b82f6" stroke="#2d2226" stroke-width="2"/>
             <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#facc15" stroke="#2d2226" stroke-width="2" stroke-linejoin="round"/>
@@ -994,41 +1208,49 @@
       if (coverPerfect) coverPerfect.textContent = perfectCount;
     }
 
-    // メインタブ切り替え（表紙 / 英作文練習 / 単元選択・文法チェック）
+    // メインタブ切り替え（表紙 / 英作文練習 / 単元選択・文法 / 成績分析）
     function switchMainTab(tab) {
       state.mainTab = tab;
       const coverView = document.getElementById('view-cover');
       const practiceView = document.getElementById('view-practice');
       const grammarView = document.getElementById('view-grammar');
+      const analysisView = document.getElementById('view-analysis');
 
       const tabCover = document.getElementById('tab-cover');
       const tabPractice = document.getElementById('tab-practice');
       const tabGrammar = document.getElementById('tab-grammar');
+      const tabAnalysis = document.getElementById('tab-analysis');
 
-      const activeBtnClass = 'px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-teal-700 shadow-sm';
-      const inactiveBtnClass = 'px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900';
+      const activeBtnClass = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-teal-700 shadow-sm';
+      const inactiveBtnClass = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900';
 
-      coverView.classList.add('hidden');
-      practiceView.classList.add('hidden');
-      grammarView.classList.add('hidden');
+      if (coverView) coverView.classList.add('hidden');
+      if (practiceView) practiceView.classList.add('hidden');
+      if (grammarView) grammarView.classList.add('hidden');
+      if (analysisView) analysisView.classList.add('hidden');
 
-      tabCover.className = inactiveBtnClass;
-      tabPractice.className = inactiveBtnClass;
-      tabGrammar.className = inactiveBtnClass;
+      if (tabCover) tabCover.className = inactiveBtnClass;
+      if (tabPractice) tabPractice.className = inactiveBtnClass;
+      if (tabGrammar) tabGrammar.className = inactiveBtnClass;
+      if (tabAnalysis) tabAnalysis.className = inactiveBtnClass;
 
       if (tab === 'cover') {
-        coverView.classList.remove('hidden');
-        tabCover.className = activeBtnClass;
+        if (coverView) coverView.classList.remove('hidden');
+        if (tabCover) tabCover.className = activeBtnClass;
         updateLearnedBadge();
         updateScoreDisplays();
       } else if (tab === 'practice') {
-        practiceView.classList.remove('hidden');
-        tabPractice.className = activeBtnClass;
+        if (practiceView) practiceView.classList.remove('hidden');
+        if (tabPractice) tabPractice.className = activeBtnClass;
         syncPracticeAfterFilterChange();
-      } else {
-        grammarView.classList.remove('hidden');
-        tabGrammar.className = activeBtnClass;
+      } else if (tab === 'grammar') {
+        if (grammarView) grammarView.classList.remove('hidden');
+        if (tabGrammar) tabGrammar.className = activeBtnClass;
         renderGrammarList();
+      } else if (tab === 'analysis') {
+        if (analysisView) analysisView.classList.remove('hidden');
+        if (tabAnalysis) tabAnalysis.className = activeBtnClass;
+        renderAnalysisView();
       }
     }
 
@@ -1135,7 +1357,7 @@
     // インライン文法ガイドの開閉
     function toggleInlineGrammarGuide() {
       const panel = document.getElementById('inline-grammar-panel');
-      panel.classList.toggle('hidden');
+      if (panel) panel.classList.toggle('hidden');
     }
 
     // 文法チェック一覧のフィルタ切り替え
@@ -1154,9 +1376,11 @@
     // 単元選択＆文法チェック一覧の描画
     function renderGrammarList() {
       const container = document.getElementById('grammar-cards-list');
-      const filtered = state.grammarFilter === 'ALL'
+      if (!container) return;
+      const targetUnitGroup = state.grammarFilter === 'LR1' ? "Let's Read 1" : state.grammarFilter;
+      const filtered = targetUnitGroup === 'ALL'
         ? QUESTIONS
-        : QUESTIONS.filter(q => q.unitGroup === state.grammarFilter);
+        : QUESTIONS.filter(q => q.unitGroup === targetUnitGroup);
 
       container.innerHTML = filtered.map(q => {
         const g = GRAMMAR_FORMULAS[q.id] || { formula: q.en, desc: q.note };
@@ -1209,7 +1433,8 @@
         updateLearnedBadge();
       }
       state.unitFilter = 'ALL';
-      document.getElementById('unit-filter').value = 'ALL';
+      const uFilter = document.getElementById('unit-filter');
+      if (uFilter) uFilter.value = 'ALL';
       switchMainTab('practice');
       loadQuestion(id);
     }
@@ -1239,6 +1464,7 @@
     // 問題セレクトボックスの描画
     function renderQuestionSelector() {
       const select = document.getElementById('question-select');
+      if (!select) return;
       const filtered = getFilteredQuestions();
 
       if (filtered.length === 0) {
@@ -1276,7 +1502,8 @@
         intermediate: '中級：接続詞や前置詞も自力で判断しよう（ノーヒント挑戦）',
         advanced: '上級：1単語ずつ＋ダミー選択肢あり！正確な語法を見抜こう（ノーヒント挑戦）'
       };
-      document.getElementById('level-desc').textContent = descMap[newLevel];
+      const descEl = document.getElementById('level-desc');
+      if (descEl) descEl.textContent = descMap[newLevel];
 
       const hintBtn = document.getElementById('btn-hint');
       const guideBtn = document.getElementById('btn-grammar-guide');
@@ -1500,6 +1727,16 @@
         state.bestScores[q.id] = Math.max(prevBestScore, earnedScore);
         state.bestStars[q.id] = Math.max(prevBestStars, earnedStars);
 
+        // 成績分析用の統計データを更新
+        const prevStat = state.questionStats[q.id] || { attempts: 0, mistakes: 0, hints: 0, clearedLevel: '' };
+        state.questionStats[q.id] = {
+          attempts: prevStat.attempts + 1,
+          mistakes: prevStat.mistakes + state.mistakeCount,
+          hints: prevStat.hints + state.hintUsedCount,
+          clearedLevel: state.level,
+          lastUpdated: new Date().toLocaleString('ja-JP')
+        };
+
         if (earnedStars === 3) {
           setCharSpeech('すごい！ノーヒント＆ノーミスで★★★（星3つ）達成だよ！');
         } else {
@@ -1509,6 +1746,7 @@
         updateScoreDisplays();
         renderAll();
         speakAnswer();
+        autoSyncProgressToSpreadsheet();
       } else {
         setCharSpeech(`いい調子！あと ${targetTokens.length - state.selectedTokens.length} パーツだよ！`);
         renderAll();
@@ -1542,6 +1780,13 @@
     let toastTimer = null;
     function triggerErrorFeedback(wrongWord) {
       state.mistakeCount += 1;
+      const q = getCurrentQuestion();
+      const prevStat = state.questionStats[q.id] || { attempts: 0, mistakes: 0, hints: 0, clearedLevel: '' };
+      state.questionStats[q.id] = {
+        ...prevStat,
+        mistakes: prevStat.mistakes + 1
+      };
+
       setCharSpeech(`おっと、「${wrongWord}」はまだ先みたい！もういちど語順を考えてみよう！`);
       renderAll();
 
@@ -1556,6 +1801,7 @@
     // トースト表示
     function showToast(message, type = 'error') {
       const toast = document.getElementById('feedback-toast');
+      if (!toast) return;
       toast.textContent = message;
       toast.className = type === 'error'
         ? 'rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-center bg-rose-100 text-rose-800 border border-rose-200 animate-pop'
@@ -1633,8 +1879,302 @@
       window.speechSynthesis.speak(utter);
     }
 
+    // ============================================================
+    // 成績分析＆スプレッドシート集計機能（中3）
+    // ============================================================
+
+    const UNIT_META_G3 = [
+      { key: 'Unit 0', theme: '過去形・熟語 be into・because' },
+      { key: 'Unit 1', theme: '現在完了（経験）・SVOC（make）' },
+      { key: 'Unit 2', theme: '現在完了（完了・継続）・現在完了進行形' },
+      { key: 'Unit 3', theme: '形式主語（It is ... for 人 to）・SVOC（want/let/help）' },
+      { key: "Let's Read 1", theme: '現在完了・受動態・比較の総合読解' },
+      { key: 'Unit 4', theme: '間接疑問文・疑問詞＋to不定詞・分詞の後置修飾' },
+      { key: 'Unit 5', theme: '関係代名詞（主格 who/that・目的格・省略）' },
+      { key: 'Unit 6', theme: '仮定法過去（I wish / If I were...）' }
+    ];
+
+    function getMajorUnitG3(unitGroup) {
+      if (unitGroup === "Let's Read 1") return "Let's Read 1";
+      return unitGroup.split(' ').slice(0, 2).join(' ');
+    }
+
+    function computeAnalyticsData() {
+      const starsList = Object.values(state.bestStars);
+      const clearedCount = starsList.length;
+      const totalStars = starsList.reduce((sum, s) => sum + s, 0);
+      const perfectCount = starsList.filter(s => s === 3).length;
+      const masteryRate = QUESTIONS.length > 0 ? Math.round((clearedCount / QUESTIONS.length) * 100) : 0;
+      const perfectRate = clearedCount > 0 ? Math.round((perfectCount / clearedCount) * 100) : 0;
+
+      let totalMistakes = 0;
+      let totalHints = 0;
+      Object.values(state.questionStats).forEach(st => {
+        totalMistakes += st.mistakes || 0;
+        totalHints += st.hints || 0;
+      });
+
+      const units = UNIT_META_G3.map(u => {
+        const qs = QUESTIONS.filter(q => getMajorUnitG3(q.unitGroup) === u.key);
+        const total = qs.length;
+        let cleared = 0;
+        let stars = 0;
+        let mistakes = 0;
+        qs.forEach(q => {
+          if (state.bestStars[q.id]) {
+            cleared += 1;
+            stars += state.bestStars[q.id];
+          }
+          if (state.questionStats[q.id]) {
+            mistakes += state.questionStats[q.id].mistakes || 0;
+          }
+        });
+        const rate = total > 0 ? Math.round((cleared / total) * 100) : 0;
+        return {
+          key: u.key,
+          theme: u.theme,
+          total,
+          cleared,
+          rate,
+          stars,
+          maxStars: total * 3,
+          mistakes
+        };
+      });
+
+      return {
+        timestamp: new Date().toLocaleString('ja-JP'),
+        grade: '中3',
+        studentId: state.studentInfo.studentId || '未入力',
+        name: state.studentInfo.name || '未入力',
+        clearedCount,
+        masteryRate,
+        totalStars,
+        perfectCount,
+        perfectRate,
+        totalMistakes,
+        totalHints,
+        units
+      };
+    }
+
+    function renderAnalysisView() {
+      const data = computeAnalyticsData();
+
+      const elRate = document.getElementById('analysis-mastery-rate');
+      const elCleared = document.getElementById('analysis-cleared-count');
+      const elStars = document.getElementById('analysis-total-stars');
+      const elPerfRate = document.getElementById('analysis-perfect-rate');
+      const elPerfCount = document.getElementById('analysis-perfect-count');
+      const elMistakes = document.getElementById('analysis-total-mistakes');
+      const elHints = document.getElementById('analysis-total-hints');
+
+      if (elRate) elRate.textContent = data.masteryRate;
+      if (elCleared) elCleared.textContent = data.clearedCount;
+      if (elStars) elStars.textContent = data.totalStars;
+      if (elPerfRate) elPerfRate.textContent = data.perfectRate;
+      if (elPerfCount) elPerfCount.textContent = data.perfectCount;
+      if (elMistakes) elMistakes.textContent = data.totalMistakes;
+      if (elHints) elHints.textContent = data.totalHints;
+
+      const tbody = document.getElementById('analysis-unit-tbody');
+      if (tbody) {
+        tbody.innerHTML = data.units.map(u => {
+          let judgeBadge = '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500">未着手</span>';
+          if (u.cleared > 0) {
+            if (u.rate === 100 && u.mistakes === 0) {
+              judgeBadge = '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">◎ 完璧</span>';
+            } else if (u.rate >= 70) {
+              judgeBadge = '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800">○ 順調</span>';
+            } else {
+              judgeBadge = '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">△ 練習中</span>';
+            }
+          }
+
+          return `
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="py-2.5 px-3 font-bold text-slate-800 whitespace-nowrap">${u.key}</td>
+              <td class="py-2.5 px-3 text-xs text-slate-600">${u.theme}</td>
+              <td class="py-2.5 px-3 text-center font-semibold text-slate-700">${u.cleared} / ${u.total}</td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-teal-600 h-full rounded-full" style="width: ${u.rate}%"></div>
+                  </div>
+                  <span class="text-xs font-bold text-slate-700">${u.rate}%</span>
+                </div>
+              </td>
+              <td class="py-2.5 px-3 text-center font-bold text-amber-600">★ ${u.stars}</td>
+              <td class="py-2.5 px-3 text-center font-semibold ${u.mistakes > 0 ? 'text-rose-600' : 'text-slate-400'}">${u.mistakes}回</td>
+              <td class="py-2.5 px-3 text-center whitespace-nowrap">${judgeBadge}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const weakList = document.getElementById('analysis-weak-list');
+      if (weakList) {
+        const weakItems = QUESTIONS.map(q => {
+          const st = state.questionStats[q.id];
+          const star = state.bestStars[q.id] || 0;
+          const mistakes = st ? st.mistakes : 0;
+          const hints = st ? st.hints : 0;
+          return { q, star, mistakes, hints, priority: mistakes * 10 + hints * 5 + (star > 0 && star < 3 ? 3 : 0) };
+        }).filter(item => item.priority > 0)
+          .sort((a, b) => b.priority - a.priority)
+          .slice(0, 10);
+
+        if (weakItems.length === 0) {
+          weakList.innerHTML = `<div class="p-4 rounded-xl bg-slate-50 text-xs text-slate-500 text-center">まだミスやヒント使用の履歴がありません。練習画面で問題を解くとここに苦手分析が表示されます！</div>`;
+        } else {
+          weakList.innerHTML = weakItems.map(item => `
+            <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-200 text-slate-700">Q.${item.q.id}</span>
+                  <span class="text-xs font-bold text-teal-700">${item.q.unitLabel}</span>
+                  <span class="text-xs font-bold text-slate-800">${item.q.topic}</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">${item.q.jp}（ミス ${item.mistakes}回 / ヒント ${item.hints}回）</p>
+              </div>
+              <button type="button" onclick="jumpToQuestionFromGrammar(${item.q.id})" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 transition">
+                解き直す →
+              </button>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function toggleWebhookSettings() {
+      const panel = document.getElementById('webhook-settings-panel');
+      if (panel) panel.classList.toggle('hidden');
+    }
+
+    function showExportBanner(msg) {
+      const banner = document.getElementById('export-status-banner');
+      if (!banner) return;
+      banner.textContent = msg;
+      banner.classList.remove('hidden');
+    }
+
+    function copyTextToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(textarea);
+    }
+
+    function copySpreadsheetRowSummary(includeHeader) {
+      const data = computeAnalyticsData();
+      const headers = [
+        '最終更新日時', '学年', '生徒ID', '氏名',
+        'クリア問題数', '全体習得率(%)', '獲得スター', 'ノーミス満点(★★★)数', '累計ミス回数', 'ヒント使用回数',
+        ...data.units.map(u => `${u.key}習得率(%)`),
+        ...data.units.map(u => `${u.key}ミス`)
+      ];
+      const row = [
+        data.timestamp, data.grade, data.studentId, data.name,
+        data.clearedCount, data.masteryRate, data.totalStars, data.perfectCount, data.totalMistakes, data.totalHints,
+        ...data.units.map(u => u.rate),
+        ...data.units.map(u => u.mistakes)
+      ];
+      const tsv = includeHeader ? `${headers.join('\t')}\n${row.join('\t')}` : row.join('\t');
+      copyTextToClipboard(tsv);
+      showExportBanner(includeHeader
+        ? '✅ 見出し＋成績データ1行をコピーしました！'
+        : '✅ 成績データ1行をコピーしました！');
+    }
+
+    function copyDetailedQuestionRows() {
+      const data = computeAnalyticsData();
+      const header = ['生徒ID', '氏名', '問題ID', '単元', '文法テーマ', 'クリア状況', '最高スター', 'ミス回数', 'ヒント回数'].join('\t');
+      const rows = QUESTIONS.map(q => {
+        const star = state.bestStars[q.id] || 0;
+        const st = state.questionStats[q.id] || { mistakes: 0, hints: 0 };
+        return [
+          data.studentId, data.name,
+          q.id, q.unitLabel, q.topic,
+          star > 0 ? 'クリア' : '未クリア',
+          star, st.mistakes || 0, st.hints || 0
+        ].join('\t');
+      });
+      copyTextToClipboard(`${header}\n${rows.join('\n')}`);
+      showExportBanner('✅ 全122問の詳細明細をコピーしました！');
+    }
+
+    function downloadCsvReport() {
+      const data = computeAnalyticsData();
+      const headers = [
+        '最終更新日時', '学年', '生徒ID', '氏名',
+        'クリア問題数', '全体習得率(%)', '獲得スター', 'ノーミス満点(★★★)数', '累計ミス回数', 'ヒント使用回数',
+        ...data.units.map(u => `${u.key}習得率(%)`),
+        ...data.units.map(u => `${u.key}ミス`)
+      ];
+      const row = [
+        data.timestamp, data.grade, data.studentId, data.name,
+        data.clearedCount, data.masteryRate, data.totalStars, data.perfectCount, data.totalMistakes, data.totalHints,
+        ...data.units.map(u => u.rate),
+        ...data.units.map(u => u.mistakes)
+      ];
+      const csvContent = '\uFEFF' + [headers, row].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `中3英作文成績_${data.studentId}_${data.name}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showExportBanner('📥 CSVファイルをダウンロードしました！');
+    }
+
+    async function autoSyncProgressToSpreadsheet() {
+      const url = state.studentInfo.webhookUrl;
+      if (!url) return;
+      const data = computeAnalyticsData();
+      updateAutoSyncBadge('sending');
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(data)
+        });
+        updateAutoSyncBadge('sent');
+      } catch (err) {
+        updateAutoSyncBadge();
+      }
+    }
+
+    async function sendDataToSpreadsheetWebhook() {
+      const url = state.studentInfo.webhookUrl;
+      if (!url) {
+        showExportBanner('⚠️ 送信先URLを入力してください。');
+        return;
+      }
+      const data = computeAnalyticsData();
+      showExportBanner('🚀 スプレッドシートへ送信しています...');
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(data)
+        });
+        updateAutoSyncBadge('sent');
+        showExportBanner('✅ スプレッドシートへ成績データを送信しました！');
+      } catch (err) {
+        showExportBanner('⚠️ 送信時にエラーが発生しました。');
+      }
+    }
+
     // 初期起動
     window.onload = () => {
+      loadSavedStudentInfo();
       renderCharacterDisplays();
       updateLearnedBadge();
       updateScoreDisplays();
