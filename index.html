@@ -441,13 +441,31 @@ window.addEventListener('DOMContentLoaded', () => {
   renderAnalytics();
 });
 
+/**
+ * 【使い方】
+ * 英作文アプリのHTMLファイル内で「function loadSavedState()」を検索し、
+ * 関数の先頭（updateSessionStatus(); の直前まで）を以下のコードに差し替えてください。
+ */
 function loadSavedState() {
-  currentUserName = localStorage.getItem(USERNAME_KEY) || "";
-  currentClass = localStorage.getItem(CLASS_KEY) || "";
-  currentNumber = localStorage.getItem(NUMBER_KEY) || "";
-  if (!currentUserName || !currentClass || !currentNumber) {
+  // 1. 勉強管理アプリからURLで渡された生徒ID・名前を取得する
+  const params = new URLSearchParams(window.location.search);
+  const urlId = (params.get('studentId') || '').trim();
+  const urlName = (params.get('studentName') || '').trim();
+
+  // 2. URLにあれば優先して採用し、なければ端末に保存済みの値を使う
+  currentNumber = urlId || localStorage.getItem(NUMBER_KEY) || "";
+  currentUserName = urlName || localStorage.getItem(USERNAME_KEY) || "";
+
+  // 3. URLから受け取った値をローカルにも記憶しておく
+  if (urlId) localStorage.setItem(NUMBER_KEY, urlId);
+  if (urlName) localStorage.setItem(USERNAME_KEY, urlName);
+
+  // 4. IDと名前がそろっていればモーダルを出さずに自動ログイン状態にする
+  //    （※元のコードにあった不要な !currentClass チェックを削除しています）
+  if (!currentUserName || !currentNumber) {
     document.getElementById('name-modal').classList.remove('hidden');
   } else {
+    document.getElementById('name-modal').classList.add('hidden');
     updateNameDisplay();
   }
 
